@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Lingua-AI — эталонный экран урока</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07070c; --card:rgba(22,22,33,.72); --card2:#1d1d2b; --line:rgba(255,255,255,.08);
+    --txt:#eef0f7; --dim:#9aa0bd; --accent:#7c5cff; --accent2:#5ce0c8; --pink:#ff5c9d;
+    --ok:#4ade80; --bad:#f87171; --gold:#fbbf24;
+    /* вертикальный ритм по сетке 8px */
+    --s1:8px; --s2:16px; --s3:24px; --s4:32px;
+    --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --display:"Sora","Inter",-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--txt);
+    font-family:var(--font);
+    font-feature-settings:"cv11","ss01";letter-spacing:-.01em;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    line-height:1.5;display:flex;justify-content:center;overflow-x:hidden}
+
+  /* ===== aurora-background (рецепт флота) ===== */
+  .aurora{position:fixed;inset:0;z-index:-2;overflow:hidden;background:#07070c;pointer-events:none}
+  .aurora::before,.aurora::after,.aurora i{content:"";position:absolute;border-radius:50%;
+    filter:blur(80px);opacity:.5;mix-blend-mode:screen}
+  .aurora::before{width:55vmax;height:55vmax;left:-12vmax;top:-18vmax;
+    background:radial-gradient(circle,var(--accent),transparent 60%);animation:a1 22s ease-in-out infinite alternate}
+  .aurora::after{width:46vmax;height:46vmax;right:-14vmax;top:8vmax;
+    background:radial-gradient(circle,var(--accent2),transparent 60%);animation:a2 27s ease-in-out infinite alternate}
+  .aurora i{width:40vmax;height:40vmax;left:22vmax;bottom:-20vmax;
+    background:radial-gradient(circle,var(--pink),transparent 60%);animation:a3 31s ease-in-out infinite alternate}
+  @keyframes a1{to{transform:translate(12vmax,8vmax) scale(1.15)}}
+  @keyframes a2{to{transform:translate(-10vmax,6vmax) scale(1.1)}}
+  @keyframes a3{to{transform:translate(-8vmax,-10vmax) scale(1.2)}}
+  .grid{position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);
+    background-size:44px 44px;
+    -webkit-mask-image:radial-gradient(ellipse 70% 55% at 50% 35%,#000 40%,transparent 75%);
+            mask-image:radial-gradient(ellipse 70% 55% at 50% 35%,#000 40%,transparent 75%)}
+
+  .app{width:100%;max-width:460px;padding:14px 16px 28px;display:flex;flex-direction:column;min-height:100dvh}
+
+  /* ===== top bar: hearts + streak + progress ===== */
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:var(--s3)}
+  .x{font-size:22px;color:var(--dim);background:none;border:none;cursor:pointer;line-height:1}
+  .prog{flex:1;height:14px;background:#ffffff14;border-radius:99px;overflow:hidden;position:relative;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+  .prog>i{display:block;height:100%;width:0;border-radius:99px;position:relative;overflow:hidden;
+    background:linear-gradient(90deg,var(--accent2),var(--accent),var(--pink));
+    background-size:200% 100%;animation:progFlow 3s linear infinite;
+    transition:width .6s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 14px rgba(124,92,255,.7)}
+  /* бегущий блик по прогресс-бару */
+  .prog>i::after{content:"";position:absolute;inset:0;border-radius:99px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);
+    transform:translateX(-100%);animation:progShine 2.4s ease-in-out infinite}
+  @keyframes progFlow{to{background-position:200% 0}}
+  @keyframes progShine{0%{transform:translateX(-100%)}55%,100%{transform:translateX(280%)}}
+  .streak{display:flex;align-items:center;gap:4px;font-weight:800;color:var(--gold);font-size:15px}
+  .hearts{display:flex;align-items:center;gap:3px;font-size:15px;font-weight:700;color:var(--pink)}
+
+  /* ===== concept chip ===== */
+  .chip{align-self:flex-start;display:flex;align-items:center;gap:7px;
+    background:linear-gradient(135deg,rgba(124,92,255,.18),rgba(92,224,200,.14));
+    border:1px solid rgba(124,92,255,.4);border-radius:99px;padding:6px 13px;font-size:12px;
+    color:var(--accent2);font-weight:600;margin-bottom:var(--s2);letter-spacing:.3px}
+  .chip b{color:#fff}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent2);box-shadow:0 0 8px var(--accent2)}
+
+  /* ===== cinematic-word-reveal (рецепт флота) ===== */
+  /* слова идут нормальной строкой с переносами; каждое "выезжает" снизу из своего окна */
+  .reveal .line{overflow:hidden;display:inline-block;vertical-align:top;margin-right:.28em}
+  .reveal .word{display:inline-block;transform:translateY(115%);
+    animation:wordUp .7s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i,0)*.08s)}
+  @keyframes wordUp{to{transform:translateY(0)}}
+  .task{font-family:var(--display);font-size:26px;font-weight:800;line-height:1.2;
+    margin-bottom:var(--s1);letter-spacing:-.025em}
+  .hintline{font-size:13px;color:var(--dim);margin-bottom:var(--s3);letter-spacing:0}
+
+  /* ===== sentence builder ===== */
+  .stage{background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:auto;
+    box-shadow:0 18px 50px -20px rgba(0,0,0,.7)}
+  .answer{min-height:54px;border-bottom:2px dashed var(--line);display:flex;flex-wrap:wrap;gap:8px;
+    align-items:center;padding:6px 2px 14px;margin-bottom:var(--s3)}
+  .answer:empty::before{content:"нажимай слова ниже…";color:#5a5f7d;font-size:14px;font-style:italic}
+  .tok{background:linear-gradient(180deg,#23233480,#1a1a2880);border:1.5px solid var(--line);
+    color:var(--txt);padding:9px 14px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;
+    transition:transform .14s cubic-bezier(.2,.8,.2,1),border-color .14s,opacity .2s,box-shadow .14s;
+    user-select:none;
+    box-shadow:0 3px 0 rgba(0,0,0,.45),0 6px 14px -8px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06)}
+  .bank .tok:hover{border-color:var(--accent);transform:translateY(-2px);
+    box-shadow:0 5px 0 rgba(0,0,0,.45),0 12px 22px -10px rgba(124,92,255,.5),inset 0 1px 0 rgba(255,255,255,.08)}
+  .bank .tok:active{transform:translateY(2px);
+    box-shadow:0 1px 0 rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05)}
+  .bank{display:flex;flex-wrap:wrap;gap:8px}
+  .tok.used{opacity:.22;pointer-events:none;border-style:dashed;box-shadow:none;transform:none}
+  .answer .tok{border-color:var(--accent);
+    background:linear-gradient(180deg,rgba(124,92,255,.22),rgba(124,92,255,.1));
+    box-shadow:0 3px 0 rgba(70,50,160,.5),inset 0 1px 0 rgba(255,255,255,.1);
+    animation:pop .26s cubic-bezier(.34,1.56,.64,1)}
+  .answer .tok:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(70,50,160,.5)}
+  @keyframes pop{0%{transform:scale(.55) translateY(8px);opacity:0}
+    60%{transform:scale(1.08) translateY(-2px)}100%{transform:scale(1) translateY(0);opacity:1}}
+
+  /* ===== feedback panel ===== */
+  .fb{position:fixed;left:0;right:0;bottom:0;transform:translateY(110%);
+    transition:transform .4s cubic-bezier(.2,.8,.2,1);z-index:5;display:flex;justify-content:center}
+  .fb.show{transform:translateY(0)}
+  .fbInner{width:100%;max-width:460px;padding:18px 16px calc(18px + env(safe-area-inset-bottom));
+    border-radius:22px 22px 0 0;border-top:1px solid var(--line)}
+  .fb.good .fbInner{background:linear-gradient(180deg,rgba(74,222,128,.16),rgba(7,7,12,.96))}
+  .fb.bad  .fbInner{background:linear-gradient(180deg,rgba(248,113,113,.16),rgba(7,7,12,.96))}
+  .fbHead{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;margin-bottom:6px}
+  .fb.good .fbHead{color:var(--ok)} .fb.bad .fbHead{color:var(--bad)}
+  .fbWhy{font-size:14px;color:#d6d9ec;margin-bottom:14px}
+  .fbWhy b{color:#fff}
+  .why-btn{background:none;border:none;color:var(--accent2);font-size:13px;font-weight:600;
+    cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
+  .hint-tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.3px;
+    padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.08);
+    color:#fff;margin-bottom:8px}
+
+  .btn{display:block;width:100%;border:none;padding:16px;border-radius:15px;font-size:16px;font-weight:800;
+    cursor:pointer;font-family:inherit;letter-spacing:.2px;position:relative;
+    transition:transform .13s cubic-bezier(.2,.8,.2,1),box-shadow .13s,filter .2s}
+  .btn.go{background:linear-gradient(135deg,var(--accent),#6a4cff);color:#fff;
+    box-shadow:0 6px 0 #4a32b0,0 16px 32px -10px rgba(124,92,255,.75),inset 0 1px 0 rgba(255,255,255,.2)}
+  .btn.good2{background:linear-gradient(135deg,var(--ok),#22c55e);color:#062b14;
+    box-shadow:0 6px 0 #15803d,0 16px 32px -10px rgba(74,222,128,.6),inset 0 1px 0 rgba(255,255,255,.35)}
+  .btn.bad2{background:linear-gradient(135deg,var(--bad),#ef4444);color:#fff;
+    box-shadow:0 6px 0 #991b1b,0 16px 32px -10px rgba(248,113,113,.55),inset 0 1px 0 rgba(255,255,255,.2)}
+  .btn:not([disabled]):hover{filter:brightness(1.06)}
+  .btn:not([disabled]):active{transform:translateY(5px);
+    box-shadow:0 1px 0 rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.15)}
+  .btn[disabled]{opacity:.4;box-shadow:none}
+  /* пульс на "Проверить", когда фраза собрана и кнопка активна */
+  .btn.go.ready{animation:btnPulse 1.6s ease-in-out infinite}
+  @keyframes btnPulse{
+    0%,100%{box-shadow:0 6px 0 #4a32b0,0 16px 32px -10px rgba(124,92,255,.75),0 0 0 0 rgba(124,92,255,.5),inset 0 1px 0 rgba(255,255,255,.2)}
+    50%{box-shadow:0 6px 0 #4a32b0,0 16px 38px -8px rgba(124,92,255,.9),0 0 0 9px rgba(124,92,255,0),inset 0 1px 0 rgba(255,255,255,.2)}}
+
+  .check{margin-top:16px}
+
+  /* ===== confetti ===== */
+  .confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9;overflow:hidden}
+  .confetti span{position:absolute;width:9px;height:14px;top:-20px;opacity:0;border-radius:2px;
+    animation:fall 1.1s cubic-bezier(.3,.7,.4,1) forwards}
+  @keyframes fall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(105vh) rotate(540deg)}}
+
+  /* shake on wrong */
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  .shake{animation:shake .4s}
+
+  /* летящий клон слова: банк → поле ответа (плавное "прилипание") */
+  .fly{position:fixed;z-index:30;pointer-events:none;margin:0;
+    background:linear-gradient(180deg,rgba(124,92,255,.28),rgba(124,92,255,.14));
+    border:1.5px solid var(--accent);color:var(--txt);
+    padding:9px 14px;border-radius:12px;font-size:15px;font-weight:600;
+    box-shadow:0 8px 22px -6px rgba(124,92,255,.7);
+    transition:left .32s cubic-bezier(.34,1.2,.5,1),top .32s cubic-bezier(.34,1.2,.5,1),transform .32s ease}
+
+  @media (prefers-reduced-motion:reduce){
+    .aurora::before,.aurora::after,.aurora i{animation:none}
+    .reveal .word{animation:none;transform:none}
+    .confetti span{display:none}
+    .btn.go.ready{animation:none}
+    .prog>i{animation:none} .prog>i::after{animation:none;display:none}
+  }
+
+  /* ===== desktop: рамка телефона по центру (на узких экранах — как было) ===== */
+  .phone{display:contents}
+  @media (min-width:600px){
+    body{align-items:center;padding:36px 0}
+    /* .phone становится рамкой телефона и контекстом позиционирования */
+    .phone{display:block;position:relative;width:434px;min-height:792px;
+      border-radius:48px;overflow:hidden;isolation:isolate;
+      background:linear-gradient(180deg,rgba(24,24,38,.92),rgba(11,11,19,.97));
+      border:1px solid rgba(255,255,255,.09);
+      box-shadow:0 50px 140px -26px rgba(0,0,0,.88),
+        0 0 0 11px rgba(255,255,255,.022),
+        inset 0 1px 0 rgba(255,255,255,.07)}
+    /* "чёлка" сверху */
+    .phone::before{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);
+      width:128px;height:5px;border-radius:99px;background:rgba(255,255,255,.16);z-index:20}
+    /* aurora и grid живут внутри рамки, не на весь экран */
+    .phone .aurora,.phone .grid{position:absolute}
+    .app{width:100%;max-width:none;min-height:792px;padding:30px 22px 26px}
+    /* шторка фидбэка и конфетти прижаты к рамке, а не к вьюпорту */
+    .fb{position:absolute}
+    .fbInner{max-width:none;border-radius:22px 22px 0 0;
+      padding:18px 18px calc(18px + 8px)}
+    .confetti{position:absolute}
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+<div class="aurora"><i></i></div>
+<div class="grid"></div>
+
+<div class="app">
+  <div class="top">
+    <button class="x" onclick="location.reload()">✕</button>
+    <div class="prog"><i id="prog"></i></div>
+    <div class="streak">🔥 <span id="streak">7</span></div>
+    <div class="hearts">❤ <span id="hearts">5</span></div>
+  </div>
+
+  <div class="chip"><span class="dot"></span> Тебе лучше заходит: <b id="conceptName">Сравнение с русским</b></div>
+
+  <h1 class="task reveal" id="task"></h1>
+  <p class="hintline" id="hint">Present Continuous — действие прямо сейчас. Собери фразу.</p>
+
+  <div class="stage">
+    <div class="answer" id="answer"></div>
+    <div class="bank" id="bank"></div>
+    <button class="btn go check" id="check" disabled onclick="check()">Проверить</button>
+  </div>
+</div>
+
+<!-- feedback sheet -->
+<div class="fb" id="fb">
+  <div class="fbInner">
+    <div class="fbHead" id="fbHead"></div>
+    <div class="fbWhy" id="fbWhy"></div>
+    <button class="btn" id="fbBtn" onclick="next()"></button>
+  </div>
+</div>
+
+<div class="confetti" id="confetti"></div>
+</div><!-- /.phone -->
+
+<script>
+/* ---- эталонный экран: одно упражнение "собери фразу" ----
+   Демонстрирует визуальный язык Lingua-AI:
+   - концепт-чип (память про юзера)
+   - кино-reveal задания
+   - sentence-builder с поп-анимацией
+   - feedback-шторка с "объясни почему" (фича против Duolingo)
+   - конфетти + haptic награда, shake на ошибке, сердца/стрик/прогресс
+*/
+/* несколько заданий темы Present Continuous — next() берёт следующее, не повтор */
+const ITEMS = [
+  {
+    ru: "Я читаю книгу прямо сейчас.",
+    correct: ["I","am","reading","a","book","right","now"],
+    bank:    ["reading","I","now","book","am","a","right","read"], // "read" — дистрактор
+    be:      "am",                  // нужный вспомогательный be для этого лица
+    ing:     {base:"read", form:"reading"}, // голый глагол vs -ing
+    subject: "I",
+    why_ok:  "Верно! <b>am + reading</b> (-ing) — действие идёт <b>в момент речи</b>. По-русски «читаю» без вспомогательного, в английском обязателен <b>am</b>.",
+    // мост к русскому: главный «ага!»-момент для русскоязычного
+    bridge:  "В русском «я <b>читаю</b>» — одно слово. В английском «сейчас читаю» = <b>два</b> слова: <b>am</b> (что происходит сейчас) + <b>reading</b> (что именно делаю). Без <b>am</b> фраза звучит как «вообще по жизни», а не «прямо сейчас».",
+    rule:    "Present Continuous (сейчас): <b>am/is/are + глагол-ing</b>. Сигналы: <i>right now, now, at the moment</i>."
+  },
+  {
+    ru: "Она сейчас готовит ужин.",
+    correct: ["She","is","cooking","dinner","now"],
+    bank:    ["cooking","is","She","dinner","now","cooks"], // "cooks" — дистрактор
+    be:      "is",
+    ing:     {base:"cooks", form:"cooking"},
+    subject: "She",
+    why_ok:  "Верно! С <b>she/he/it</b> вспомогательный — <b>is</b> (не am/are). <b>is cooking</b> = готовит прямо сейчас.",
+    bridge:  "По-русски «она готовит» и «прямо сейчас», и «вообще умеет» — одинаково. В английском это <b>разные</b> фразы: <b>is cooking</b> = сейчас у плиты; <b>cooks</b> = умеет/делает по жизни. Раз в задании «сейчас» — берём <b>is + cooking</b>.",
+    rule:    "Для <b>he/she/it</b> → <b>is</b> + V-ing. Не путай с Present Simple (she cooks = вообще, по жизни)."
+  },
+  {
+    ru: "Мы смотрим фильм.",
+    correct: ["We","are","watching","a","movie"],
+    bank:    ["are","watching","We","movie","a","watch"], // "watch" — дистрактор
+    be:      "are",
+    ing:     {base:"watch", form:"watching"},
+    subject: "We",
+    why_ok:  "Верно! С <b>we/you/they</b> → <b>are</b>. <b>are watching</b> — процесс идёт сейчас.",
+    bridge:  "«Мы смотрим» по-русски — одно слово. В английском процесс «прямо сейчас» = <b>are</b> + <b>watching</b>. <b>are</b> — потому что <b>we</b> (мы/вы/они всегда берут are).",
+    rule:    "Для <b>we/you/they</b> → <b>are</b> + V-ing."
+  }
+];
+
+const answer = document.getElementById('answer');
+const bank   = document.getElementById('bank');
+const checkBtn = document.getElementById('check');
+let picked = [];
+let idx = 0;            // текущее задание
+let EX = ITEMS[idx];    // активный айтем
+
+function loadItem(){
+  EX = ITEMS[idx];
+  picked = [];
+  answer.innerHTML = '';
+  bank.innerHTML = '';
+  checkBtn.disabled = true;
+  checkBtn.classList.remove('ready');
+  // кино-reveal задания (по словам)
+  document.getElementById('task').innerHTML =
+    EX.ru.split(' ').map((w,i)=>`<span class="line"><span class="word" style="--i:${i}">${w}</span></span>`).join('');
+  // банк слов
+  EX.bank.forEach((w,i)=>{
+    const b=document.createElement('button');
+    b.className='tok'; b.textContent=w; b.dataset.i=i;
+    b.onclick=()=>pick(b,w);
+    bank.appendChild(b);
+  });
+}
+loadItem();
+
+/* динамический разбор ИМЕННО твоей ошибки (фича против Duolingo).
+   Не просто «лишнее/не хватает», а ПОЧЕМУ — на человеческом языке, под конкретный тип ошибки. */
+function explainError(got, correct){
+  const extra   = got.filter(w=>!correct.includes(w));                 // лишние слова
+  const missing = correct.filter(w=>!got.includes(w));                // пропущенные
+  const sameSet = extra.length===0 && missing.length===0;
+
+  // 1) перепутал форму be для лица (взял am/are вместо is и т.п.) — проверяем ПЕРВЫМ
+  const wrongBe = extra.find(w=>['am','is','are'].includes(w) && w!==EX.be);
+  if(wrongBe && missing.includes(EX.be)){
+    return `С «<b>${EX.subject}</b>» нужен <b>${EX.be}</b>, а не <b>${wrongBe}</b>. `+
+           `Привязка жёсткая: <b>I → am</b>, <b>he/she/it → is</b>, <b>we/you/they → are</b>.`;
+  }
+  // 2) забыл вспомогательный be (am/is/are) совсем
+  if(missing.includes(EX.be) && !got.includes(EX.be)){
+    return `Не хватает слова <b>${EX.be}</b> — это вспомогательный глагол. `+
+           `В английском «прямо сейчас» нельзя сказать без него: <b>${EX.subject} ${EX.be} ${EX.ing.form}</b>. `+
+           `Само <b>${EX.ing.form}</b> без <b>${EX.be}</b> «повисает» в воздухе.`;
+  }
+  // 3) взял голый глагол вместо -ing (read вместо reading)
+  if(extra.includes(EX.ing.base) && missing.includes(EX.ing.form)){
+    return `Тут нужна форма с <b>-ing</b>: <b>${EX.ing.form}</b>, а не <b>${EX.ing.base}</b>. `+
+           `<b>-ing</b> показывает, что действие <b>идёт прямо сейчас</b>, а не «вообще по жизни».`;
+  }
+  // 4) слова верные — только порядок
+  if(sameSet){
+    return `Слова все верные — сбит только <b>порядок</b>. `+
+           `Каркас фразы: <b>кто → ${EX.be} → действие(-ing) → остальное</b>.`;
+  }
+  // 5) общий случай (лишнее/пропущенное)
+  let msg = '';
+  if(extra.length)   msg += `Лишнее: <b>${extra.join(', ')}</b>. `;
+  if(missing.length) msg += `Не хватает: <b>${missing.join(', ')}</b>. `;
+  msg += `Собери по каркасу: <b>${EX.subject} ${EX.be} ${EX.ing.form}…</b>`;
+  return msg;
+}
+
+function haptic(ms){ if(navigator.vibrate) navigator.vibrate(ms); }
+
+function syncCheck(){
+  const has = picked.length>0;
+  checkBtn.disabled = !has;
+  checkBtn.classList.toggle('ready', has);
+}
+
+/* плавный перелёт клона из банка в поле ответа (FLIP) */
+function flyWord(fromEl, toEl, w){
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(reduce) return;
+  const a = fromEl.getBoundingClientRect();
+  const b = toEl.getBoundingClientRect();
+  const ghost = document.createElement('div');
+  ghost.className = 'fly'; ghost.textContent = w;
+  ghost.style.left = a.left+'px'; ghost.style.top = a.top+'px';
+  document.body.appendChild(ghost);
+  toEl.style.visibility = 'hidden';            // прячем настоящий токен на время полёта
+  requestAnimationFrame(()=>{
+    ghost.style.left = b.left+'px'; ghost.style.top = b.top+'px';
+    ghost.style.transform = 'scale(1.04)';
+  });
+  setTimeout(()=>{ ghost.remove(); toEl.style.visibility=''; }, 330);
+}
+
+function pick(btn,w){
+  btn.classList.add('used');
+  picked.push({w, src:btn});
+  const t=document.createElement('button');
+  t.className='tok'; t.textContent=w;
+  t.onclick=()=>unpick(t,btn);
+  answer.appendChild(t);
+  flyWord(btn, t, w);
+  haptic(8);
+  syncCheck();
+}
+function unpick(tok,src){
+  tok.remove(); src.classList.remove('used');
+  picked = picked.filter(p=>p.src!==src);
+  syncCheck();
+}
+
+function setProg(p){ document.getElementById('prog').style.width=p+'%'; }
+setProg(64); // демо: середина урока
+
+function check(){
+  const got = picked.map(p=>p.w);
+  const ok = JSON.stringify(got)===JSON.stringify(EX.correct);
+  const fb=document.getElementById('fb');
+  const head=document.getElementById('fbHead');
+  const why=document.getElementById('fbWhy');
+  const btn=document.getElementById('fbBtn');
+  checkBtn.disabled=true; checkBtn.classList.remove('ready');
+
+  if(ok){
+    head.innerHTML='✅ Отлично!';
+    why.innerHTML=EX.why_ok;
+    const last = idx >= ITEMS.length-1;
+    btn.textContent = last ? 'Тема пройдена ✓' : 'Дальше →';
+    btn.className='btn good2';
+    fb.className='fb good show';
+    confetti(); haptic([10,30,10]);
+    setProg(Math.round((idx+1)/ITEMS.length*100));
+    const s=document.getElementById('streak'); s.textContent=(+s.textContent+1);
+  }else{
+    head.innerHTML='Почти! Давай разберём';
+    // фича против Duolingo: разбор ИМЕННО твоей ошибки + раскрутка вглубь
+    hintLevel = 0;
+    why.innerHTML=explainError(got, EX.correct)+
+      ' <button class="why-btn" onclick="moreWhy()">почему так? →</button>';
+    btn.textContent='Понятно, ещё раз'; btn.className='btn bad2';
+    fb.className='fb bad show';
+    document.querySelector('.stage').classList.add('shake');
+    setTimeout(()=>document.querySelector('.stage').classList.remove('shake'),400);
+    haptic([40,60,40]);
+    const h=document.getElementById('hearts'); h.textContent=Math.max(0,+h.textContent-1);
+  }
+}
+
+/* раскрутка подсказки вглубь: разбор → мостик с русского → сухое правило */
+let hintLevel = 0;
+function moreWhy(){
+  const why = document.getElementById('fbWhy');
+  hintLevel++;
+  if(hintLevel===1){
+    // уровень 2 — «мостик»: связываем с родным языком (ага-момент)
+    why.innerHTML = `<span class="hint-tag">🧠 На пальцах</span><br>${EX.bridge}`+
+      ' <button class="why-btn" onclick="moreWhy()">короткое правило →</button>';
+  }else{
+    // уровень 3 — сухая формула, чтобы запомнить
+    why.innerHTML = `<span class="hint-tag">📌 Правило</span><br>${EX.rule}`;
+  }
+}
+
+function next(){
+  const fb=document.getElementById('fb');
+  const wasGood = fb.classList.contains('good');
+  fb.classList.remove('show');
+  setTimeout(()=>{
+    if(wasGood && idx < ITEMS.length-1){
+      idx++;            // верный ответ → следующее задание
+      loadItem();
+    }else if(wasGood){
+      // тема пройдена — в демо стартуем заново с первого
+      idx=0; loadItem(); setProg(0);
+    }else{
+      // ошибка → то же задание, но поле чистое для новой попытки
+      picked=[]; answer.innerHTML='';
+      document.querySelectorAll('.bank .tok').forEach(t=>t.classList.remove('used'));
+      syncCheck();
+    }
+  },350);
+}
+
+function confetti(){
+  const box=document.getElementById('confetti');
+  const colors=['#7c5cff','#5ce0c8','#ff5c9d','#fbbf24','#4ade80'];
+  for(let i=0;i<70;i++){
+    const s=document.createElement('span');
+    s.style.left=Math.random()*100+'%';
+    s.style.background=colors[i%colors.length];
+    s.style.animationDelay=(Math.random()*.25)+'s';
+    s.style.transform='rotate('+(Math.random()*360)+'deg)';
+    box.appendChild(s);
+    setTimeout(()=>s.remove(),1400);
+  }
+}
+</script>
+</body>
+</html>

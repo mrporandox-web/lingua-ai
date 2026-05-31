@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Lingua-AI — прототип ядра</title>
+<style>
+  :root{
+    --bg:#0a0a0f; --card:#15151f; --card2:#1d1d2b; --line:#2a2a3a;
+    --txt:#e8e8f0; --dim:#9090a8; --accent:#7c5cff; --accent2:#5ce0c8;
+    --ok:#4ade80; --bad:#f87171; --warn:#fbbf24;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    line-height:1.5;min-height:100vh;display:flex;justify-content:center}
+  .app{width:100%;max-width:460px;padding:20px 16px 60px}
+  header{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex;align-items:center;justify-content:center;font-size:18px}
+  h1{font-size:17px;font-weight:700}
+  .sub{font-size:12px;color:var(--dim)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px;
+    animation:rise .35s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .q{font-size:16px;font-weight:600;margin-bottom:16px}
+  .qmeta{font-size:11px;color:var(--dim);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+  .opt{display:block;width:100%;text-align:left;background:var(--card2);border:1.5px solid var(--line);
+    color:var(--txt);padding:13px 15px;border-radius:11px;margin-bottom:9px;font-size:15px;cursor:pointer;
+    transition:.15s;font-family:inherit}
+  .opt:hover{border-color:var(--accent)}
+  .opt.ok{border-color:var(--ok);background:rgba(74,222,128,.12)}
+  .opt.bad{border-color:var(--bad);background:rgba(248,113,113,.12)}
+  .opt:disabled{cursor:default}
+  .bar{height:6px;background:var(--card2);border-radius:99px;overflow:hidden;margin-bottom:18px}
+  .bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transition:width .4s ease;border-radius:99px}
+  .btn{display:block;width:100%;background:linear-gradient(135deg,var(--accent),#6a4cff);color:#fff;border:none;
+    padding:15px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:6px}
+  .btn.sec{background:var(--card2);border:1px solid var(--line)}
+  .pill{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:99px;
+    padding:4px 11px;font-size:12px;color:var(--dim);margin:0 5px 5px 0}
+  .pill.hot{border-color:var(--bad);color:#ffb4b4}
+  .big{font-size:40px;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--accent));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin:6px 0}
+  .lbl{font-size:12px;color:var(--dim);text-align:center;text-transform:uppercase;letter-spacing:1px}
+  .conceptTag{font-size:11px;color:var(--accent2);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+  .teach{background:var(--card2);border-left:3px solid var(--accent);padding:13px 15px;border-radius:0 10px 10px 0;
+    margin-bottom:16px;font-size:14px;white-space:pre-line}
+  .row{display:flex;gap:8px;margin-top:10px}
+  .row .btn{margin-top:0}
+  .fb{font-size:14px;padding:11px 14px;border-radius:10px;margin:10px 0;font-weight:500}
+  .fb.ok{background:rgba(74,222,128,.12);color:#a7f3c4}
+  .fb.bad{background:rgba(248,113,113,.12);color:#ffc4c4}
+  .scoreRow{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+  .scoreRow:last-child{border:none}
+  .scoreBar{flex:1;height:8px;background:var(--card2);border-radius:99px;margin:0 12px;overflow:hidden}
+  .scoreBar > i{display:block;height:100%;border-radius:99px;transition:width .6s ease}
+  .winner{color:var(--accent2);font-weight:700}
+  .note{font-size:12px;color:var(--dim);margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+  .speak{text-align:center;padding:8px 0}
+  .mic{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none;color:#fff;font-size:32px;margin:14px auto;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .mic.rec{animation:pulse 1s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(124,92,255,.5)}50%{box-shadow:0 0 0 16px rgba(124,92,255,0)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">🎓</div>
+    <div><h1>Lingua-AI</h1><div class="sub">прототип ядра · диагностика + движок концепций</div></div>
+  </header>
+  <div id="root"></div>
+</div>
+
+<script>
+// ============ ДАННЫЕ ============
+// Адаптивный placement-тест: вопросы по уровням, движемся вверх/вниз
+const QUESTIONS = [
+  {lvl:'A1', topic:'present-simple', q:'She ___ coffee every morning.', opts:['drink','drinks','drinking'], a:1},
+  {lvl:'A1', topic:'articles', q:'I have ___ apple.', opts:['a','an','the'], a:1},
+  {lvl:'A2', topic:'present-continuous', q:'Look! It ___ right now.', opts:['rains','is raining','rain'], a:1},
+  {lvl:'A2', topic:'past-simple', q:'We ___ to Paris last year.', opts:['go','went','gone'], a:1},
+  {lvl:'B1', topic:'present-perfect', q:'I ___ never ___ sushi.', opts:['have / eaten','did / eat','am / eating'], a:0},
+  {lvl:'B1', topic:'conditionals', q:'If I ___ rich, I would travel.', opts:['am','were','will be'], a:1},
+  {lvl:'B2', topic:'passive', q:'The bridge ___ in 1990.', opts:['built','was built','has built'], a:1},
+  {lvl:'B2', topic:'reported', q:'He said he ___ tired.', opts:['is','was','will be'], a:1},
+  {lvl:'C1', topic:'inversion', q:'Never ___ such a thing.', opts:['I have seen','have I seen','I saw'], a:1},
+  {lvl:'C1', topic:'phrasal', q:'She ___ the offer despite the risk.', opts:['took up','put off','gave in'], a:0},
+];
+const LVL_ORDER=['A1','A2','B1','B2','C1','C2'];
+
+// 3 концепции подачи темы present simple vs continuous
+const CONCEPTS = [
+  {
+    id:'rule-first', name:'Правило сначала',
+    teach:'ПРАВИЛО:\n• Present Simple — регулярное, привычка, факт. Маркеры: every day, usually, always.\n• Present Continuous — прямо сейчас, в процессе. Маркеры: now, look!, at the moment.\n\nФормула: He works (simple) / He is working (continuous).'
+  },
+  {
+    id:'examples-first', name:'Через примеры',
+    teach:'Смотри на пары и почувствуй разницу сам:\n\n• I drink tea. → I am drinking tea now.\n• She reads books. → She is reading a book at the moment.\n• They play football on Sundays. → Look, they are playing football!\n\nЗаметил? Левое — вообще/всегда. Правое — в этот момент.'
+  },
+  {
+    id:'contrast-native', name:'Сравнение с русским',
+    teach:'В русском мы НЕ различаем это временами, а англичане — да:\n\n«Я работаю» может значить:\n• «Я работаю программистом» (вообще) → I work\n• «Я работаю прямо сейчас, не мешай» → I am working\n\nАнглийский заставляет ВЫБРАТЬ: факт это или процесс прямо сейчас.'
+  },
+];
+
+// Упражнения для проверки концепции (одинаковые по сложности)
+const DRILLS = [
+  {q:'My brother ___ in a bank.', opts:['works','is working'], a:0, hint:'вообще, работа'},
+  {q:'Be quiet! The baby ___.', opts:['sleeps','is sleeping'], a:1, hint:'прямо сейчас'},
+  {q:'Water ___ at 100°C.', opts:['boils','is boiling'], a:0, hint:'факт всегда'},
+  {q:'Why ___ you ___ at me? Stop it!', opts:['do / look','are / looking'], a:1, hint:'в этот момент'},
+  {q:'She usually ___ to work by bus.', opts:['goes','is going'], a:0, hint:'маркер usually'},
+  {q:'Listen! Someone ___ the piano.', opts:['plays','is playing'], a:1, hint:'listen = сейчас'},
+];
+
+// ============ СОСТОЯНИЕ (профиль ученика) ============
+let profile = {
+  cefr:'A1', skills:{grammar:0}, weak_topics:[],
+  concept_scores:{}, // {conceptId:{correct,total}}
+  preferred_concept:null,
+};
+let testIdx=0, testLvlPtr=0, correctStreak=0, wrongStreak=0, answered=[];
+let conceptOrder=[], conceptPtr=0, drillPtr=0, curConcept=null;
+
+const root=document.getElementById('root');
+
+// ============ ЭКРАН 1: ДИАГНОСТИКА ============
+function renderTest(){
+  // подбираем вопрос близкий к текущему уровню (адаптив)
+  const targetLvl=LVL_ORDER[testLvlPtr];
+  let pool=QUESTIONS.filter((q,i)=>!answered.includes(i)&&q.lvl===targetLvl);
+  if(!pool.length) pool=QUESTIONS.filter((q,i)=>!answered.includes(i));
+  if(!pool.length||answered.length>=7){return finishTest();}
+  const qi=QUESTIONS.indexOf(pool[0]);
+  const Q=QUESTIONS[qi];
+  const prog=Math.round(answered.length/7*100);
+  root.innerHTML=`
+    <div class="bar"><i style="width:${prog}%"></i></div>
+    <div class="card">
+      <div class="qmeta">Диагностика · уровень ${Q.lvl} · вопрос ${answered.length+1}/7</div>
+      <div class="q">${Q.q}</div>
+      <div id="opts"></div>
+    </div>
+    <div class="sub" style="text-align:center">Тест подстраивается: ответил верно → сложнее, ошибся → проще</div>`;
+  const o=document.getElementById('opts');
+  Q.opts.forEach((opt,idx)=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=opt;
+    b.onclick=()=>{
+      answered.push(qi);
+      const right=idx===Q.a;
+      [...o.children].forEach((c,ci)=>{c.disabled=true;if(ci===Q.a)c.classList.add('ok');else if(ci===idx)c.classList.add('bad')});
+      // адаптив + запись слабой темы
+      if(right){correctStreak++;wrongStreak=0;if(correctStreak>=1&&testLvlPtr<LVL_ORDER.length-1){testLvlPtr++;correctStreak=0}}
+      else{wrongStreak++;correctStreak=0;profile.weak_topics.push(Q.topic);if(testLvlPtr>0)testLvlPtr--}
+      setTimeout(renderTest,750);
+    };
+    o.appendChild(b);
+  });
+}
+
+function finishTest(){
+  // оценка уровня = достигнутый ptr
+  const reached=Math.max(0,testLvlPtr);
+  profile.cefr=LVL_ORDER[Math.min(reached,LVL_ORDER.length-1)];
+  const acc=Math.round((answered.length-profile.weak_topics.length)/answered.length*100);
+  profile.skills.grammar=acc;
+  const weak=[...new Set(profile.weak_topics)];
+  root.innerHTML=`
+    <div class="card">
+      <div class="lbl">Твой уровень</div>
+      <div class="big">${profile.cefr}</div>
+      <div style="text-align:center;color:var(--dim);font-size:13px;margin-bottom:16px">грамматика ~${acc}% точности</div>
+      <div class="lbl" style="text-align:left;margin-bottom:8px">Слабые темы (фокус обучения):</div>
+      <div>${weak.length?weak.map(w=>`<span class="pill hot">${w}</span>`).join(''):'<span class="pill">база крепкая 👍</span>'}</div>
+      <div class="note">Профиль создан. Дальше — движок концепций: одну тему покажу <b>3 разными способами</b> и замерю, какой работает на ТЕБЕ лучше.</div>
+    </div>
+    <button class="btn" onclick="startConcepts()">Начать урок: Present Simple vs Continuous →</button>`;
+}
+
+// ============ ЭКРАН 2: ДВИЖОК КОНЦЕПЦИЙ ============
+function startConcepts(){
+  // перемешиваем порядок концепций (чтобы не было bias первой)
+  conceptOrder=[...CONCEPTS].sort(()=>Math.random()-0.5);
+  CONCEPTS.forEach(c=>profile.concept_scores[c.id]={correct:0,total:0});
+  conceptPtr=0;drillPtr=0;
+  renderConcept();
+}
+
+function renderConcept(){
+  if(conceptPtr>=conceptOrder.length){return finishConcepts();}
+  curConcept=conceptOrder[conceptPtr];
+  root.innerHTML=`
+    <div class="bar"><i style="width:${Math.round(conceptPtr/conceptOrder.length*100)}%"></i></div>
+    <div class="card">
+      <div class="conceptTag">Концепция ${conceptPtr+1}/3 · ${curConcept.name}</div>
+      <div class="teach">${curConcept.teach}</div>
+      <button class="btn" onclick="startDrill()">Понятно, проверь меня →</button>
+    </div>
+    <div class="sub" style="text-align:center">Каждый способ объясняет одно и то же. Замеряем, где ты отвечаешь точнее.</div>`;
+}
+
+function startDrill(){drillPtr=0;renderDrill();}
+
+function renderDrill(){
+  // 2 упражнения на концепцию
+  const perConcept=2;
+  if(drillPtr>=perConcept){conceptPtr++;return renderConcept();}
+  const D=DRILLS[(conceptPtr*perConcept+drillPtr)%DRILLS.length];
+  root.innerHTML=`
+    <div class="card">
+      <div class="conceptTag">${curConcept.name} · упр ${drillPtr+1}/${perConcept}</div>
+      <div class="q">${D.q}</div>
+      <div id="opts"></div>
+      <div id="fb"></div>
+    </div>`;
+  const o=document.getElementById('opts');
+  D.opts.forEach((opt,idx)=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=opt;
+    b.onclick=()=>{
+      const right=idx===D.a;
+      profile.concept_scores[curConcept.id].total++;
+      if(right)profile.concept_scores[curConcept.id].correct++;
+      [...o.children].forEach((c,ci)=>{c.disabled=true;if(ci===D.a)c.classList.add('ok');else if(ci===idx)c.classList.add('bad')});
+      document.getElementById('fb').innerHTML=`<div class="fb ${right?'ok':'bad'}">${right?'✅ Верно!':'❌ Не то.'} Подсказка: <b>${D.hint}</b></div>`;
+      drillPtr++;
+      setTimeout(renderDrill,1100);
+    };
+    o.appendChild(b);
+  });
+}
+
+// ============ ЭКРАН 3: РЕЗУЛЬТАТ ЗАМЕРА (ядро-магия) ============
+function finishConcepts(){
+  const scores=CONCEPTS.map(c=>{
+    const s=profile.concept_scores[c.id];
+    return {...c, pct: s.total?Math.round(s.correct/s.total*100):0, ...s};
+  }).sort((a,b)=>b.pct-a.pct);
+  profile.preferred_concept=scores[0].id;
+  const colors={'rule-first':'#7c5cff','examples-first':'#5ce0c8','contrast-native':'#fbbf24'};
+  root.innerHTML=`
+    <div class="card">
+      <div class="lbl">Замер завершён</div>
+      <div style="text-align:center;font-size:15px;margin:10px 0 18px">Лучше всего ты усвоил тему через:<br><span class="big" style="font-size:22px">${scores[0].name}</span></div>
+      ${scores.map(s=>`
+        <div class="scoreRow">
+          <span class="${s.id===profile.preferred_concept?'winner':''}" style="font-size:13px;width:130px">${s.name}</span>
+          <div class="scoreBar"><i style="width:${s.pct}%;background:${colors[s.id]}"></i></div>
+          <span style="font-size:13px;width:42px;text-align:right">${s.pct}%</span>
+        </div>`).join('')}
+      <div class="note">🧠 <b>Это ядро продукта.</b> Система запомнила: тебя эффективнее учить способом «${scores[0].name}». Дальше новые темы пойдут преимущественно так — но иногда система пробует другой способ (вдруг ты вырос). Именно этого нет у Duolingo: он учит всех одинаково.</div>
+    </div>
+    <button class="btn" onclick="renderSpeak()">Демо: модуль Speaking (v2) →</button>
+    <button class="btn sec" onclick="dumpProfile()" style="margin-top:10px">Показать профиль ученика (JSON)</button>`;
+}
+
+// ============ ЭКРАН 4: SPEAKING (демо-заглушка) ============
+function renderSpeak(){
+  root.innerHTML=`
+    <div class="card speak">
+      <div class="conceptTag">Модуль Speaking · демо (v2)</div>
+      <div class="q" style="margin-bottom:4px">Скажи вслух:</div>
+      <div style="font-size:19px;color:var(--accent2);font-weight:700;margin-bottom:6px">"She is reading a book now."</div>
+      <button class="mic" id="mic">🎤</button>
+      <div id="sres" class="sub">Нажми и говори (демонстрация UX)</div>
+      <div class="note" style="text-align:left">⚠️ Честно: оценка произношения = STT (Whisper) + анализ фонетики. Это самый дорогой/хрупкий кусок, поэтому в реальном продукте включается ОТДЕЛЬНО после прототипа. Тут — только UX-демо, без реального распознавания.</div>
+    </div>
+    <button class="btn sec" onclick="finishConcepts()">← Назад к замеру</button>`;
+  const mic=document.getElementById('mic'),sres=document.getElementById('sres');
+  mic.onclick=()=>{
+    mic.classList.add('rec');sres.textContent='🔴 Слушаю...';
+    setTimeout(()=>{mic.classList.remove('rec');
+      sres.innerHTML='<span style="color:var(--ok)">✅ Распознано: "She is reading a book now" · беглость 82% · 1 неточность в "reading"</span>';
+    },1800);
+  };
+}
+
+function dumpProfile(){
+  root.innerHTML=`
+    <div class="card">
+      <div class="conceptTag">Профиль ученика (то, что хранит система)</div>
+      <pre style="font-size:11px;color:var(--accent2);white-space:pre-wrap;background:var(--card2);padding:14px;border-radius:10px;overflow:auto">${JSON.stringify(profile,null,2)}</pre>
+      <div class="note">Эта запись живёт на каждого юзера. Перед каждым уроком AI её читает и подстраивает подачу. Это и есть «движок памяти про ученика».</div>
+    </div>
+    <button class="btn" onclick="location.reload()">↻ Пройти заново</button>`;
+}
+
+// старт
+renderTest();
+</script>
+</body>
+</html>
