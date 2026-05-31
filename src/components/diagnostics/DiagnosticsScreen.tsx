@@ -21,6 +21,7 @@ import {
   type PlacementState,
 } from "@/lib/placement/engine";
 import { getProfileStore } from "@/lib/store";
+import { topicLabel } from "@/lib/pedagogy";
 
 // Лёгкая тактильная отдача (как в уроке) — без падений на десктопе.
 function haptic(pattern: number | number[]) {
@@ -29,23 +30,7 @@ function haptic(pattern: number | number[]) {
   }
 }
 
-// Человекочитаемая подпись слабой темы для финиша (ключ → русский текст).
-const TOPIC_LABEL: Record<string, string> = {
-  "to-be": "глагол to be",
-  articles: "артикли",
-  "past-simple": "Past Simple",
-  comparatives: "сравнительная степень",
-  "present-perfect": "Present Perfect",
-  "first-conditional": "1-й тип условия",
-  "passive-voice": "пассивный залог",
-  "reported-speech": "косвенная речь",
-  inversion: "инверсия",
-  "mixed-conditionals": "смешанные условия",
-};
-
-function topicLabel(topic: string): string {
-  return TOPIC_LABEL[topic] ?? topic;
-}
+// Подпись слабой темы — общий модуль @/lib/pedagogy (topicLabel).
 
 export function DiagnosticsScreen() {
   const router = useRouter();

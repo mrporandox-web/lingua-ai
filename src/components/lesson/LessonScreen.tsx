@@ -7,6 +7,7 @@
 // сердца / стрик / прогресс. ITEMS и explainError — из src/lib/lesson/items.ts.
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   ITEMS,
   explainFor,
@@ -466,7 +467,9 @@ export function LessonScreen() {
         <div className="prog">
           <i style={{ width: `${prog}%` }} />
         </div>
-        <div className="streak">🔥 <span>{streak}</span></div>
+        <Link href="/profile" className="streak" aria-label="Мой профиль">
+          🔥 <span>{streak}</span>
+        </Link>
         <div className="hearts">❤ <span>{hearts}</span></div>
       </div>
 

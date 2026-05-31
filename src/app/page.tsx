@@ -54,6 +54,18 @@ export default function Home() {
           >
             Посмотреть урок без теста
           </Link>
+          <Link
+            href="/profile"
+            className="hintline"
+            style={{
+              display: "block",
+              textAlign: "center",
+              marginTop: "var(--s2)",
+              fontSize: "13px",
+            }}
+          >
+            Мой профиль
+          </Link>
         </div>
       </div>
     </div>
