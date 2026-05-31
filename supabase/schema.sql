@@ -16,6 +16,11 @@ create table if not exists public.profiles (
   created_at        timestamptz not null default now(),
   updated_at        timestamptz not null default now(),
 
+  -- имя для обращения (спрашиваем при знакомстве); null до онбординга
+  name              text,
+  -- { plan: free|premium, status, renewsAt } — тариф/статус оплаты
+  subscription      jsonb not null default '{"plan":"free","status":"none","renewsAt":null}'::jsonb,
+
   onboarded         boolean not null default false,
   goal              text,
   cefr_level        text check (cefr_level in ('A1','A2','B1','B2','C1','C2')),
@@ -47,6 +52,13 @@ create table if not exists public.profiles (
 );
 
 create index if not exists profiles_user_id_idx on public.profiles (user_id);
+
+-- ── Миграция существующей таблицы (идемпотентно) ────────────────────────────
+-- Добавляет name/subscription к уже созданной profiles. Безопасно гонять
+-- повторно. До прогона приложение деградирует мягко (имя живёт в localStorage).
+alter table public.profiles add column if not exists name text;
+alter table public.profiles add column if not exists subscription jsonb
+  not null default '{"plan":"free","status":"none","renewsAt":null}'::jsonb;
 
 -- ── Лог событий обучения (для накопления сигнала концепций / аналитики) ──────
 -- Минимальный аппендли-лог. Pedagogy Engine читает его, чтобы считать

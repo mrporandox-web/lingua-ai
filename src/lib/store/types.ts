@@ -42,6 +42,16 @@ export interface ConceptScore {
   n: number; // число сессий накопления (анти-шум: решаем после 3–5)
 }
 
+/** Тариф подписки. v1: free по умолчанию; premium — после оплаты. */
+export type SubscriptionPlan = "free" | "premium";
+
+/** Подписка ученика (биллинг подключим позже — пока статус ведём в профиле). */
+export interface Subscription {
+  plan: SubscriptionPlan;
+  status: "none" | "trialing" | "active" | "canceled"; // состояние оплаты
+  renewsAt: string | null; // ISO-дата следующего списания (null для free)
+}
+
 /** Геймификация — долгая история мотивации (стрик занятий по дням).
  *  Сердца в профиле НЕ держим: они про «текущую попытку урока», а не про
  *  историю — живут в локальном state экрана и сбрасываются каждым уроком. */
@@ -68,6 +78,8 @@ export interface UserProfile {
   id: string; // анонимный id (uuid)
   createdAt: string; // ISO
   updatedAt: string; // ISO
+  name: string | null; // имя для обращения (спрашиваем при знакомстве); null до онбординга
+  subscription: Subscription; // тариф/статус оплаты
   onboarded: boolean; // прошёл онбординг
   goal: string | null; // цель/мотивация (свободный текст)
   cefrLevel: CefrLevel | null; // null до диагностики
@@ -94,12 +106,19 @@ export function emptyGamification(): Gamification {
   return { streak: 0, bestStreak: 0, lastActiveDate: null };
 }
 
+/** Дефолтная подписка нового ученика (бесплатный тариф, без оплаты). */
+export function emptySubscription(): Subscription {
+  return { plan: "free", status: "none", renewsAt: null };
+}
+
 /** Создать чистый профиль нового анонимного ученика. */
 export function createEmptyProfile(id: string, now: string): UserProfile {
   return {
     id,
     createdAt: now,
     updatedAt: now,
+    name: null,
+    subscription: emptySubscription(),
     onboarded: false,
     goal: null,
     cefrLevel: null,

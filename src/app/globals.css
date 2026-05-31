@@ -1005,7 +1005,56 @@ body {
   border-top: 1px solid var(--line);
 }
 
+/* Поле ввода имени на шаге знакомства. */
+.nameInput {
+  display: block;
+  width: 100%;
+  background: var(--card2);
+  border: 1.5px solid var(--line);
+  color: var(--txt);
+  padding: 13px 15px;
+  border-radius: 11px;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.nameInput:focus {
+  border-color: var(--accent);
+}
+.nameInput::placeholder {
+  color: var(--dim);
+}
+
 /* ── Экран профиля (витрина движка памяти) ───────────────────────────────── */
+/* Имя ученика в шапке профиля. */
+.nameHead {
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 4px;
+}
+/* Строка тарифа: бейдж + статус. */
+.subRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.planBadge {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 99px;
+  padding: 3px 12px;
+}
+.planBadge.free {
+  color: var(--dim);
+  border: 1px solid var(--line);
+}
+.planBadge.premium {
+  color: #1a1024;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+}
 /* Ряд стрик/рекорд под уровнем. */
 .streakRow {
   display: flex;

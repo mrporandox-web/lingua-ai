@@ -48,6 +48,26 @@ export function DiagnosticsScreen() {
   const [result, setResult] = useState<PlacementResult | null>(null);
   const [saving, setSaving] = useState(false);
 
+  // Шаг знакомства: имя ученика. greeted=false → сперва спрашиваем имя,
+  // потом тест. Имя сохраняем в профиль, чтобы обращаться по нему дальше.
+  const [greeted, setGreeted] = useState(false);
+  const [nameInput, setNameInput] = useState("");
+  const [savedName, setSavedName] = useState<string | null>(null);
+
+  // Подтвердить имя (или пропустить) → сохранить в профиль и начать тест.
+  const onGreet = useCallback(async () => {
+    const clean = nameInput.trim().slice(0, 40);
+    setSavedName(clean || null);
+    setGreeted(true);
+    try {
+      const store = getProfileStore();
+      await store.getOrCreate();
+      await store.patch({ name: clean || null });
+    } catch (e) {
+      console.warn("[diagnostics] не удалось сохранить имя:", e);
+    }
+  }, [nameInput]);
+
   // Сколько вопросов уже отвечено и доля прогресса (для .bar).
   const answered = state.asked.length;
   const progress = useMemo(
@@ -107,7 +127,17 @@ export function DiagnosticsScreen() {
     getProfileStore()
       .load()
       .then((p) => {
-        if (alive && p?.onboarded) router.replace("/lesson");
+        if (!alive) return;
+        if (p?.onboarded) {
+          router.replace("/lesson");
+          return;
+        }
+        // Имя уже знаем (вернулись посреди онбординга) — пропускаем знакомство.
+        if (p?.name) {
+          setSavedName(p.name);
+          setNameInput(p.name);
+          setGreeted(true);
+        }
       });
     return () => {
       alive = false;
@@ -125,13 +155,41 @@ export function DiagnosticsScreen() {
 
       {/* подпись-чип: что это за экран */}
       <div className="chip">
-        <span className="dot" /> Диагностика уровня
+        <span className="dot" /> {greeted ? "Диагностика уровня" : "Знакомство"}
       </div>
 
-      {result ? (
+      {!greeted ? (
+        // === Шаг знакомства: спрашиваем имя до теста ===
+        <div className="card" key="greet">
+          <div className="q">Давай познакомимся 👋</div>
+          <p className="hintline" style={{ marginBottom: 14 }}>
+            Как тебя зовут? Буду обращаться по имени — так уютнее учиться.
+          </p>
+          <input
+            className="nameInput"
+            type="text"
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && onGreet()}
+            placeholder="Твоё имя"
+            maxLength={40}
+            autoFocus
+            aria-label="Твоё имя"
+          />
+          <button
+            className="btn go ready"
+            style={{ display: "block", width: "100%", marginTop: 14 }}
+            onClick={onGreet}
+          >
+            {nameInput.trim() ? "Приятно познакомиться →" : "Пропустить →"}
+          </button>
+        </div>
+      ) : result ? (
         // === Финишный экран: уровень + точность + слабые темы ===
         <div className="card" key="result">
-          <div className="lbl">Твой уровень</div>
+          <div className="lbl">
+            {savedName ? `${savedName}, твой уровень` : "Твой уровень"}
+          </div>
           <div className="big">{result.cefrLevel}</div>
           <div className="lbl">Грамматика — {result.grammarAccuracy}% верных</div>
 

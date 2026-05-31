@@ -104,8 +104,9 @@ function ProfileBody({ profile }: { profile: UserProfile }) {
 
   return (
     <>
-      {/* Уровень + стрик */}
+      {/* Имя + уровень + стрик */}
       <div className="card">
+        {profile.name && <div className="nameHead">{profile.name}</div>}
         <div className="lbl">Твой уровень</div>
         <div className="big">{profile.cefrLevel}</div>
         <div className="streakRow">
@@ -113,6 +114,10 @@ function ProfileBody({ profile }: { profile: UserProfile }) {
           <span>🏆 Рекорд: <b>{g.bestStreak}</b> дн.</span>
         </div>
       </div>
+
+      {/* Подписка */}
+      <SubscriptionCard profile={profile} />
+
 
       {/* Карта навыков */}
       <div className="card">
@@ -154,6 +159,43 @@ function ProfileBody({ profile }: { profile: UserProfile }) {
         </div>
       )}
     </>
+  );
+}
+
+// Карточка подписки: тариф + статус. Биллинг подключим позже — пока
+// показываем текущий план (free по умолчанию) и CTA на премиум.
+function SubscriptionCard({ profile }: { profile: UserProfile }) {
+  const sub = profile.subscription;
+  const isPremium = sub.plan === "premium";
+  const renews =
+    sub.renewsAt &&
+    new Date(sub.renewsAt).toLocaleDateString("ru-RU", {
+      day: "numeric",
+      month: "long",
+    });
+
+  return (
+    <div className="card">
+      <div className="qmeta">Подписка</div>
+      <div className="subRow">
+        <span className={`planBadge ${isPremium ? "premium" : "free"}`}>
+          {isPremium ? "✦ Premium" : "Free"}
+        </span>
+        <span className="skillPct">
+          {isPremium
+            ? renews
+              ? `продление ${renews}`
+              : "активна"
+            : "базовый доступ"}
+        </span>
+      </div>
+      {!isPremium && (
+        <p className="note" style={{ borderTop: "none", marginTop: 10 }}>
+          Premium откроет безлимитные уроки, аудирование и speaking. Подключим
+          оплату — будет доступно здесь.
+        </p>
+      )}
+    </div>
   );
 }
 

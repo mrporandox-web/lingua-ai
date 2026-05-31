@@ -4,12 +4,14 @@ import type { ProfileStore } from "./store";
 import {
   createEmptyProfile,
   emptyGamification,
+  emptySubscription,
   type CefrLevel,
   type ConceptId,
   type ConceptScore,
   type Gamification,
   type Skills,
   type SrsItem,
+  type Subscription,
   type UserProfile,
   type WeakTopic,
 } from "./types";
@@ -30,6 +32,8 @@ interface ProfileRow {
   user_id: string;
   created_at: string;
   updated_at: string;
+  name: string | null; // может отсутствовать в старой схеме (миграция в schema.sql)
+  subscription: Subscription | null; // -//-
   onboarded: boolean;
   goal: string | null;
   cefr_level: CefrLevel | null;
@@ -46,6 +50,9 @@ function rowToProfile(row: ProfileRow): UserProfile {
     id: row.user_id, // id ученика = владелец строки (auth.uid)
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    // толерантность к старой схеме без колонок name/subscription → дефолты
+    name: row.name ?? null,
+    subscription: row.subscription ?? emptySubscription(),
     onboarded: row.onboarded,
     goal: row.goal,
     cefrLevel: row.cefr_level,
@@ -63,6 +70,8 @@ function rowToProfile(row: ProfileRow): UserProfile {
 function profileToRow(profile: UserProfile, userId: string) {
   return {
     user_id: userId,
+    name: profile.name,
+    subscription: profile.subscription,
     onboarded: profile.onboarded,
     goal: profile.goal,
     cefr_level: profile.cefrLevel,
@@ -73,6 +82,18 @@ function profileToRow(profile: UserProfile, userId: string) {
     srs_queue: profile.srsQueue,
     gamification: profile.gamification,
   };
+}
+
+// Колонки, которые могут отсутствовать в БД до миграции (schema.sql).
+// Если upsert падает на «нет такой колонки» — повторяем без них, чтобы прод
+// не ломался; облачная синхронизация этих полей включится после ALTER TABLE.
+const FORWARD_COMPAT_COLS = ["name", "subscription"] as const;
+
+/** Признак ошибки PostgREST «колонки нет в схеме» (код 42703 / PGRST204). */
+function isMissingColumnError(msg: string): boolean {
+  return /column .* does not exist|could not find the .* column|schema cache/i.test(
+    msg
+  );
 }
 
 export class SupabaseStore implements ProfileStore {
@@ -114,10 +135,23 @@ export class SupabaseStore implements ProfileStore {
 
   async save(profile: UserProfile): Promise<void> {
     const userId = await this.uid();
+    const row = profileToRow(profile, userId);
     const { error } = await this.sb
       .from("profiles")
-      .upsert(profileToRow(profile, userId), { onConflict: "user_id" });
-    if (error) throw new Error(`SupabaseStore.save: ${error.message}`);
+      .upsert(row, { onConflict: "user_id" });
+    if (!error) return;
+
+    // БД ещё не мигрирована (нет колонок name/subscription) → повтор без них.
+    if (isMissingColumnError(error.message)) {
+      const reduced = { ...row } as Record<string, unknown>;
+      for (const c of FORWARD_COMPAT_COLS) delete reduced[c];
+      const retry = await this.sb
+        .from("profiles")
+        .upsert(reduced, { onConflict: "user_id" });
+      if (!retry.error) return;
+      throw new Error(`SupabaseStore.save: ${retry.error.message}`);
+    }
+    throw new Error(`SupabaseStore.save: ${error.message}`);
   }
 
   async patch(partial: Partial<UserProfile>): Promise<UserProfile> {
