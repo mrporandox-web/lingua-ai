@@ -43,7 +43,7 @@ export default function Home() {
             Определить мой уровень →
           </Link>
           <Link
-            href="/lesson"
+            href="/course"
             className="hintline"
             style={{
               display: "block",
@@ -52,7 +52,7 @@ export default function Home() {
               fontSize: "13px",
             }}
           >
-            Посмотреть урок без теста
+            Программа курса
           </Link>
           <Link
             href="/profile"

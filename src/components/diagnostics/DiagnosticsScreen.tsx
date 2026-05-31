@@ -114,7 +114,7 @@ export function DiagnosticsScreen() {
         weakTopics: result.weakTopics,
         onboarded: true,
       });
-      router.push("/lesson");
+      router.push("/course");
     } catch (e) {
       console.warn("[diagnostics] не удалось сохранить профиль:", e);
       setSaving(false);
@@ -129,7 +129,7 @@ export function DiagnosticsScreen() {
       .then((p) => {
         if (!alive) return;
         if (p?.onboarded) {
-          router.replace("/lesson");
+          router.replace("/course");
           return;
         }
         // Имя уже знаем (вернулись посреди онбординга) — пропускаем знакомство.

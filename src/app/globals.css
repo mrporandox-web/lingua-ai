@@ -1005,6 +1005,113 @@ body {
   border-top: 1px solid var(--line);
 }
 
+/* ── Экран программы курса (карта юнитов/тем) ─────────────────────────────── */
+.courseHead {
+  margin-bottom: 14px;
+}
+.unitHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.unitTitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+.unitSub {
+  font-size: 12px;
+  color: var(--dim);
+  margin-top: 2px;
+}
+.unitCount {
+  font-size: 13px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+/* Линейный путь тем внутри юнита. */
+.path {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topicRow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  text-align: left;
+  background: var(--card2);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 13px;
+  font-family: inherit;
+  color: var(--txt);
+  cursor: pointer;
+  transition: 0.15s;
+}
+.topicRow.current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+.topicRow.done {
+  border-color: color-mix(in srgb, var(--ok) 55%, var(--line));
+}
+.topicRow:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.topicRow:not(:disabled):hover {
+  border-color: var(--accent);
+}
+/* Маркер статуса темы. */
+.topicDot {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+}
+.topicDot.current {
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  border-color: transparent;
+  color: #160e26;
+}
+.topicDot.done {
+  background: var(--ok);
+  border-color: transparent;
+  color: #06210f;
+}
+.topicMain {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.topicTitle {
+  font-size: 14px;
+  font-weight: 600;
+}
+.topicBlurb {
+  font-size: 12px;
+  color: var(--dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.topicPct {
+  font-size: 12px;
+  color: var(--ok);
+  font-variant-numeric: tabular-nums;
+}
+
 /* Поле ввода имени на шаге знакомства. */
 .nameInput {
   display: block;
