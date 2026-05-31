@@ -1,15 +1,28 @@
 "use client";
 
-// useTts — клиентский хук озвучки фразы через /api/tts (Фаза 4, listening).
+// useTts — клиентский хук озвучки фразы (Фаза 4, listening).
 //
-// Зачем кэш: один синтез на фразу. Повторное нажатие 🔊 на той же фразе (или
-// авто-проигрыш эталона после уже услышанной попытки) НЕ дёргает сеть второй
-// раз — берём готовый blob-URL из памяти. Урок шустрый, токены Gemini не жжём.
+// Порядок источников (от мгновенного к дорогому):
+//   1) Статика public/tts/<hash>.wav по манифесту — предзапечённые фразы урока.
+//      Играют мгновенно с CDN, БЕЗ запроса к Gemini и БЕЗ трат токенов.
+//   2) Рантайм-кэш blob-URL в памяти — для уже синтезированных в этой сессии.
+//   3) /api/tts — живой синтез (AI-сгенерированные фразы, которых нет в статике).
 //
 // Фолбэк-безопасно: нет аудио (204 / сеть / abort) → молча ничего не играем,
 // listening деградирует мягко, урок не ломается.
 
 import { useCallback, useEffect, useRef, useState } from "react";
+
+// Манифест предзапечённых фраз: { "<текст>": "<файл>.wav" }. Грузим один раз.
+let manifestPromise: Promise<Record<string, string>> | null = null;
+function loadManifest(): Promise<Record<string, string>> {
+  if (!manifestPromise) {
+    manifestPromise = fetch("/tts/manifest.json")
+      .then((r) => (r.ok ? r.json() : {}))
+      .catch(() => ({}));
+  }
+  return manifestPromise;
+}
 
 interface TtsState {
   /** идёт ли синтез/загрузка прямо сейчас (для спиннера на кнопке) */
@@ -53,13 +66,22 @@ export function useTts(): TtsState {
       const key = text.trim();
       if (!key) return;
 
-      // уже синтезировали — играем из кэша, сети нет
+      // 1) предзапечённая статика — мгновенно, без сети к Gemini и без токенов
+      const manifest = await loadManifest();
+      const staticFile = manifest[key];
+      if (staticFile) {
+        play(`/tts/${staticFile}`);
+        return;
+      }
+
+      // 2) уже синтезировали в этой сессии — играем из памяти
       const cached = cacheRef.current.get(key);
       if (cached) {
         play(cached);
         return;
       }
 
+      // 3) живой синтез через API (фразы вне статики, напр. AI-генерация)
       setLoading(true);
       try {
         const res = await fetch("/api/tts", {
