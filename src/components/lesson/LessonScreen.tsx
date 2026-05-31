@@ -16,7 +16,12 @@ import {
 } from "@/lib/lesson/items";
 import type { ConceptId, UserProfile } from "@/lib/store/types";
 import { CONCEPT_LABEL } from "@/lib/pedagogy";
-import { startSession, submitAnswer, scoreRetention } from "@/lib/learning";
+import {
+  startSession,
+  submitAnswer,
+  scoreRetention,
+  recordActivity,
+} from "@/lib/learning";
 import { useTts } from "@/lib/tts/useTts";
 
 // Какие концепции реально написаны для темы (есть в byConcept) + дефолт.
@@ -44,6 +49,10 @@ function selectWeakTopic(profile: UserProfile | null): string {
 }
 
 const CONFETTI_COLORS = ["#7c5cff", "#5ce0c8", "#ff5c9d", "#fbbf24", "#4ade80"];
+
+// Сердца («жизни») на ОДИН урок — не история, а текущая попытка: сбрасываются
+// каждым уроком, поэтому живут в локальном state, а не в профиле.
+const HEARTS_PER_LESSON = 5;
 
 type PickedTok = { id: number; word: string; bankIdx: number };
 
@@ -77,7 +86,10 @@ export function LessonScreen() {
   useEffect(() => {
     let alive = true;
     startSession(items[0].topic, availableConcepts(items[0])).then((plan) => {
-      if (alive) setProfile(plan.profile);
+      if (!alive) return;
+      setProfile(plan.profile);
+      // подтягиваем РЕАЛЬНЫЙ стрик из истории профиля (честная замена «🔥 7»).
+      setStreak(plan.profile.gamification.streak);
     });
     return () => {
       alive = false;
@@ -149,10 +161,13 @@ export function LessonScreen() {
   const [picked, setPicked] = useState<PickedTok[]>([]);
   // какие индексы банка уже использованы (для .used)
   const [usedBank, setUsedBank] = useState<Set<number>>(new Set());
-  // прогресс-бар (демо стартует с 64% — середина урока)
-  const [prog, setProg] = useState(64);
-  const [streak, setStreak] = useState(7);
-  const [hearts, setHearts] = useState(5);
+  // прогресс-бар урока — честные 0% на старте (растёт по мере ответов).
+  const [prog, setProg] = useState(0);
+  // стрик занятий — РЕАЛЬНАЯ история из профиля (gamification.streak).
+  // 0 до загрузки профиля; затем подтягиваем настоящее число (см. эффект маунта).
+  const [streak, setStreak] = useState(0);
+  // сердца — текущая попытка урока, не история → стартуем с полного бака.
+  const [hearts, setHearts] = useState(HEARTS_PER_LESSON);
 
   // feedback-шторка
   const [fb, setFb] = useState<null | "good" | "bad">(null);
@@ -291,7 +306,9 @@ export function LessonScreen() {
       fireConfetti();
       haptic([10, 30, 10]);
       setProg(Math.round(((idx + 1) / items.length) * 100));
-      setStreak((s) => s + 1);
+      // стрик: засчитываем «занимался сегодня» через сервис (пишет в профиль,
+      // идемпотентно за день) и показываем РЕАЛЬНОЕ число дней подряд, а не +1.
+      void recordActivity().then((p) => setStreak(p.gamification.streak));
       // listening: на успехе озвучиваем эталон — ученик слышит, как звучит фраза,
       // которую только что собрал. Фолбэк-безопасно: нет TTS → просто тишина.
       void speak(item.correct.join(" "));
@@ -436,10 +453,11 @@ export function LessonScreen() {
           className="x"
           aria-label="Закрыть"
           onClick={() => {
+            // сброс ТЕКУЩЕЙ попытки урока: позиция, прогресс-бар, сердца.
+            // Стрик НЕ трогаем — это история занятий, а не состояние урока.
             setIdx(0);
-            setProg(64);
-            setStreak(7);
-            setHearts(5);
+            setProg(0);
+            setHearts(HEARTS_PER_LESSON);
             loadItem();
           }}
         >

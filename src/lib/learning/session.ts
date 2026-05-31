@@ -26,6 +26,7 @@ import {
   gradeItem,
   upsertSrs,
 } from "@/lib/srs";
+import { bumpStreak } from "@/lib/gamification";
 
 /** Что сервис отдаёт UI на старте сессии: какой темой и какой концепцией вести. */
 export interface SessionPlan {
@@ -75,6 +76,26 @@ export async function startSession(
   const profile = await store.getOrCreate();
   const concept = pickConcept(profile, available, rnd);
   return { topic, concept, profile };
+}
+
+/**
+ * Засчитать «ученик занимался сегодня» и обновить стрик занятий.
+ * Идемпотентно за день (bumpStreak не двигает стрик при повторном заходе),
+ * поэтому безопасно звать на каждый успешный ответ. Возвращает свежий профиль.
+ *
+ * Это честная замена фейковому «🔥 7» в UI: число берётся из реальной истории
+ * дней, а не из захардкоженной константы.
+ */
+export async function recordActivity(
+  deps: LearningDeps = {}
+): Promise<UserProfile> {
+  const { store, now } = resolve(deps);
+  const ts = now();
+  const current = await store.getOrCreate();
+  const gamification = bumpStreak(current.gamification, ts);
+  const next: UserProfile = { ...current, gamification, updatedAt: ts };
+  await store.save(next);
+  return next;
 }
 
 /**

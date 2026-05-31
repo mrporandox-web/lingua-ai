@@ -40,6 +40,9 @@ create table if not exists public.profiles (
   --    lastConcept, lastReviewed, retentionScored }]  (мостик к движку памяти)
   srs_queue         jsonb not null default '[]'::jsonb,
 
+  -- { streak, bestStreak, lastActiveDate }  — честный daily-streak (мотивация)
+  gamification      jsonb not null default '{"streak":0,"bestStreak":0,"lastActiveDate":null}'::jsonb,
+
   unique (user_id)
 );
 

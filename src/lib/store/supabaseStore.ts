@@ -3,9 +3,11 @@ import { ensureSession, getSupabaseClient } from "../supabase/client";
 import type { ProfileStore } from "./store";
 import {
   createEmptyProfile,
+  emptyGamification,
   type CefrLevel,
   type ConceptId,
   type ConceptScore,
+  type Gamification,
   type Skills,
   type SrsItem,
   type UserProfile,
@@ -36,6 +38,7 @@ interface ProfileRow {
   preferred_concept: ConceptId | null;
   concept_scores: Record<ConceptId, ConceptScore>;
   srs_queue: SrsItem[];
+  gamification: Gamification | null;
 }
 
 function rowToProfile(row: ProfileRow): UserProfile {
@@ -51,6 +54,8 @@ function rowToProfile(row: ProfileRow): UserProfile {
     preferredConcept: row.preferred_concept,
     conceptScores: row.concept_scores,
     srsQueue: row.srs_queue ?? [],
+    // старые строки без колонки gamification → дефолт (толерантность к миграции)
+    gamification: row.gamification ?? emptyGamification(),
   };
 }
 
@@ -66,6 +71,7 @@ function profileToRow(profile: UserProfile, userId: string) {
     preferred_concept: profile.preferredConcept,
     concept_scores: profile.conceptScores,
     srs_queue: profile.srsQueue,
+    gamification: profile.gamification,
   };
 }
 

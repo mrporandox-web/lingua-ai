@@ -42,6 +42,15 @@ export interface ConceptScore {
   n: number; // число сессий накопления (анти-шум: решаем после 3–5)
 }
 
+/** Геймификация — долгая история мотивации (стрик занятий по дням).
+ *  Сердца в профиле НЕ держим: они про «текущую попытку урока», а не про
+ *  историю — живут в локальном state экрана и сбрасываются каждым уроком. */
+export interface Gamification {
+  streak: number; // дней подряд с занятием
+  bestStreak: number; // рекорд стрика (для «личного лучшего»)
+  lastActiveDate: string | null; // YYYY-MM-DD последнего дня с занятием
+}
+
 /** Запись в очереди spaced repetition (SM-2 / Anki). */
 export interface SrsItem {
   item: string; // id слова/правила/паттерна
@@ -67,6 +76,7 @@ export interface UserProfile {
   preferredConcept: ConceptId | null; // null пока сигнал не накоплен
   conceptScores: Record<ConceptId, ConceptScore>;
   srsQueue: SrsItem[];
+  gamification: Gamification; // стрик/рекорд занятий (мотивация)
 }
 
 /** Дефолтный пустой score по концепции. */
@@ -77,6 +87,11 @@ export function emptyConceptScore(): ConceptScore {
 /** Дефолтные навыки нового ученика (всё с нуля до диагностики). */
 export function emptySkills(): Skills {
   return { grammar: 0, vocab: 0, listening: 0, reading: 0, speaking: 0 };
+}
+
+/** Дефолтная геймификация нового ученика (ещё ни дня не занимался). */
+export function emptyGamification(): Gamification {
+  return { streak: 0, bestStreak: 0, lastActiveDate: null };
 }
 
 /** Создать чистый профиль нового анонимного ученика. */
@@ -98,5 +113,6 @@ export function createEmptyProfile(id: string, now: string): UserProfile {
       "contrast-native": emptyConceptScore(),
     },
     srsQueue: [],
+    gamification: emptyGamification(),
   };
 }
