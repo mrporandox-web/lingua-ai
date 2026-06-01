@@ -20,6 +20,12 @@ import {
   PAST_CONTINUOUS,
   USED_TO,
 } from "./content-a2-unit1";
+import {
+  FUTURE_WILL,
+  GOING_TO,
+  FUTURE_TIME,
+  PREDICTIONS,
+} from "./content-a2-unit2";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -715,6 +721,11 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "past-irregular": PAST_IRREGULAR,
   "past-continuous": PAST_CONTINUOUS,
   "used-to": USED_TO,
+  // A2 · Юнит 2 (Будущее)
+  "future-will": FUTURE_WILL,
+  "going-to": GOING_TO,
+  "future-time": FUTURE_TIME,
+  predictions: PREDICTIONS,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */

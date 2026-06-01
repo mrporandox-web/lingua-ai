@@ -79,11 +79,11 @@ export const A2_TOPICS: CourseTopic[] = [
   { id: "past-continuous", title: "Past Continuous", blurb: "was/were + -ing", cefr: "A2", status: "ready" },
   { id: "used-to", title: "used to", blurb: "раньше делал, а теперь нет", cefr: "A2", status: "ready" },
 
-  // Юнит 2 · Будущее и планы
-  { id: "future-will", title: "Future will", blurb: "решения и обещания", cefr: "A2", status: "soon" },
-  { id: "going-to", title: "be going to", blurb: "планы и намерения", cefr: "A2", status: "soon" },
-  { id: "future-time", title: "Время в будущем", blurb: "when/if + present", cefr: "A2", status: "soon" },
-  { id: "predictions", title: "Прогнозы", blurb: "will / might про будущее", cefr: "A2", status: "soon" },
+  // Юнит 2 · Будущее и планы — наполнен кураторским контентом (status: ready)
+  { id: "future-will", title: "Future will", blurb: "решения и обещания", cefr: "A2", status: "ready" },
+  { id: "going-to", title: "be going to", blurb: "планы и намерения", cefr: "A2", status: "ready" },
+  { id: "future-time", title: "Время в будущем", blurb: "when/if + present", cefr: "A2", status: "ready" },
+  { id: "predictions", title: "Прогнозы", blurb: "will / might про будущее", cefr: "A2", status: "ready" },
 
   // Юнит 3 · Сравнение и количество
   { id: "comparatives", title: "Сравнительная степень", blurb: "bigger, more expensive", cefr: "A2", status: "soon" },

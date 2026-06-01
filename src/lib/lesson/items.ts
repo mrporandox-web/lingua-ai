@@ -27,7 +27,11 @@ export type LessonKind =
   | "wh-questions"
   | "past-irregular"
   | "past-continuous"
-  | "used-to";
+  | "used-to"
+  | "future-will"
+  | "going-to"
+  | "future-time"
+  | "predictions";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

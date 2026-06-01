@@ -33,6 +33,10 @@ const KINDS: LessonKind[] = [
   "past-irregular",
   "past-continuous",
   "used-to",
+  "future-will",
+  "going-to",
+  "future-time",
+  "predictions",
 ];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */
