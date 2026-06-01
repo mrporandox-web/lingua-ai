@@ -277,6 +277,122 @@
   }
 }
 
+.lyra-onboarding {
+  min-height: calc(100dvh - 168px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+}
+
+.lyra-ob-hero {
+  text-align: center;
+  display: grid;
+  place-items: center;
+  gap: 14px;
+}
+
+.lyra-brand {
+  font-family: var(--lyra-display);
+  font-size: 46px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.lyra-title {
+  font-family: var(--lyra-display);
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin: 14px 0 10px;
+}
+
+.lyra-muted {
+  color: var(--lyra-muted);
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.lyra-ob-card {
+  padding: 20px;
+}
+
+.lyra-language-grid {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 14px;
+}
+
+.lyra-language {
+  text-align: left;
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(239, 192, 121, 0.1);
+  border: 1px solid rgba(239, 192, 121, 0.4);
+  color: var(--lyra-text);
+}
+
+.lyra-language span {
+  display: block;
+  font-family: var(--lyra-display);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.lyra-language small {
+  display: block;
+  margin-top: 4px;
+  color: var(--lyra-muted);
+  font-weight: 800;
+}
+
+.lyra-input {
+  width: 100%;
+  border: 1px solid var(--lyra-line);
+  border-radius: 18px;
+  padding: 15px 16px;
+  margin-top: 4px;
+  background: var(--lyra-surface-2);
+  color: var(--lyra-text);
+  font: inherit;
+}
+
+.lyra-input::placeholder {
+  color: var(--lyra-dim);
+}
+
+.lyra-btn {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  min-height: 54px;
+  border-radius: 18px;
+  margin-top: 14px;
+  font-weight: 900;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.lyra-btn.primary {
+  color: #1c1305;
+  background: linear-gradient(180deg, #f6ce8c, var(--lyra-gold), var(--lyra-gold-2));
+  box-shadow: 0 14px 34px -12px rgba(239, 192, 121, 0.45);
+}
+
+.lyra-link {
+  display: block;
+  margin-top: 12px;
+  color: var(--lyra-muted);
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 800;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

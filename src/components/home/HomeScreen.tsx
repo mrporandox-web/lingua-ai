@@ -8,11 +8,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Backdrop } from "@/components/Backdrop";
+import { LyraCard, LyraChip, LyraOrb, LyraShell } from "@/components/lyra";
+import { APP_NAME, LANGUAGE_OPTIONS, TARGET_LANGUAGE } from "@/lib/brand";
 import { getProfileStore } from "@/lib/store";
-
-const PITCH =
-  "Персональный AI-репетитор, который запоминает, КАК ты учишься лучше — и ведёт именно так. Грамматику объясняем на русском.";
 
 export function HomeScreen() {
   const router = useRouter();
@@ -53,69 +51,73 @@ export function HomeScreen() {
   const known = typeof name === "string" && name.length > 0;
 
   return (
-    <div className="phone">
-      <Backdrop />
-      <div className="app">
-        <div className="chip" style={{ marginTop: "auto" }}>
-          <span className="dot" /> AI-репетитор английского
+    <LyraShell>
+      <div className="lyra-onboarding">
+        <div className="lyra-ob-hero">
+          <LyraOrb size={118} />
+          <div className="lyra-brand">{APP_NAME}</div>
+          <p className="lyra-muted">
+            AI-наставник по английскому, который запоминает, как тебе удобнее
+            учиться.
+          </p>
         </div>
-
         {known ? (
-          // ── Вернувшийся ученик ──
-          <>
-            <h1 className="task" style={{ fontSize: 30, marginBottom: "var(--s2)" }}>
-              С возвращением, {name}! 👋
-            </h1>
-            <p className="hintline" style={{ fontSize: 15, marginBottom: "var(--s4)" }}>
-              Продолжим? Я помню твой уровень и как тебе удобнее учиться.
+          <LyraCard className="lyra-ob-card">
+            <LyraChip tone="gold">С возвращением</LyraChip>
+            <h1 className="lyra-title">{name}, продолжим небо?</h1>
+            <p className="lyra-muted">
+              Я помню твой уровень, слабые темы и стиль подачи, который тебе
+              подходит.
             </p>
-            <div style={{ marginTop: "auto" }}>
-              <Link
-                href={onboarded ? "/course" : "/diagnostics"}
-                className="btn go ready"
-                style={{ display: "block", textAlign: "center" }}
-              >
-                {onboarded ? "Продолжить учиться →" : "Пройти диагностику →"}
-              </Link>
-              <Link href="/profile" className="homeLink">
-                Мой профиль
-              </Link>
-            </div>
-          </>
+            <Link
+              href={onboarded ? "/course" : "/diagnostics"}
+              className="lyra-btn primary"
+            >
+              {onboarded ? "Продолжить учиться" : "Пройти диагностику"}
+            </Link>
+            <Link href="/profile" className="lyra-link">
+              Мой профиль
+            </Link>
+          </LyraCard>
         ) : (
-          // ── Новый ученик: знакомство ──
-          <>
-            <h1 className="task" style={{ fontSize: 30, marginBottom: "var(--s2)" }}>
-              Привет! Давай познакомимся 👋
-            </h1>
-            <p className="hintline" style={{ fontSize: 15, marginBottom: "var(--s3)" }}>
-              {PITCH}
-            </p>
-            <div style={{ marginTop: "auto" }}>
-              <input
-                className="nameInput"
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && start()}
-                placeholder="Как тебя зовут?"
-                maxLength={40}
-                aria-label="Твоё имя"
-              />
-              <button
-                className="btn go ready"
-                style={{ display: "block", width: "100%", marginTop: "var(--s2)" }}
-                onClick={start}
-              >
-                {input.trim() ? "Поехали →" : "Пропустить и начать →"}
-              </button>
-              <Link href="/course" className="homeLink">
-                Посмотреть программу курса
-              </Link>
+          <LyraCard className="lyra-ob-card">
+            <LyraChip tone="cool">Язык</LyraChip>
+            <h1 className="lyra-title">Какой язык зажигаем?</h1>
+            <div className="lyra-language-grid">
+              {LANGUAGE_OPTIONS.map((lang) => (
+                <button
+                  key={lang.id}
+                  className="lyra-language selected"
+                  type="button"
+                >
+                  <span>{lang.greeting}</span>
+                  <small>
+                    {lang.nameRu} · {lang.nameEn}
+                  </small>
+                </button>
+              ))}
             </div>
-          </>
+            <input
+              className="lyra-input"
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && start()}
+              placeholder="Как тебя зовут?"
+              maxLength={40}
+              aria-label="Твоё имя"
+            />
+            <button className="lyra-btn primary" onClick={start}>
+              {input.trim()
+                ? `Начать ${TARGET_LANGUAGE.nameRu.toLowerCase()}`
+                : "Пропустить и начать"}
+              </button>
+            <Link href="/course" className="lyra-link">
+              Посмотреть программу курса
+            </Link>
+          </LyraCard>
         )}
       </div>
-    </div>
+    </LyraShell>
   );
 }
