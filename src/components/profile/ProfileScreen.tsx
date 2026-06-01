@@ -9,6 +9,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getProfileStore } from "@/lib/store";
+import { learningGoalLabel } from "@/lib/onboarding";
 import {
   ALL_CONCEPTS,
   type ConceptId,
@@ -114,6 +115,11 @@ function ProfileBody({ profile }: { profile: UserProfile }) {
         {profile.name && <div className="lyra-profile-name">{profile.name}</div>}
         <div className="lyra-label">Твой уровень</div>
         <div className="lyra-result-level">{profile.cefrLevel}</div>
+        {profile.goal && (
+          <p className="lyra-profile-goal">
+            Цель: {learningGoalLabel(profile.goal)}
+          </p>
+        )}
         <div className="lyra-streak-row">
           <span>Стрик: <b>{g.streak}</b> дн.</span>
           <span>Рекорд: <b>{g.bestStreak}</b> дн.</span>

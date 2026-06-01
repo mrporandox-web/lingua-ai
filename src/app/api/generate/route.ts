@@ -25,6 +25,7 @@ interface GenerateBody {
   count?: unknown;
   concepts?: unknown;
   cefrLevel?: unknown;
+  goal?: unknown;
 }
 
 /** Ответ роута: либо сгенерённые валидные айтемы, либо сигнал фолбэка. */
@@ -80,7 +81,12 @@ function readParams(body: GenerateBody): GenerateParams {
       ? body.cefrLevel.trim()
       : undefined;
 
-  return { topic, kind: topicToKind(topic), count, concepts, cefrLevel };
+  const goal =
+    typeof body.goal === "string" && body.goal.trim()
+      ? body.goal.trim().slice(0, 80)
+      : undefined;
+
+  return { topic, kind: topicToKind(topic), count, concepts, cefrLevel, goal };
 }
 
 export async function POST(req: Request): Promise<NextResponse<GenerateResponse>> {

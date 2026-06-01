@@ -16,6 +16,7 @@ import { itemsForTopic } from "@/lib/lesson/content";
 import { getTopic } from "@/lib/course/curriculum";
 import type { ConceptId, UserProfile } from "@/lib/store/types";
 import { CONCEPT_LABEL } from "@/lib/pedagogy";
+import { learningGoalLabel } from "@/lib/onboarding";
 import {
   startSession,
   submitAnswer,
@@ -130,6 +131,7 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
               : undefined,
             // CEFR-уровень из диагностики (под него Claude подбирает лексику)
             cefrLevel: profile.cefrLevel ?? undefined,
+            goal: profile.goal ? learningGoalLabel(profile.goal) : undefined,
           }),
           signal: ctrl.signal,
         });

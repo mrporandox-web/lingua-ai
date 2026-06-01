@@ -18,6 +18,8 @@ export interface GenerateParams {
   concepts: ConceptId[];
   /** Уровень CEFR ученика — модель калибрует лексику/длину под него. */
   cefrLevel?: string;
+  /** Цель ученика из onboarding — модель подбирает ситуации и лексику под неё. */
+  goal?: string;
 }
 
 /**
@@ -110,13 +112,14 @@ const CONCEPT_HINT: Record<ConceptId, string> = {
 
 /** Пользовательский промпт: что именно сгенерить в этот раз. */
 export function buildUserPrompt(params: GenerateParams): string {
-  const { topic, count, concepts, cefrLevel } = params;
+  const { topic, count, concepts, cefrLevel, goal } = params;
   const conceptLines = concepts
     .map((c) => `  - "${c}": ${CONCEPT_HINT[c]}`)
     .join("\n");
   return [
     `Сгенерируй ${count} разных упражнений по теме "${topic}".`,
     cefrLevel ? `Уровень ученика: ${cefrLevel} (калибруй лексику и длину фразы).` : "",
+    goal ? `Цель ученика: ${goal} (подбирай жизненные ситуации и лексику под эту цель).` : "",
     "Каждое упражнение — отдельное русское предложение для перевода на английский.",
     "Разнообразь подлежащие (I/He/She/It/We/You/They) и глаголы.",
     "В byConcept положи эти концепции:",
