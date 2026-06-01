@@ -56,7 +56,7 @@ export function courseSmokePaths(): string[] {
 export interface CourseAnswerSmokeCase {
   topic: string;
   path: string;
-  correct: string[];
+  correctAnswers: string[][];
 }
 
 export function courseAnswerSmokeCases(): CourseAnswerSmokeCase[] {
@@ -65,6 +65,6 @@ export function courseAnswerSmokeCases(): CourseAnswerSmokeCase[] {
     .map((topic) => ({
       topic: topic.id,
       path: `/lesson?topic=${topic.id}`,
-      correct: itemsForTopic(topic.id)[0].correct,
+      correctAnswers: itemsForTopic(topic.id).map((item) => item.correct),
     }));
 }

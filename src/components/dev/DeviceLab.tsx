@@ -193,6 +193,41 @@ export function DeviceLab() {
     token.click();
   }
 
+  function hasAvailableBankTokens(words: string[]) {
+    const doc = frameDocument();
+    const bank = doc.querySelector(".lyra-bank");
+    const available = Array.from(
+      bank?.querySelectorAll<HTMLButtonElement>("button.lyra-token") ?? []
+    )
+      .filter((item) => !item.classList.contains("used"))
+      .map((item) => normalizeText(item.textContent ?? ""));
+    const counts = new Map<string, number>();
+    for (const word of available) counts.set(word, (counts.get(word) ?? 0) + 1);
+
+    for (const word of words) {
+      const count = counts.get(word) ?? 0;
+      if (count === 0) return false;
+      counts.set(word, count - 1);
+    }
+    return true;
+  }
+
+  function hasEmptyAnswer() {
+    const doc = frameDocument();
+    return doc.querySelectorAll(".lyra-answer button.lyra-token").length === 0;
+  }
+
+  async function waitForAnswerReady(words: string[]) {
+    await waitFor(
+      () =>
+        frameDocument().querySelector(".lyra-feedback.show") === null &&
+        frameDocument().querySelector(".lyra-check") !== null &&
+        hasEmptyAnswer() &&
+        hasAvailableBankTokens(words),
+      `задание с токенами "${words.join(" ")}"`
+    );
+  }
+
   async function runOnboardingDiagnostics() {
     setStatus("Сценарий: сбрасываю профиль");
     clearFrameStorage();
@@ -264,21 +299,42 @@ export function DeviceLab() {
 
   async function runCourseAnswerSmoke() {
     const cases = courseAnswerSmokeCases();
+    let completedAnswers = 0;
+
     for (const [index, item] of cases.entries()) {
-      setStatus(`Answer smoke: ${index + 1}/${cases.length} ${item.topic}`);
+      setStatus(
+        `Answer smoke: тема ${index + 1}/${cases.length} ${item.topic}`
+      );
       await openFrame(item.path);
       await waitForSelector(".lyra-builder");
       await waitForSelector(".lyra-bank button.lyra-token");
 
-      for (const word of item.correct) {
-        clickBankToken(word);
-        await sleep(55);
-      }
+      for (const [answerIndex, correctAnswer] of item.correctAnswers.entries()) {
+        setStatus(
+          `Answer smoke: тема ${index + 1}/${cases.length} ${item.topic}, задание ${
+            answerIndex + 1
+          }/${item.correctAnswers.length}`
+        );
+        await waitForAnswerReady(correctAnswer);
 
-      clickFrameText("Проверить");
-      await waitForText(/Отлично/);
+        for (const word of correctAnswer) {
+          clickBankToken(word);
+          await sleep(55);
+        }
+
+        clickFrameText("Проверить");
+        await waitForText(/Отлично/);
+        completedAnswers += 1;
+
+        if (answerIndex < item.correctAnswers.length - 1) {
+          clickFrameText(/Дальше/);
+          await waitForAnswerReady(item.correctAnswers[answerIndex + 1]);
+        }
+      }
     }
-    setStatus(`Answer smoke OK: ${cases.length} тем решились`);
+    setStatus(
+      `Answer smoke OK: ${cases.length} тем / ${completedAnswers} заданий`
+    );
   }
 
   async function runScenario() {

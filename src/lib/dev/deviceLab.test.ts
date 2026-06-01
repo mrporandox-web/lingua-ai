@@ -46,18 +46,29 @@ describe("Device Lab config", () => {
     expect(paths.at(-1)).toBe("/lesson?topic=so-such");
   });
 
-  it("builds an answer smoke case for every ready course topic", () => {
+  it("builds answer smoke cases with every item for each ready course topic", () => {
     const cases = courseAnswerSmokeCases();
     expect(cases).toHaveLength(48);
     expect(cases[0]).toEqual({
       topic: "to-be",
       path: "/lesson?topic=to-be",
-      correct: ["I", "am", "a", "student"],
+      correctAnswers: [
+        ["I", "am", "a", "student"],
+        ["She", "is", "happy"],
+        ["They", "are", "at", "home"],
+      ],
     });
     expect(cases.at(-1)).toEqual({
       topic: "so-such",
       path: "/lesson?topic=so-such",
-      correct: ["She", "is", "so", "tired"],
+      correctAnswers: [
+        ["She", "is", "so", "tired"],
+        ["It", "is", "such", "a", "good", "idea"],
+        ["It", "was", "such", "a", "long", "day"],
+      ],
     });
+    expect(
+      cases.reduce((total, item) => total + item.correctAnswers.length, 0)
+    ).toBe(144);
   });
 });
