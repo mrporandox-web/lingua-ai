@@ -2642,3 +2642,71 @@ body {
 .winFill {
   background: linear-gradient(90deg, var(--ok), var(--accent2)) !important;
 }
+
+/* ── Speaking (прототип /talk) ───────────────────────────────────────────── */
+.lyra-btn.ghost {
+  color: var(--lyra-text);
+  background: var(--lyra-surface-2);
+  border: 1px solid var(--lyra-line);
+  box-shadow: none;
+}
+.lyra-speak-phrase {
+  font-size: 26px;
+  line-height: 1.2;
+}
+.lyra-speak-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.lyra-speak-actions .lyra-btn {
+  flex: 1;
+  margin: 0;
+}
+.lyra-speak-partial {
+  margin-top: 16px;
+  text-align: center;
+  font-style: italic;
+  color: var(--lyra-cool);
+  min-height: 22px;
+}
+.lyra-speak-result {
+  margin-top: 18px;
+}
+.lyra-speak-score {
+  font-size: 40px;
+  font-weight: 800;
+  text-align: center;
+  color: var(--lyra-gold);
+}
+.lyra-speak-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  justify-content: center;
+  margin: 12px 0;
+}
+.lyra-speak-words span {
+  padding: 4px 10px;
+  border-radius: 9px;
+  font-size: 15px;
+  border: 1px solid var(--lyra-line);
+}
+.lyra-speak-words span.ok {
+  color: #0c2a16;
+  background: var(--lyra-good);
+  border-color: transparent;
+}
+.lyra-speak-words span.miss {
+  color: #ffb4b4;
+  border-color: var(--lyra-bad);
+}
+.lyra-speak-heard {
+  text-align: center;
+  font-size: 13px;
+}
+.lyra-speak-warn {
+  margin-top: 14px;
+  font-size: 13px;
+  text-align: center;
+}
