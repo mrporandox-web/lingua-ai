@@ -3,6 +3,7 @@ import {
   DEVICES,
   SCENARIOS,
   SCREENS,
+  courseSmokePaths,
   withReloadParam,
 } from "./deviceLab";
 
@@ -25,6 +26,7 @@ describe("Device Lab config", () => {
       "onboarding-diagnostics",
       "lesson-error",
       "core-tabs",
+      "course-smoke",
     ]);
   });
 
@@ -33,5 +35,12 @@ describe("Device Lab config", () => {
     expect(withReloadParam("/lesson?topic=to-be", 42)).toBe(
       "/lesson?topic=to-be&lab=42"
     );
+  });
+
+  it("builds a smoke path for every ready course topic", () => {
+    const paths = courseSmokePaths();
+    expect(paths).toHaveLength(48);
+    expect(paths[0]).toBe("/lesson?topic=to-be");
+    expect(paths.at(-1)).toBe("/lesson?topic=so-such");
   });
 });

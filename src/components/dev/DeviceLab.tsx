@@ -6,6 +6,7 @@ import {
   DEVICES,
   SCENARIOS,
   SCREENS,
+  courseSmokePaths,
   withReloadParam,
   type DeviceId,
   type ScenarioId,
@@ -144,6 +145,13 @@ export function DeviceLab() {
     }, `текст "${matcherLabel(matcher)}"`);
   }
 
+  async function waitForSelector(selector: string) {
+    await waitFor(
+      () => frameDocument().querySelector(selector) !== null,
+      `selector "${selector}"`
+    );
+  }
+
   function clickFrameText(matcher: string | RegExp) {
     const doc = frameDocument();
     const targets = Array.from(
@@ -240,6 +248,19 @@ export function DeviceLab() {
     setStatus("Core tabs OK: курс, разговор, профиль");
   }
 
+  async function runCourseSmoke() {
+    const paths = courseSmokePaths();
+    for (const [index, lessonPath] of paths.entries()) {
+      const topic = lessonPath.split("topic=")[1] ?? lessonPath;
+      setStatus(`Course smoke: ${index + 1}/${paths.length} ${topic}`);
+      await openFrame(lessonPath);
+      await waitForSelector(".lyra-builder");
+      await waitForSelector(".lyra-bank button.lyra-token");
+      await waitForSelector(".lyra-check");
+    }
+    setStatus(`Course smoke OK: ${paths.length} тем открылись`);
+  }
+
   async function runScenario() {
     if (running) return;
     setRunning(true);
@@ -248,6 +269,8 @@ export function DeviceLab() {
         await runOnboardingDiagnostics();
       } else if (scenarioId === "lesson-error") {
         await runLessonError();
+      } else if (scenarioId === "course-smoke") {
+        await runCourseSmoke();
       } else {
         await runCoreTabs();
       }

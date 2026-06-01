@@ -1,3 +1,5 @@
+import { orderedTopics } from "@/lib/course/curriculum";
+
 export const DEVICES = [
   { id: "iphone-se", label: "iPhone SE", width: 375, height: 667 },
   { id: "iphone-15", label: "iPhone 15", width: 393, height: 852 },
@@ -26,6 +28,10 @@ export const SCENARIOS = [
     id: "core-tabs",
     label: "Core tabs",
   },
+  {
+    id: "course-smoke",
+    label: "Full course smoke",
+  },
 ] as const;
 
 export type DeviceId = (typeof DEVICES)[number]["id"];
@@ -34,4 +40,10 @@ export type ScenarioId = (typeof SCENARIOS)[number]["id"];
 export function withReloadParam(path: string, reloadKey: number): string {
   const joiner = path.includes("?") ? "&" : "?";
   return `${path}${joiner}lab=${reloadKey}`;
+}
+
+export function courseSmokePaths(): string[] {
+  return orderedTopics()
+    .filter((topic) => topic.status === "ready")
+    .map((topic) => `/lesson?topic=${topic.id}`);
 }
