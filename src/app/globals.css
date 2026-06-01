@@ -505,6 +505,37 @@
   background: var(--lyra-gold);
 }
 
+.lyra-prep-list {
+  display: grid;
+  gap: 10px;
+  margin: 22px 0 8px;
+}
+
+.lyra-prep-item {
+  display: flex;
+  min-height: 62px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid var(--lyra-line);
+  border-radius: 18px;
+  padding: 13px 15px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lyra-prep-item span {
+  color: var(--lyra-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.lyra-prep-item b {
+  color: var(--lyra-text);
+  font-size: 15px;
+  font-weight: 900;
+  text-align: right;
+}
+
 .lyra-course-head,
 .lyra-reco-top,
 .lyra-section-head,
