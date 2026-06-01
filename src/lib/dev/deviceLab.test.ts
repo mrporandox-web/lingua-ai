@@ -3,6 +3,7 @@ import {
   DEVICES,
   SCENARIOS,
   SCREENS,
+  courseAnswerSmokeCases,
   courseSmokePaths,
   withReloadParam,
 } from "./deviceLab";
@@ -27,6 +28,7 @@ describe("Device Lab config", () => {
       "lesson-error",
       "core-tabs",
       "course-smoke",
+      "course-answer-smoke",
     ]);
   });
 
@@ -42,5 +44,20 @@ describe("Device Lab config", () => {
     expect(paths).toHaveLength(48);
     expect(paths[0]).toBe("/lesson?topic=to-be");
     expect(paths.at(-1)).toBe("/lesson?topic=so-such");
+  });
+
+  it("builds an answer smoke case for every ready course topic", () => {
+    const cases = courseAnswerSmokeCases();
+    expect(cases).toHaveLength(48);
+    expect(cases[0]).toEqual({
+      topic: "to-be",
+      path: "/lesson?topic=to-be",
+      correct: ["I", "am", "a", "student"],
+    });
+    expect(cases.at(-1)).toEqual({
+      topic: "so-such",
+      path: "/lesson?topic=so-such",
+      correct: ["She", "is", "so", "tired"],
+    });
   });
 });

@@ -1,4 +1,5 @@
 import { orderedTopics } from "@/lib/course/curriculum";
+import { itemsForTopic } from "@/lib/lesson/content";
 
 export const DEVICES = [
   { id: "iphone-se", label: "iPhone SE", width: 375, height: 667 },
@@ -32,6 +33,10 @@ export const SCENARIOS = [
     id: "course-smoke",
     label: "Full course smoke",
   },
+  {
+    id: "course-answer-smoke",
+    label: "Full answer smoke",
+  },
 ] as const;
 
 export type DeviceId = (typeof DEVICES)[number]["id"];
@@ -46,4 +51,20 @@ export function courseSmokePaths(): string[] {
   return orderedTopics()
     .filter((topic) => topic.status === "ready")
     .map((topic) => `/lesson?topic=${topic.id}`);
+}
+
+export interface CourseAnswerSmokeCase {
+  topic: string;
+  path: string;
+  correct: string[];
+}
+
+export function courseAnswerSmokeCases(): CourseAnswerSmokeCase[] {
+  return orderedTopics()
+    .filter((topic) => topic.status === "ready")
+    .map((topic) => ({
+      topic: topic.id,
+      path: `/lesson?topic=${topic.id}`,
+      correct: itemsForTopic(topic.id)[0].correct,
+    }));
 }

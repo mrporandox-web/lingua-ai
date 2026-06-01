@@ -6,6 +6,7 @@ import {
   DEVICES,
   SCENARIOS,
   SCREENS,
+  courseAnswerSmokeCases,
   courseSmokePaths,
   withReloadParam,
   type DeviceId,
@@ -261,6 +262,25 @@ export function DeviceLab() {
     setStatus(`Course smoke OK: ${paths.length} тем открылись`);
   }
 
+  async function runCourseAnswerSmoke() {
+    const cases = courseAnswerSmokeCases();
+    for (const [index, item] of cases.entries()) {
+      setStatus(`Answer smoke: ${index + 1}/${cases.length} ${item.topic}`);
+      await openFrame(item.path);
+      await waitForSelector(".lyra-builder");
+      await waitForSelector(".lyra-bank button.lyra-token");
+
+      for (const word of item.correct) {
+        clickBankToken(word);
+        await sleep(55);
+      }
+
+      clickFrameText("Проверить");
+      await waitForText(/Отлично/);
+    }
+    setStatus(`Answer smoke OK: ${cases.length} тем решились`);
+  }
+
   async function runScenario() {
     if (running) return;
     setRunning(true);
@@ -271,6 +291,8 @@ export function DeviceLab() {
         await runLessonError();
       } else if (scenarioId === "course-smoke") {
         await runCourseSmoke();
+      } else if (scenarioId === "course-answer-smoke") {
+        await runCourseAnswerSmoke();
       } else {
         await runCoreTabs();
       }
