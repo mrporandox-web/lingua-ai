@@ -14,6 +14,12 @@ import {
   NUMBERS_TIME,
   WH_QUESTIONS,
 } from "./content-unit4";
+import {
+  PAST_SIMPLE,
+  PAST_IRREGULAR,
+  PAST_CONTINUOUS,
+  USED_TO,
+} from "./content-a2-unit1";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -704,6 +710,11 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "like-ing": LIKE_ING,
   "numbers-time": NUMBERS_TIME,
   "wh-questions": WH_QUESTIONS,
+  // A2 · Юнит 1 (Прошлое)
+  "past-simple": PAST_SIMPLE,
+  "past-irregular": PAST_IRREGULAR,
+  "past-continuous": PAST_CONTINUOUS,
+  "used-to": USED_TO,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */

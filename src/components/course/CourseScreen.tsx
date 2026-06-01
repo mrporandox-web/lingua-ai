@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { Backdrop } from "@/components/Backdrop";
 import { getProfileStore } from "@/lib/store";
 import { createEmptyProfile, type UserProfile } from "@/lib/store/types";
-import { A1_SECTION, A1_UNITS, getTopic } from "@/lib/course/curriculum";
+import { SECTIONS, unitsOfSection, getTopic } from "@/lib/course/curriculum";
 import {
   topicStates,
   topicMastery,
@@ -55,7 +55,7 @@ export function CourseScreen() {
             ‹
           </Link>
           <div className="chip" style={{ margin: 0 }}>
-            <span className="dot" /> {A1_SECTION.title}
+            <span className="dot" /> Программа курса
           </div>
         </div>
 
@@ -71,10 +71,13 @@ export function CourseScreen() {
           </div>
         </div>
 
-        {A1_UNITS.map((unit, ui) => {
-            const up = unitProgress(baseProfile, unit.id);
-            return (
-              <div className="card" key={unit.id}>
+        {SECTIONS.map((section) => (
+          <div key={section.cefr}>
+            <div className="sectionHead">{section.title}</div>
+            {unitsOfSection(section).map((unit, ui) => {
+              const up = unitProgress(baseProfile, unit.id);
+              return (
+                <div className="card" key={unit.id}>
                 <div className="unitHead">
                   <div>
                     <div className="unitTitle">
@@ -121,9 +124,11 @@ export function CourseScreen() {
                     );
                   })}
                 </div>
-              </div>
-            );
-          })}
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </div>
     </div>
   );

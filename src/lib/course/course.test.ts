@@ -27,10 +27,10 @@ function withMastery(topic: string, mastery: number): UserProfile {
 }
 
 describe("curriculum A1", () => {
-  it("16 тем в 4 юнитах, порядок целостный", () => {
+  it("16 тем A1 в 4 юнитах; orderedTopics покрывает A1+A2 = 32", () => {
     expect(A1_UNITS).toHaveLength(4);
-    expect(orderedTopics()).toHaveLength(16);
     expect(A1_TOPICS).toHaveLength(16);
+    expect(orderedTopics()).toHaveLength(32); // A1 (16) + A2 (16)
   });
 
   it("каждый topicId юнита резолвится в тему", () => {
@@ -75,12 +75,12 @@ describe("progress", () => {
 
   it("courseProgress и unitProgress считают освоенные", () => {
     const p = withMastery("present-continuous", MASTERY_DONE);
-    expect(courseProgress(p)).toEqual({ done: 1, total: 16 });
+    expect(courseProgress(p)).toEqual({ done: 1, total: 32 }); // A1+A2 = 32 темы
     expect(unitProgress(p, "a1-now")).toEqual({ done: 1, total: 4 });
     expect(unitProgress(p, "a1-basics")).toEqual({ done: 0, total: 4 });
   });
 
-  it("readyShare: 16 готовых из 16 (вся A1)", () => {
-    expect(readyShare()).toEqual({ ready: 16, total: 16 });
+  it("readyShare: 20 готовых из 32 (вся A1 + A2 Юнит 1)", () => {
+    expect(readyShare()).toEqual({ ready: 20, total: 32 });
   });
 });

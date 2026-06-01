@@ -70,12 +70,57 @@ export const A1_SECTION: CourseSection = {
   unitIds: A1_UNITS.map((u) => u.id),
 };
 
-// Весь курс (пока только A1; A2+ добавим тем же паттерном).
-export const SECTIONS: CourseSection[] = [A1_SECTION];
+// ══ Уровень A2 ═══════════════════════════════════════════════════════════════
+// Темы A2 (Юнит 1 «Прошлое» наполнен; остальные — скелет под наполнение).
+export const A2_TOPICS: CourseTopic[] = [
+  // Юнит 1 · Прошлое
+  { id: "past-simple", title: "Past Simple", blurb: "правильные глаголы: -ed", cefr: "A2", status: "ready" },
+  { id: "past-irregular", title: "Неправильные глаголы", blurb: "go→went, have→had", cefr: "A2", status: "ready" },
+  { id: "past-continuous", title: "Past Continuous", blurb: "was/were + -ing", cefr: "A2", status: "ready" },
+  { id: "used-to", title: "used to", blurb: "раньше делал, а теперь нет", cefr: "A2", status: "ready" },
+
+  // Юнит 2 · Будущее и планы
+  { id: "future-will", title: "Future will", blurb: "решения и обещания", cefr: "A2", status: "soon" },
+  { id: "going-to", title: "be going to", blurb: "планы и намерения", cefr: "A2", status: "soon" },
+  { id: "future-time", title: "Время в будущем", blurb: "when/if + present", cefr: "A2", status: "soon" },
+  { id: "predictions", title: "Прогнозы", blurb: "will / might про будущее", cefr: "A2", status: "soon" },
+
+  // Юнит 3 · Сравнение и количество
+  { id: "comparatives", title: "Сравнительная степень", blurb: "bigger, more expensive", cefr: "A2", status: "soon" },
+  { id: "superlatives", title: "Превосходная степень", blurb: "the biggest, the best", cefr: "A2", status: "soon" },
+  { id: "quantifiers", title: "some / any / much / many", blurb: "сколько чего", cefr: "A2", status: "soon" },
+  { id: "countable", title: "Исчисляемое и нет", blurb: "a lot of vs much", cefr: "A2", status: "soon" },
+
+  // Юнит 4 · Опыт и советы
+  { id: "present-perfect", title: "Present Perfect", blurb: "have done — опыт/результат", cefr: "A2", status: "soon" },
+  { id: "perfect-vs-past", title: "Perfect vs Past", blurb: "have been vs was", cefr: "A2", status: "soon" },
+  { id: "modals-advice", title: "should / must", blurb: "советы и долженствование", cefr: "A2", status: "soon" },
+  { id: "adverbs-manner", title: "Наречия образа действия", blurb: "quickly, well, hard", cefr: "A2", status: "soon" },
+];
+
+export const A2_UNITS: CourseUnit[] = [
+  { id: "a2-past", title: "Прошлое", subtitle: "Что было: Past Simple и Continuous", topicIds: ["past-simple", "past-irregular", "past-continuous", "used-to"] },
+  { id: "a2-future", title: "Будущее и планы", subtitle: "will, going to, прогнозы", topicIds: ["future-will", "going-to", "future-time", "predictions"] },
+  { id: "a2-compare", title: "Сравнение и количество", subtitle: "Степени сравнения, сколько чего", topicIds: ["comparatives", "superlatives", "quantifiers", "countable"] },
+  { id: "a2-experience", title: "Опыт и советы", subtitle: "Present Perfect, модальные", topicIds: ["present-perfect", "perfect-vs-past", "modals-advice", "adverbs-manner"] },
+];
+
+export const A2_SECTION: CourseSection = {
+  cefr: "A2",
+  title: "A2 · Elementary",
+  unitIds: A2_UNITS.map((u) => u.id),
+};
+
+// Весь курс: A1 + A2.
+export const SECTIONS: CourseSection[] = [A1_SECTION, A2_SECTION];
+
+// Плоские списки по всем секциям (для индексов/прогресса/карты).
+export const ALL_TOPICS: CourseTopic[] = [...A1_TOPICS, ...A2_TOPICS];
+export const ALL_UNITS: CourseUnit[] = [...A1_UNITS, ...A2_UNITS];
 
 // ── Индексы для быстрого доступа ────────────────────────────────────────────
-const TOPIC_BY_ID = new Map(A1_TOPICS.map((t) => [t.id, t]));
-const UNIT_BY_ID = new Map(A1_UNITS.map((u) => [u.id, u]));
+const TOPIC_BY_ID = new Map(ALL_TOPICS.map((t) => [t.id, t]));
+const UNIT_BY_ID = new Map(ALL_UNITS.map((u) => [u.id, u]));
 
 export function getTopic(id: string): CourseTopic | undefined {
   return TOPIC_BY_ID.get(id);
@@ -84,9 +129,16 @@ export function getUnit(id: string): CourseUnit | undefined {
   return UNIT_BY_ID.get(id);
 }
 
-/** Все темы в линейном порядке прохождения (по юнитам). */
+/** Юниты секции по её cefr. */
+export function unitsOfSection(section: CourseSection): CourseUnit[] {
+  return section.unitIds
+    .map((id) => UNIT_BY_ID.get(id))
+    .filter((u): u is CourseUnit => !!u);
+}
+
+/** Все темы в линейном порядке прохождения (по всем юнитам всех секций). */
 export function orderedTopics(): CourseTopic[] {
-  return A1_UNITS.flatMap((u) =>
+  return ALL_UNITS.flatMap((u) =>
     u.topicIds.map((id) => TOPIC_BY_ID.get(id)).filter((t): t is CourseTopic => !!t)
   );
 }

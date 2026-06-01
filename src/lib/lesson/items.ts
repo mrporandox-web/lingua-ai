@@ -24,7 +24,10 @@ export type LessonKind =
   | "adverbs-frequency"
   | "like-ing"
   | "numbers-time"
-  | "wh-questions";
+  | "wh-questions"
+  | "past-irregular"
+  | "past-continuous"
+  | "used-to";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

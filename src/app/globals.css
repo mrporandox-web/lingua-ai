@@ -1009,6 +1009,15 @@ body {
 .courseHead {
   margin-bottom: 14px;
 }
+/* Заголовок секции уровня (A1 · Beginner). */
+.sectionHead {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 6px 0 10px;
+}
 .unitHead {
   display: flex;
   justify-content: space-between;

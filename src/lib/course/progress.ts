@@ -5,7 +5,7 @@
 
 import type { UserProfile } from "@/lib/store/types";
 import type { CourseTopic } from "./types";
-import { orderedTopics, getUnit, A1_UNITS } from "./curriculum";
+import { orderedTopics, getUnit, ALL_UNITS } from "./curriculum";
 
 // Порог «освоено» — единый с движком памяти (retention важнее моментальной точности).
 export const MASTERY_DONE = 0.8;
@@ -85,7 +85,7 @@ export function courseProgress(profile: UserProfile): {
 
 /** Доля готового контента в курсе (ready / всего) — для честной коммуникации. */
 export function readyShare(): { ready: number; total: number } {
-  const total = A1_UNITS.reduce((n, u) => n + u.topicIds.length, 0);
+  const total = ALL_UNITS.reduce((n, u) => n + u.topicIds.length, 0);
   const ready = orderedTopics().filter((t) => t.status === "ready").length;
   return { ready, total };
 }
