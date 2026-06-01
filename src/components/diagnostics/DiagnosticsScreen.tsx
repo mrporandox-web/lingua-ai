@@ -132,10 +132,14 @@ export function DiagnosticsScreen() {
           router.replace("/course");
           return;
         }
-        // Имя уже знаем (вернулись посреди онбординга) — пропускаем знакомство.
-        if (p?.name) {
-          setSavedName(p.name);
-          setNameInput(p.name);
+        // Знакомство теперь на стартовом экране (HomeScreen). Если профиль уже
+        // создан (юзер прошёл через главную) — шаг знакомства тут пропускаем.
+        // Локальный шаг остаётся только фолбэком для прямого захода на /diagnostics.
+        if (p) {
+          if (p.name) {
+            setSavedName(p.name);
+            setNameInput(p.name);
+          }
           setGreeted(true);
         }
       });

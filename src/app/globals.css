@@ -1128,6 +1128,19 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Вторичная ссылка на стартовом экране (профиль/программа). */
+.homeLink {
+  display: block;
+  text-align: center;
+  margin-top: var(--s2);
+  font-size: 13px;
+  color: var(--dim);
+  text-decoration: none;
+}
+.homeLink:hover {
+  color: var(--txt);
+}
+
 /* Поле ввода имени на шаге знакомства. */
 .nameInput {
   display: block;
