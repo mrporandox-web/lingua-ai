@@ -29,6 +29,14 @@ describe("контент Юнита 1", () => {
   it("itemsForTopic возвращает темы; неизвестная → present-continuous", () => {
     expect(itemsForTopic("to-be")[0].topic).toBe("to-be");
     expect(itemsForTopic("articles")[0].topic).toBe("articles");
+    expect(itemsForTopic("present-perfect-continuous")[0].topic).toBe(
+      "present-perfect-continuous"
+    );
+    expect(itemsForTopic("past-perfect")[0].topic).toBe("past-perfect");
+    expect(itemsForTopic("for-since")[0].topic).toBe("for-since");
+    expect(itemsForTopic("just-already-yet")[0].topic).toBe(
+      "just-already-yet"
+    );
     expect(itemsForTopic("нет-такой")[0].topic).toBe("present-continuous");
     expect(itemsForTopic(null)[0].topic).toBe("present-continuous");
   });

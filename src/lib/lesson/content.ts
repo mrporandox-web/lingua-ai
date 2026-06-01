@@ -44,6 +44,12 @@ import {
   WISH_PAST,
   UNLESS,
 } from "./content-b1-unit1";
+import {
+  PRESENT_PERFECT_CONTINUOUS,
+  PAST_PERFECT,
+  FOR_SINCE,
+  JUST_ALREADY_YET,
+} from "./content-b1-unit2";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -759,6 +765,11 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "second-conditional": SECOND_CONDITIONAL,
   "wish-past": WISH_PAST,
   unless: UNLESS,
+  // B1 · Юнит 2 (Времена Perfect)
+  "present-perfect-continuous": PRESENT_PERFECT_CONTINUOUS,
+  "past-perfect": PAST_PERFECT,
+  "for-since": FOR_SINCE,
+  "just-already-yet": JUST_ALREADY_YET,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */

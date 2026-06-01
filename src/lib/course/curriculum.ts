@@ -121,10 +121,10 @@ export const B1_TOPICS: CourseTopic[] = [
   { id: "unless", title: "unless", blurb: "«если не»", cefr: "B1", status: "ready" },
 
   // Юнит 2 · Времена Perfect
-  { id: "present-perfect-continuous", title: "Present Perfect Continuous", blurb: "have been doing", cefr: "B1", status: "soon" },
-  { id: "past-perfect", title: "Past Perfect", blurb: "had done — до прошлого", cefr: "B1", status: "soon" },
-  { id: "for-since", title: "for / since", blurb: "длительность и точка отсчёта", cefr: "B1", status: "soon" },
-  { id: "just-already-yet", title: "just / already / yet", blurb: "маркеры перфекта", cefr: "B1", status: "soon" },
+  { id: "present-perfect-continuous", title: "Present Perfect Continuous", blurb: "have been doing", cefr: "B1", status: "ready" },
+  { id: "past-perfect", title: "Past Perfect", blurb: "had done — до прошлого", cefr: "B1", status: "ready" },
+  { id: "for-since", title: "for / since", blurb: "длительность и точка отсчёта", cefr: "B1", status: "ready" },
+  { id: "just-already-yet", title: "just / already / yet", blurb: "маркеры перфекта", cefr: "B1", status: "ready" },
 
   // Юнит 3 · Пассив и косвенная речь
   { id: "passive-present", title: "Пассив (настоящее)", blurb: "is made, are built", cefr: "B1", status: "soon" },

@@ -49,6 +49,10 @@ const KINDS: LessonKind[] = [
   "second-conditional",
   "wish-past",
   "unless",
+  "present-perfect-continuous",
+  "past-perfect",
+  "for-since",
+  "just-already-yet",
 ];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */

@@ -43,7 +43,11 @@ export type LessonKind =
   | "zero-conditional"
   | "second-conditional"
   | "wish-past"
-  | "unless";
+  | "unless"
+  | "present-perfect-continuous"
+  | "past-perfect"
+  | "for-since"
+  | "just-already-yet";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

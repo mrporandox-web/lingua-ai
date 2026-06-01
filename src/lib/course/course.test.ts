@@ -3,6 +3,7 @@ import { createEmptyProfile, type UserProfile } from "@/lib/store/types";
 import {
   A1_UNITS,
   A1_TOPICS,
+  B1_TOPICS,
   orderedTopics,
   getTopic,
   getUnit,
@@ -80,7 +81,23 @@ describe("progress", () => {
     expect(unitProgress(p, "a1-basics")).toEqual({ done: 0, total: 4 });
   });
 
-  it("readyShare: 36 готовых из 48 (A1 + A2 + B1 Юнит 1)", () => {
-    expect(readyShare()).toEqual({ ready: 36, total: 48 });
+  it("readyShare: 40 готовых из 48 (A1 + A2 + B1 Юниты 1–2)", () => {
+    expect(readyShare()).toEqual({ ready: 40, total: 48 });
+  });
+
+  it("B1 Unit 2 Perfect готов к прохождению", () => {
+    const readyIds = B1_TOPICS.filter((topic) => topic.status === "ready").map(
+      (topic) => topic.id
+    );
+    expect(readyIds).toEqual([
+      "zero-conditional",
+      "second-conditional",
+      "wish-past",
+      "unless",
+      "present-perfect-continuous",
+      "past-perfect",
+      "for-since",
+      "just-already-yet",
+    ]);
   });
 });
