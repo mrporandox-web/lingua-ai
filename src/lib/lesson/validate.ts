@@ -19,6 +19,10 @@ const KINDS: LessonKind[] = [
   "to-be",
   "pronouns",
   "plurals",
+  "present-simple",
+  "have-got",
+  "possessives",
+  "this-that",
 ];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */

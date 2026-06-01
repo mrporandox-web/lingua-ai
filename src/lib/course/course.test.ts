@@ -39,13 +39,17 @@ describe("curriculum A1", () => {
     }
   });
 
-  it("Юнит 1 + present-continuous готовы (5 ready-тем)", () => {
+  it("Юниты 1–2 + present-continuous готовы (9 ready-тем)", () => {
     const ready = A1_TOPICS.filter((t) => t.status === "ready").map((t) => t.id);
     expect(ready).toEqual([
       "to-be",
       "pronouns",
       "articles",
       "plurals",
+      "present-simple",
+      "have-got",
+      "possessives",
+      "this-that",
       "present-continuous",
     ]);
   });
@@ -61,6 +65,7 @@ describe("progress", () => {
     const st = topicStates(profile());
     expect(st.get("to-be")).toBe("current"); // первая в порядке
     expect(st.get("pronouns")).toBe("available");
+    expect(st.get("present-simple")).toBe("available");
     expect(st.get("present-continuous")).toBe("available");
     expect(st.get("wh-questions")).toBe("soon");
   });
@@ -85,7 +90,7 @@ describe("progress", () => {
     expect(unitProgress(p, "a1-basics")).toEqual({ done: 0, total: 4 });
   });
 
-  it("readyShare: 5 готовых из 16", () => {
-    expect(readyShare()).toEqual({ ready: 5, total: 16 });
+  it("readyShare: 9 готовых из 16", () => {
+    expect(readyShare()).toEqual({ ready: 9, total: 16 });
   });
 });

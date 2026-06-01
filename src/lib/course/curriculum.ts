@@ -16,11 +16,11 @@ export const A1_TOPICS: CourseTopic[] = [
   { id: "articles", title: "Артикли a / an / the", blurb: "когда какой и когда никакой", cefr: "A1", status: "ready" },
   { id: "plurals", title: "Множественное число", blurb: "-s, -es и исключения", cefr: "A1", status: "ready" },
 
-  // Юнит 2 · О себе и людях
-  { id: "present-simple", title: "Present Simple", blurb: "регулярные действия: I work", cefr: "A1", status: "soon" },
-  { id: "have-got", title: "have / has got", blurb: "что у тебя есть", cefr: "A1", status: "soon" },
-  { id: "possessives", title: "Притяжательные", blurb: "my, your, his, her", cefr: "A1", status: "soon" },
-  { id: "this-that", title: "this / that / these / those", blurb: "этот и тот", cefr: "A1", status: "soon" },
+  // Юнит 2 · О себе и людях — наполнен кураторским контентом (status: ready)
+  { id: "present-simple", title: "Present Simple", blurb: "регулярные действия: I work", cefr: "A1", status: "ready" },
+  { id: "have-got", title: "have / has got", blurb: "что у тебя есть", cefr: "A1", status: "ready" },
+  { id: "possessives", title: "Притяжательные", blurb: "my, your, his, her", cefr: "A1", status: "ready" },
+  { id: "this-that", title: "this / that / these / those", blurb: "этот и тот", cefr: "A1", status: "ready" },
 
   // Юнит 3 · Прямо сейчас
   { id: "present-continuous", title: "Present Continuous", blurb: "действие сейчас: am/is/are + -ing", cefr: "A1", status: "ready" },

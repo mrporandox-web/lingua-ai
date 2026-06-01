@@ -344,14 +344,350 @@ const PLURALS: LessonItem[] = [
   },
 ];
 
+// ══ ЮНИТ 2 · О себе и людях ══════════════════════════════════════════════════
+
+// ── present-simple: регулярные действия ─────────────────────────────────────
+const PRESENT_SIMPLE: LessonItem[] = [
+  {
+    topic: "present-simple",
+    kind: "present-simple",
+    ru: "Я работаю каждый день.",
+    correct: ["I", "work", "every", "day"],
+    bank: ["I", "work", "every", "day", "working"],
+    subject: "I",
+    whyOk: "Верно! Регулярное действие → Present Simple, глагол без изменений: <b>I work</b>.",
+    bridge:
+      "Present Simple — про «вообще, по жизни, регулярно». Сигнал <b>every day</b> (каждый день) — это про привычку, а не «прямо сейчас». Поэтому простое <b>work</b>, без -ing.",
+    rule: "Регулярно/всегда → Present Simple: <b>I/you/we/they + глагол</b>. Сигналы: every day, usually.",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: I + базовый глагол → <b>I work</b>.",
+        bridge:
+          "Формула Present Simple для I/you/we/they: <b>подлежащее + глагол</b> (без окончаний). <b>I work</b>. Маркер «every day» подтверждает регулярность.",
+        rule: "<b>I/you/we/they + V</b> (база). he/she/it добавляет -s.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>I work</i>, <i>I read</i>, <i>I play</i> — регулярное действие без хвостов.",
+        bridge:
+          "Сравни: <i>I <b>work</b> every day</i> (привычка) ↔ <i>I <b>am working</b> now</i> (сейчас). «Every day» → простая форма <b>work</b>.",
+        rule: "«Каждый день / обычно» → глагол в простой форме.",
+      },
+    },
+  },
+  {
+    topic: "present-simple",
+    kind: "present-simple",
+    ru: "Она любит кофе.",
+    correct: ["She", "likes", "coffee"],
+    bank: ["She", "likes", "coffee", "like"],
+    subject: "She",
+    whyOk: "Верно! С <b>he/she/it</b> в Present Simple глагол берёт <b>-s</b>: <b>likes</b>.",
+    bridge:
+      "Главная ловушка Present Simple: для третьего лица (he/she/it) к глаголу добавляется <b>-s</b>. «Она любит» = <b>She likes</b>, не «She like».",
+    rule: "<b>he/she/it + глагол-s</b>. she likes, he works, it rains.",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: <b>She → likes</b> (третье лицо + -s).",
+        bridge:
+          "Правило -s: если подлежащее he/she/it, к глаголу добавь <b>-s</b>. like → <b>likes</b>. <b>She likes coffee</b>.",
+        rule: "Третье лицо ед.ч. → глагол + <b>-s</b>.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>she likes</i>, <i>he works</i>, <i>it costs</i> — везде <b>-s</b> после he/she/it.",
+        bridge:
+          "Ряд: <i>I like → she <b>likes</b></i> · <i>I work → he <b>works</b></i>. Третье лицо тянет <b>-s</b> на глагол.",
+        rule: "he/she/it → глагол с <b>-s</b>.",
+      },
+    },
+  },
+  {
+    topic: "present-simple",
+    kind: "present-simple",
+    ru: "Мы живём в Москве.",
+    correct: ["We", "live", "in", "Moscow"],
+    bank: ["We", "live", "in", "Moscow", "lives"],
+    subject: "We",
+    whyOk: "Верно! С <b>we</b> глагол без -s: <b>We live</b>. -s только для he/she/it.",
+    bridge:
+      "«Живём» — постоянное состояние → Present Simple. Подлежащее <b>we</b> (не третье лицо) → глагол простой, без -s: <b>live</b>.",
+    rule: "<b>I/you/we/they + V</b> (без -s). -s добавляет только he/she/it.",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: <b>we</b> → глагол без -s → <b>live</b>.",
+        bridge:
+          "Проверка на -s: подлежащее he/she/it? Нет, это <b>we</b> → глагол остаётся простым: <b>live</b>. <b>We live in Moscow</b>.",
+        rule: "we/you/they/I → глагол <b>без -s</b>.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>we live</i>, <i>they work</i>, <i>you play</i> — без -s.",
+        bridge:
+          "Сравни: <i>she live<b>s</b></i> (третье лицо) ↔ <i>we <b>live</b></i> (множественное). Только he/she/it берут -s.",
+        rule: "Множественное и «я/ты» → глагол без -s.",
+      },
+    },
+  },
+];
+
+// ── have-got: что у тебя есть ───────────────────────────────────────────────
+const HAVE_GOT: LessonItem[] = [
+  {
+    topic: "have-got",
+    kind: "have-got",
+    ru: "У меня есть машина.",
+    correct: ["I", "have", "got", "a", "car"],
+    bank: ["I", "have", "got", "a", "car", "has"],
+    subject: "I",
+    whyOk: "Верно! «У меня есть» = <b>I have got</b>. Связка have + got — обладание.",
+    bridge:
+      "В русском «у меня есть машина» — через «есть». В английском это <b>have got</b>: <i>I have got a car</i>. Для I/you/we/they — именно <b>have</b>.",
+    rule: "Обладание: <b>I/you/we/they have got</b>, <b>he/she/it has got</b>.",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: <b>I → have got</b>.",
+        bridge:
+          "Конструкция «у кого-то есть» = <b>have/has got</b>. Лицо I → <b>have</b>. Плюс «a car». <b>I have got a car</b>.",
+        rule: "<b>have got</b> (I/you/we/they) / <b>has got</b> (he/she/it).",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>I have got a car</i>, <i>they have got a dog</i> — have got = есть.",
+        bridge:
+          "Ряд: <i>I <b>have got</b> a car</i> · <i>we <b>have got</b> time</i>. «У меня/нас есть» → <b>have got</b>.",
+        rule: "«У меня есть …» → <b>I have got …</b>.",
+      },
+    },
+  },
+  {
+    topic: "have-got",
+    kind: "have-got",
+    ru: "У неё голубые глаза.",
+    correct: ["She", "has", "got", "blue", "eyes"],
+    bank: ["She", "has", "got", "blue", "eyes", "have"],
+    subject: "She",
+    whyOk: "Верно! С <b>she/he/it</b> → <b>has got</b>: <b>She has got blue eyes</b>.",
+    bridge:
+      "Та же ловушка третьего лица: для he/she/it «иметь» — это <b>has got</b>, не have. «У неё есть» = <b>She has got</b>.",
+    rule: "<b>he/she/it → has got</b> (не have got).",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: <b>She → has got</b>.",
+        bridge:
+          "Лицо she → форма <b>has</b> (третье лицо). <b>has got</b> + «blue eyes». Получаем <b>She has got blue eyes</b>.",
+        rule: "he/she/it → <b>has got</b>.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>she has got</i>, <i>he has got</i>, <i>it has got</i> — третье лицо → has.",
+        bridge:
+          "Сравни: <i>I <b>have</b> got</i> ↔ <i>she <b>has</b> got</i>. he/she/it меняют have на <b>has</b>.",
+        rule: "Третье лицо → <b>has got</b>.",
+      },
+    },
+  },
+  {
+    topic: "have-got",
+    kind: "have-got",
+    ru: "У них двое детей.",
+    correct: ["They", "have", "got", "two", "children"],
+    bank: ["They", "have", "got", "two", "children", "has", "childs"],
+    subject: "They",
+    whyOk: "Верно! <b>They have got</b> + множественное <b>children</b> (исключение).",
+    bridge:
+      "«У них есть» = <b>They have got</b> (множественное → have). И «дети» — особое множественное <b>children</b>, не childs.",
+    rule: "<b>they have got</b>; child → children (исключение мн.числа).",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: they → <b>have got</b>, child → <b>children</b>.",
+        bridge:
+          "Шаг 1: they (множеств.) → <b>have got</b>. Шаг 2: «дети» — исключение → <b>children</b>. Итог: <b>They have got two children</b>.",
+        rule: "they → have got; неправильное мн.ч.: children.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>they have got</i> + <i>children</i> — множественное и форма-исключение.",
+        bridge:
+          "Ряд: <i>we <b>have got</b></i> · <i>they <b>have got</b></i>. И помни <i>child → <b>children</b></i>.",
+        rule: "they/we → have got; child → children.",
+      },
+    },
+  },
+];
+
+// ── possessives: притяжательные ─────────────────────────────────────────────
+const POSSESSIVES: LessonItem[] = [
+  {
+    topic: "possessives",
+    kind: "possessives",
+    ru: "Это моя книга.",
+    correct: ["This", "is", "my", "book"],
+    bank: ["This", "is", "my", "book", "mine", "I"],
+    subject: "This",
+    whyOk: "Верно! Перед существительным — <b>my</b> (не mine): <b>my book</b>.",
+    bridge:
+      "<b>my</b> и <b>mine</b> оба «мой», но <b>my</b> стоит перед словом (<i>my book</i>), а <b>mine</b> — отдельно (<i>it is mine</i>). Раз дальше «book» — нужен <b>my</b>.",
+    rule: "Перед существительным: <b>my, your, his, her, our, their</b>. my book.",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: <b>my</b> + существительное.",
+        bridge:
+          "Притяжательное перед предметом — это <b>my/your/his…</b>. Здесь «моя книга» → <b>my book</b>. <b>mine</b> было бы без «book».",
+        rule: "<b>my</b> + сущ.; <b>mine</b> — без сущ.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>my book</i>, <i>my car</i>, <i>my friend</i> — <b>my</b> перед предметом.",
+        bridge:
+          "Сравни: <i>this is <b>my</b> book</i> ↔ <i>this book is <b>mine</b></i>. Есть слово после → <b>my</b>.",
+        rule: "Есть существительное → <b>my</b>.",
+      },
+    },
+  },
+  {
+    topic: "possessives",
+    kind: "possessives",
+    ru: "Её зовут Анна.",
+    correct: ["Her", "name", "is", "Anna"],
+    bank: ["Her", "name", "is", "Anna", "She", "His"],
+    subject: "Her",
+    whyOk: "Верно! «Её» (чьё имя) → <b>Her</b>: <b>Her name is Anna</b>.",
+    bridge:
+      "В английском «её зовут» строят через «её имя есть»: <b>Her name is Anna</b>. «Её» (чья) — это <b>Her</b>, а <b>She</b> — это «она» (кто).",
+    rule: "Притяжательные: his (его), <b>her</b> (её), its, our, their.",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: чьё имя → <b>her</b> name.",
+        bridge:
+          "«Её имя» = <b>her name</b> (her — притяжательное). Дальше «is Anna». <b>Her name is Anna</b>. <b>She</b> сюда не подходит — это «она сама».",
+        rule: "«её» (чья) → <b>her</b>; «она» (кто) → she.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>her name</i>, <i>her book</i>, <i>her idea</i> — <b>her</b> = её.",
+        bridge:
+          "Сравни: <i><b>She</b> is Anna</i> (она — Анна) ↔ <i><b>Her</b> name is Anna</i> (её имя — Анна). «Чьё имя» → <b>her</b>.",
+        rule: "«Её что-то» → <b>her</b> + предмет.",
+      },
+    },
+  },
+  {
+    topic: "possessives",
+    kind: "possessives",
+    ru: "Наш дом большой.",
+    correct: ["Our", "house", "is", "big"],
+    bank: ["Our", "house", "is", "big", "We", "Ours"],
+    subject: "Our",
+    whyOk: "Верно! «Наш» перед существительным → <b>Our</b>: <b>Our house</b>.",
+    bridge:
+      "«Наш» = <b>Our</b> (перед предметом). <b>We</b> — это «мы» (кто), <b>Ours</b> — «наше» отдельно. Раз дальше «house» — нужен <b>Our</b>.",
+    rule: "<b>our</b> + существительное = наш …. our house, our city.",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: <b>our</b> + house.",
+        bridge:
+          "Притяжательное «наш» перед предметом — <b>our</b>. <b>Our house</b> + «is big». Не We (мы) и не Ours (без предмета).",
+        rule: "«наш» + сущ. → <b>our</b>.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>our house</i>, <i>our team</i>, <i>our plan</i> — <b>our</b> перед предметом.",
+        bridge:
+          "Сравни: <i><b>We</b> are here</i> (мы) ↔ <i><b>Our</b> house</i> (наш дом). Перед предметом → <b>our</b>.",
+        rule: "Есть существительное → <b>our</b>, не we.",
+      },
+    },
+  },
+];
+
+// ── this-that: этот / тот ───────────────────────────────────────────────────
+const THIS_THAT: LessonItem[] = [
+  {
+    topic: "this-that",
+    kind: "this-that",
+    ru: "Это ручка.",
+    correct: ["This", "is", "a", "pen"],
+    bank: ["This", "is", "a", "pen", "That", "These"],
+    subject: "This",
+    whyOk: "Верно! Про близкий предмет — <b>This</b>: <b>This is a pen</b>.",
+    bridge:
+      "<b>This</b> — для того, что рядом («этот, вот этот»). <b>That</b> — для далёкого («тот, вон тот»). Предмет тут под рукой → <b>This</b>.",
+    rule: "<b>this</b> — близко (этот), <b>that</b> — далеко (тот). Ед.число.",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: близкий предмет → <b>This</b>.",
+        bridge:
+          "Выбор this/that по расстоянию. Близко → <b>this</b>. Дальше «is a pen». <b>This is a pen</b>.",
+        rule: "Близко и один → <b>this</b>.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>this pen</i>, <i>this book</i> — про то, что рядом, <b>this</b>.",
+        bridge:
+          "Сравни: <i><b>this</b> (вот здесь)</i> ↔ <i><b>that</b> (вон там)</i>. Рядом → <b>this</b>.",
+        rule: "Рядом → <b>this</b>.",
+      },
+    },
+  },
+  {
+    topic: "this-that",
+    kind: "this-that",
+    ru: "То — моя машина.",
+    correct: ["That", "is", "my", "car"],
+    bank: ["That", "is", "my", "car", "This", "Those"],
+    subject: "That",
+    whyOk: "Верно! Про дальний предмет — <b>That</b>: <b>That is my car</b>.",
+    bridge:
+      "Предмет вдалеке («то, вон то») → <b>That</b>. Если бы рядом — было бы this. Раз «то» (не вот это) — <b>That</b>.",
+    rule: "<b>that</b> — далеко (тот/то). Ед.число.",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: дальний предмет → <b>That</b>.",
+        bridge:
+          "Расстояние: далеко → <b>that</b>. Дальше «is my car». <b>That is my car</b>.",
+        rule: "Далеко и один → <b>that</b>.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>that car</i>, <i>that house</i> — про далёкое, <b>that</b>.",
+        bridge:
+          "Сравни: <i><b>this</b> (рядом)</i> ↔ <i><b>that</b> (вдали)</i>. Далеко → <b>that</b>.",
+        rule: "Вдали → <b>that</b>.",
+      },
+    },
+  },
+  {
+    topic: "this-that",
+    kind: "this-that",
+    ru: "Это мои друзья.",
+    correct: ["These", "are", "my", "friends"],
+    bank: ["These", "are", "my", "friends", "This", "Those"],
+    subject: "These",
+    whyOk: "Верно! Несколько близких → <b>These</b> + are: <b>These are my friends</b>.",
+    bridge:
+      "<b>this</b> — один близкий, а <b>these</b> — несколько близких («эти»). Друзей много → <b>These</b>, и связка множественного → <b>are</b>.",
+    rule: "Мн.число: <b>these</b> (эти, близко), <b>those</b> (те, далеко).",
+    byConcept: {
+      "rule-first": {
+        whyOk: "Верно: много близких → <b>These</b> + are.",
+        bridge:
+          "this во множественном → <b>these</b>. Раз «друзья» много и рядом → <b>These</b>, связка <b>are</b>. <b>These are my friends</b>.",
+        rule: "Мн.ч. близко → <b>these</b> + are.",
+      },
+      "examples-first": {
+        whyOk: "Верно! <i>these friends</i>, <i>these books</i> — много рядом, <b>these</b>.",
+        bridge:
+          "Ряд: <i>this → <b>these</b></i> (близкие) · <i>that → those</i> (далёкие). Много рядом → <b>these</b>.",
+        rule: "Несколько рядом → <b>these</b>.",
+      },
+    },
+  },
+];
+
 // Реестр контента по теме. present-continuous — из items.ts (полная адаптивность,
-// 3 концепции). Новые темы Юнита 1 — здесь. AI-генерация пополняет реестр позже.
+// 3 концепции). Темы Юнитов 1–2 — здесь. AI-генерация пополняет реестр позже.
 export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "present-continuous": ITEMS,
+  // Юнит 1
   "to-be": TO_BE,
   pronouns: PRONOUNS,
   articles: ARTICLES,
   plurals: PLURALS,
+  // Юнит 2
+  "present-simple": PRESENT_SIMPLE,
+  "have-got": HAVE_GOT,
+  possessives: POSSESSIVES,
+  "this-that": THIS_THAT,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */

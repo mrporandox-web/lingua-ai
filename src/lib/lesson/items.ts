@@ -13,7 +13,11 @@ export type LessonKind =
   | "articles"
   | "to-be"
   | "pronouns"
-  | "plurals";
+  | "plurals"
+  | "present-simple"
+  | "have-got"
+  | "possessives"
+  | "this-that";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,
