@@ -6,6 +6,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   explainFor,
   explainStructured,
@@ -64,6 +65,7 @@ function haptic(pattern: number | number[]) {
 }
 
 export function LessonScreen({ topic }: { topic?: string | null }) {
+  const router = useRouter();
   const [idx, setIdx] = useState(0);
 
   // Пачка упражнений: тема урока берётся из ?topic= (карта курса) — это
@@ -464,14 +466,7 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
         <button
           className="lyra-icon-btn"
           aria-label="Закрыть"
-          onClick={() => {
-            // сброс ТЕКУЩЕЙ попытки урока: позиция, прогресс-бар, сердца.
-            // Стрик НЕ трогаем — это история занятий, а не состояние урока.
-            setIdx(0);
-            setProg(0);
-            setHearts(HEARTS_PER_LESSON);
-            loadItem();
-          }}
+          onClick={() => router.push("/course")}
         >
           ×
         </button>
