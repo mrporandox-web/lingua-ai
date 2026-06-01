@@ -83,6 +83,10 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
   // Хук кэширует синтез по тексту — повторный 🔊 на той же фразе сети не дёргает.
   const { loading: ttsLoading, speak } = useTts();
 
+  // стрик занятий — РЕАЛЬНАЯ история из профиля (gamification.streak).
+  // 0 до загрузки профиля; затем подтягиваем настоящее число (см. эффект маунта).
+  const [streak, setStreak] = useState(0);
+
   // загрузка профиля при монтировании через сервис обучения. Концепцию здесь
   // НЕ выбираем — этим занимается эффект ниже (по idx + готовности профиля),
   // чтобы не было двойного startSession на старте.
@@ -167,9 +171,6 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
   const [usedBank, setUsedBank] = useState<Set<number>>(new Set());
   // прогресс-бар урока — честные 0% на старте (растёт по мере ответов).
   const [prog, setProg] = useState(0);
-  // стрик занятий — РЕАЛЬНАЯ история из профиля (gamification.streak).
-  // 0 до загрузки профиля; затем подтягиваем настоящее число (см. эффект маунта).
-  const [streak, setStreak] = useState(0);
   // сердца — текущая попытка урока, не история → стартуем с полного бака.
   const [hearts, setHearts] = useState(HEARTS_PER_LESSON);
 
@@ -347,7 +348,7 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
         setProfile(res.profile);
       })();
     }
-  }, [picked, item, idx, items.length, fireConfetti, profile, activeConcept, speak]);
+  }, [picked, item, idx, items.length, fireConfetti, profile, activeConcept, speak, setStreak]);
 
   // ── раскрутка подсказки вглубь: разбор → мостик → правило ────────────────────
   const moreWhy = useCallback(() => {
