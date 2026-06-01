@@ -1,10 +1,8 @@
 "use client";
 
-// Эталонный экран урока Lingua-AI — sentence-builder «собери фразу».
-// Портировано 1:1 из prototype/lesson.html: концепт-чип, кино-reveal задания,
-// поп-анимация токенов, FLIP-перелёт банк→ответ, feedback-шторка с 3-уровневым
-// «объясни почему» (фича против Duolingo), конфетти + haptic, shake на ошибке,
-// сердца / стрик / прогресс. ITEMS и explainError — из src/lib/lesson/items.ts.
+// Экран урока Lyra: sentence-builder «собери фразу».
+// Механика сохранена: концепт-чип, reveal задания, FLIP-перелёт банк→ответ,
+// feedback-шторка, TTS, конфетти + haptic, сердца / стрик / прогресс.
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -50,7 +48,7 @@ function selectWeakTopic(profile: UserProfile | null): string {
   return weak.reduce((a, b) => (b.weight > a.weight ? b : a)).topic;
 }
 
-const CONFETTI_COLORS = ["#7c5cff", "#5ce0c8", "#ff5c9d", "#fbbf24", "#4ade80"];
+const CONFETTI_COLORS = ["#efc079", "#f4a85c", "#8fa8ff", "#b79bff", "#7fd9a6"];
 
 // Сердца («жизни») на ОДИН урок — не история, а текущая попытка: сбрасываются
 // каждым уроком, поэтому живут в локальном state, а не в профиле.
@@ -239,7 +237,7 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
     if (!toEl) return;
     const b = toEl.getBoundingClientRect();
     const ghost = document.createElement("div");
-    ghost.className = "fly";
+    ghost.className = "lyra-fly";
     ghost.textContent = word;
     ghost.style.left = `${a.left}px`;
     ghost.style.top = `${a.top}px`;
@@ -378,16 +376,16 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
 
   // ── строки-блоки структурированного разбора ─────────────────────────────────
   const renderBlocks = (blocks: ErrorBlock[]) => (
-    <div className="fbCard">
+    <div className="lyra-fb-card">
       {blocks.map((b, i) => (
-        <div className={`fbRow tone-${b.tone}`} key={i}>
-          <span className="fbRowIcon" aria-hidden>
+        <div className={`lyra-fb-row tone-${b.tone}`} key={i}>
+          <span className="lyra-fb-row-icon" aria-hidden>
             {b.icon}
           </span>
-          <div className="fbRowBody">
-            <span className="fbRowLabel">{b.label}</span>
+          <div className="lyra-fb-row-body">
+            <span className="lyra-fb-row-label">{b.label}</span>
             <span
-              className="fbRowText"
+              className="lyra-fb-row-text"
               dangerouslySetInnerHTML={{ __html: b.html }}
             />
           </div>
@@ -403,7 +401,7 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
     if (fb === "good") {
       return (
         <span
-          className="fbWhyText"
+          className="lyra-fb-why-text"
           dangerouslySetInnerHTML={{ __html: exp.whyOk }}
         />
       );
@@ -413,7 +411,7 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
       return (
         <>
           {renderBlocks(fbBlocks)}
-          <button className="why-btn" onClick={moreWhy}>
+          <button className="lyra-why-btn" onClick={moreWhy}>
             почему так? →
           </button>
         </>
@@ -423,13 +421,13 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
       return (
         <>
           {renderBlocks(fbBlocks)}
-          <div className="fbDeeper">
-            <span className="hint-tag">🧠 На пальцах</span>
+          <div className="lyra-fb-deeper">
+            <span className="lyra-hint-tag">На пальцах</span>
             <span
-              className="fbWhyText"
+              className="lyra-fb-why-text"
               dangerouslySetInnerHTML={{ __html: exp.bridge }}
             />
-            <button className="why-btn" onClick={moreWhy}>
+            <button className="lyra-why-btn" onClick={moreWhy}>
               короткое правило →
             </button>
           </div>
@@ -439,10 +437,10 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
     return (
       <>
         {renderBlocks(fbBlocks)}
-        <div className="fbDeeper">
-          <span className="hint-tag">📌 Правило</span>
+        <div className="lyra-fb-deeper">
+          <span className="lyra-hint-tag">Правило</span>
           <span
-            className="fbWhyText"
+            className="lyra-fb-why-text"
             dangerouslySetInnerHTML={{ __html: exp.rule }}
           />
         </div>
@@ -451,11 +449,11 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
   };
 
   return (
-    <div className="app">
+    <div className="lyra-lesson">
       {/* top bar: прогресс + стрик + сердца */}
-      <div className="top">
+      <div className="lyra-lesson-top">
         <button
-          className="x"
+          className="lyra-icon-btn"
           aria-label="Закрыть"
           onClick={() => {
             // сброс ТЕКУЩЕЙ попытки урока: позиция, прогресс-бар, сердца.
@@ -466,25 +464,27 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
             loadItem();
           }}
         >
-          ✕
+          ×
         </button>
-        <div className="prog">
+        <div className="lyra-progress lyra-lesson-progress">
           <i style={{ width: `${prog}%` }} />
         </div>
-        <Link href="/profile" className="streak" aria-label="Мой профиль">
-          🔥 <span>{streak}</span>
+        <Link href="/profile" className="lyra-stat" aria-label="Мой профиль">
+          <span aria-hidden>*</span> {streak}
         </Link>
-        <div className="hearts">❤ <span>{hearts}</span></div>
+        <div className="lyra-stat danger">
+          <span aria-hidden>♥</span> {hearts}
+        </div>
       </div>
 
       {/* концепт-чип — память про юзера (концепция выбрана движком) */}
-      <div className="chip">
-        <span className="dot" /> Тебе лучше заходит:{" "}
+      <div className="lyra-chip cool lyra-lesson-chip">
+        <span className="lyra-status-dot" /> Формат подачи:{" "}
         <b>{CONCEPT_LABEL[activeConcept]}</b>
       </div>
 
       {/* кино-reveal задания (по словам) */}
-      <h1 className="task reveal" key={idx}>
+      <h1 className="lyra-task reveal" key={idx}>
         {item.ru.split(" ").map((w, i) => (
           <span className="line" key={i}>
             <span className="word" style={{ ["--i" as string]: i }}>
@@ -493,7 +493,7 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
           </span>
         ))}
       </h1>
-      <p className="hintline">
+      <p className="lyra-muted lyra-lesson-hint">
         {(() => {
           const t = getTopic(item.topic);
           return t ? `${t.title} — ${t.blurb}. Собери фразу.` : "Собери фразу.";
@@ -501,26 +501,26 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
       </p>
 
       {/* sentence builder */}
-      <div className={`stage${shake ? " shake" : ""}`}>
-        <div className="answer" ref={answerRef}>
+      <div className={`lyra-card lyra-builder${shake ? " shake" : ""}`}>
+        <div className="lyra-answer" ref={answerRef}>
           {picked.map((p) => (
             <button
               key={p.id}
-              className="tok"
+              className="lyra-token"
               onClick={() => unpick(p.id, p.bankIdx)}
             >
               {p.word}
             </button>
           ))}
         </div>
-        <div className="bank">
+        <div className="lyra-bank">
           {item.bank.map((w, i) => (
             <button
               key={i}
               ref={(el) => {
                 bankRefs.current[i] = el;
               }}
-              className={`tok${usedBank.has(i) ? " used" : ""}`}
+              className={`lyra-token${usedBank.has(i) ? " used" : ""}`}
               onClick={() => pick(i, w)}
             >
               {w}
@@ -529,7 +529,7 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
         </div>
         {fb === null && (
           <button
-            className={`btn go check${canCheck ? " ready" : ""}`}
+            className={`lyra-btn primary lyra-check${canCheck ? " ready" : ""}`}
             disabled={!canCheck}
             onClick={check}
           >
@@ -539,25 +539,25 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
       </div>
 
       {/* feedback sheet */}
-      <div className={`fb${fb ? ` ${fb} show` : ""}`}>
-        <div className="fbInner">
-          <div className="fbHead">
-            <span>{fb === "good" ? "✅ Отлично!" : "Почти! Давай разберём"}</span>
+      <div className={`lyra-feedback${fb ? ` ${fb} show` : ""}`}>
+        <div className="lyra-feedback-inner">
+          <div className="lyra-feedback-head">
+            <span>{fb === "good" ? "Отлично!" : "Почти! Давай разберём"}</span>
             {/* listening: послушать эталонную фразу. Виден только в шторке —
                 до проверки прятать (это и есть ответ). Нет TTS → тишина. */}
             <button
               type="button"
-              className="ttsBtn"
+              className="lyra-tts-btn"
               aria-label="Послушать правильную фразу"
               disabled={ttsLoading}
               onClick={() => speak(item.correct.join(" "))}
             >
-              {ttsLoading ? "…" : "🔊"}
+              {ttsLoading ? "…" : "♪"}
             </button>
           </div>
-          <div className="fbWhy">{fb && renderWhy()}</div>
+          <div className="lyra-feedback-why">{fb && renderWhy()}</div>
           <button
-            className={`btn ${fb === "good" ? "good2" : "bad2"}`}
+            className={`lyra-btn ${fb === "good" ? "success" : "danger"}`}
             onClick={next}
           >
             {fb === "good"

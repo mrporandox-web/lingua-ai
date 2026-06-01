@@ -1,8 +1,7 @@
-// Роут урока: фон (aurora+grid) внутри рамки телефона + клиентский LessonScreen.
 // ?topic=<id> (из карты курса) задаёт тему урока; нет параметра → дефолт-витрина
 // (present-continuous + адаптивная AI-генерация под слабую тему).
-import { Backdrop } from "@/components/Backdrop";
 import { LessonScreen } from "@/components/lesson/LessonScreen";
+import { LyraShell } from "@/components/lyra";
 
 export default async function LessonPage({
   searchParams,
@@ -11,9 +10,8 @@ export default async function LessonPage({
 }) {
   const { topic } = await searchParams;
   return (
-    <div className="phone">
-      <Backdrop />
+    <LyraShell>
       <LessonScreen topic={topic ?? null} />
-    </div>
+    </LyraShell>
   );
 }
