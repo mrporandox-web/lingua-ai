@@ -23,6 +23,13 @@ const KINDS: LessonKind[] = [
   "have-got",
   "possessives",
   "this-that",
+  "there-is",
+  "prepositions-place",
+  "can-cant",
+  "adverbs-frequency",
+  "like-ing",
+  "numbers-time",
+  "wh-questions",
 ];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */

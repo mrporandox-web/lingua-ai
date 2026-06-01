@@ -39,19 +39,10 @@ describe("curriculum A1", () => {
     }
   });
 
-  it("Юниты 1–2 + present-continuous готовы (9 ready-тем)", () => {
-    const ready = A1_TOPICS.filter((t) => t.status === "ready").map((t) => t.id);
-    expect(ready).toEqual([
-      "to-be",
-      "pronouns",
-      "articles",
-      "plurals",
-      "present-simple",
-      "have-got",
-      "possessives",
-      "this-that",
-      "present-continuous",
-    ]);
+  it("вся программа A1 готова — 16/16 ready-тем", () => {
+    const ready = A1_TOPICS.filter((t) => t.status === "ready");
+    expect(ready).toHaveLength(16);
+    expect(A1_TOPICS.every((t) => t.status === "ready")).toBe(true);
   });
 
   it("getUnit возвращает юнит по id", () => {
@@ -61,13 +52,12 @@ describe("curriculum A1", () => {
 });
 
 describe("progress", () => {
-  it("первая готовая — current, прочие готовые — available, скелеты — soon", () => {
+  it("первая готовая — current, прочие готовые — available", () => {
     const st = topicStates(profile());
     expect(st.get("to-be")).toBe("current"); // первая в порядке
     expect(st.get("pronouns")).toBe("available");
     expect(st.get("present-simple")).toBe("available");
-    expect(st.get("present-continuous")).toBe("available");
-    expect(st.get("wh-questions")).toBe("soon");
+    expect(st.get("wh-questions")).toBe("available"); // теперь тоже готова
   });
 
   it("освоенная готовая тема становится done", () => {
@@ -90,7 +80,7 @@ describe("progress", () => {
     expect(unitProgress(p, "a1-basics")).toEqual({ done: 0, total: 4 });
   });
 
-  it("readyShare: 9 готовых из 16", () => {
-    expect(readyShare()).toEqual({ ready: 9, total: 16 });
+  it("readyShare: 16 готовых из 16 (вся A1)", () => {
+    expect(readyShare()).toEqual({ ready: 16, total: 16 });
   });
 });

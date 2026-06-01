@@ -7,6 +7,13 @@
 
 import type { LessonItem } from "./items";
 import { ITEMS } from "./items";
+import { THERE_IS, PREPOSITIONS_PLACE, CAN_CANT } from "./content-unit3";
+import {
+  ADVERBS_FREQUENCY,
+  LIKE_ING,
+  NUMBERS_TIME,
+  WH_QUESTIONS,
+} from "./content-unit4";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -688,6 +695,15 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "have-got": HAVE_GOT,
   possessives: POSSESSIVES,
   "this-that": THIS_THAT,
+  // Юнит 3
+  "there-is": THERE_IS,
+  "prepositions-place": PREPOSITIONS_PLACE,
+  "can-cant": CAN_CANT,
+  // Юнит 4
+  "adverbs-frequency": ADVERBS_FREQUENCY,
+  "like-ing": LIKE_ING,
+  "numbers-time": NUMBERS_TIME,
+  "wh-questions": WH_QUESTIONS,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */

@@ -22,17 +22,17 @@ export const A1_TOPICS: CourseTopic[] = [
   { id: "possessives", title: "Притяжательные", blurb: "my, your, his, her", cefr: "A1", status: "ready" },
   { id: "this-that", title: "this / that / these / those", blurb: "этот и тот", cefr: "A1", status: "ready" },
 
-  // Юнит 3 · Прямо сейчас
+  // Юнит 3 · Прямо сейчас — наполнен кураторским контентом (status: ready)
   { id: "present-continuous", title: "Present Continuous", blurb: "действие сейчас: am/is/are + -ing", cefr: "A1", status: "ready" },
-  { id: "there-is", title: "there is / there are", blurb: "есть / находится", cefr: "A1", status: "soon" },
-  { id: "prepositions-place", title: "Предлоги места", blurb: "in, on, at, under", cefr: "A1", status: "soon" },
-  { id: "can-cant", title: "can / can't", blurb: "умение и возможность", cefr: "A1", status: "soon" },
+  { id: "there-is", title: "there is / there are", blurb: "есть / находится", cefr: "A1", status: "ready" },
+  { id: "prepositions-place", title: "Предлоги места", blurb: "in, on, at, under", cefr: "A1", status: "ready" },
+  { id: "can-cant", title: "can / can't", blurb: "умение и возможность", cefr: "A1", status: "ready" },
 
-  // Юнит 4 · Каждый день
-  { id: "adverbs-frequency", title: "Наречия частоты", blurb: "always, usually, never", cefr: "A1", status: "soon" },
-  { id: "like-ing", title: "like + -ing", blurb: "что нравится делать", cefr: "A1", status: "soon" },
-  { id: "numbers-time", title: "Числа и время", blurb: "сколько времени, который час", cefr: "A1", status: "soon" },
-  { id: "wh-questions", title: "Вопросы Wh-", blurb: "What, Where, When, Who", cefr: "A1", status: "soon" },
+  // Юнит 4 · Каждый день — наполнен кураторским контентом (status: ready)
+  { id: "adverbs-frequency", title: "Наречия частоты", blurb: "always, usually, never", cefr: "A1", status: "ready" },
+  { id: "like-ing", title: "like + -ing", blurb: "что нравится делать", cefr: "A1", status: "ready" },
+  { id: "numbers-time", title: "Числа и время", blurb: "сколько времени, который час", cefr: "A1", status: "ready" },
+  { id: "wh-questions", title: "Вопросы Wh-", blurb: "What, Where, When, Who", cefr: "A1", status: "ready" },
 ];
 
 // ── Юниты A1 ────────────────────────────────────────────────────────────────

@@ -17,7 +17,14 @@ export type LessonKind =
   | "present-simple"
   | "have-got"
   | "possessives"
-  | "this-that";
+  | "this-that"
+  | "there-is"
+  | "prepositions-place"
+  | "can-cant"
+  | "adverbs-frequency"
+  | "like-ing"
+  | "numbers-time"
+  | "wh-questions";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,
