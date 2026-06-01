@@ -1,13 +1,17 @@
-// Применение миграций к облачному Postgres (Supabase) напрямую.
+// Применение миграций к облачному Postgres (Supabase) через Management API.
 //
-// Запуск:  SUPABASE_DB_URL="postgresql://...:6543/postgres" node scripts/migrate.mjs
-// Строку подключения берём из Supabase → Project Settings → Database →
-// Connection string → URI (pooler). Один раз кладём её в .env моста как
-// SUPABASE_DB_URL, дальше миграции катаются без участия человека.
+// Запуск:  node scripts/migrate.mjs
+// Токен берётся из SUPABASE_ACCESS_TOKEN (Personal Access Token, sbp_...).
+// Лежит в .env моста (claude-tg-lingua/.env) — скрипт читает его сам, либо
+// можно передать через окружение: SUPABASE_ACCESS_TOKEN=sbp_... node scripts/migrate.mjs
 //
-// Все шаги ИДЕМПОТЕНТНЫ (if not exists) — безопасно гонять повторно.
+// Почему Management API, а не connection string: не нужен пароль БД — PAT
+// аккаунта даёт право выполнить SQL на проекте. Все шаги ИДЕМПОТЕНТНЫ.
 
-import pg from "pg";
+import { readFileSync } from "node:fs";
+
+const PROJECT_REF = "rpromuftcsbkstazjctr"; // общий облачный проект флота
+const BRIDGE_ENV = "/Users/exz/projects/claude-tg-lingua/.env";
 
 const MIGRATIONS = [
   // 2026-06-01 · знакомство (имя) + подписка в профиле
@@ -16,38 +20,55 @@ const MIGRATIONS = [
      not null default '{"plan":"free","status":"none","renewsAt":null}'::jsonb;`,
 ];
 
+function readToken() {
+  if (process.env.SUPABASE_ACCESS_TOKEN) return process.env.SUPABASE_ACCESS_TOKEN;
+  try {
+    const env = readFileSync(BRIDGE_ENV, "utf8");
+    const m = env.match(/^SUPABASE_ACCESS_TOKEN=(.+)$/m);
+    if (m) return m[1].trim().replace(/^"|"$/g, "");
+  } catch {}
+  return null;
+}
+
+async function runSql(token, query) {
+  const res = await fetch(
+    `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/query`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query }),
+    }
+  );
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
 async function main() {
-  const url = process.env.SUPABASE_DB_URL || process.env.DATABASE_URL;
-  if (!url) {
+  const token = readToken();
+  if (!token) {
     console.error(
-      "Нет SUPABASE_DB_URL. Пример:\n  SUPABASE_DB_URL='postgresql://postgres.<ref>:<pass>@<host>:6543/postgres' node scripts/migrate.mjs"
+      "Нет SUPABASE_ACCESS_TOKEN (ни в env, ни в .env моста). Выпусти PAT на\n" +
+        "https://supabase.com/dashboard/account/tokens и положи в .env."
     );
     process.exit(1);
   }
-
-  const client = new pg.Client({
-    connectionString: url,
-    ssl: { rejectUnauthorized: false },
-  });
-  await client.connect();
-  try {
-    for (const sql of MIGRATIONS) {
-      await client.query(sql);
-      console.log("✓", sql.split("\n")[0].trim());
-    }
-    // Контроль: убедимся, что колонки на месте.
-    const { rows } = await client.query(
-      `select column_name from information_schema.columns
-         where table_schema='public' and table_name='profiles'
-           and column_name in ('name','subscription') order by column_name;`
-    );
-    console.log(
-      "колонки profiles:",
-      rows.map((r) => r.column_name).join(", ") || "— нет —"
-    );
-  } finally {
-    await client.end();
+  for (const sql of MIGRATIONS) {
+    await runSql(token, sql);
+    console.log("✓", sql.split("\n")[0].trim());
   }
+  const cols = await runSql(
+    token,
+    `select column_name from information_schema.columns
+       where table_schema='public' and table_name='profiles'
+         and column_name in ('name','subscription') order by column_name;`
+  );
+  console.log(
+    "колонки profiles:",
+    cols.map((r) => r.column_name).join(", ") || "— нет —"
+  );
 }
 
 main().catch((e) => {
