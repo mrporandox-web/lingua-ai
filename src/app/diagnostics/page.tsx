@@ -1,13 +1,10 @@
-// Роут диагностики уровня (Блок A) — адаптивный placement-тест.
-// Структура зеркалит урок: рамка телефона на десктопе + общий фон + экран.
-import { Backdrop } from "@/components/Backdrop";
 import { DiagnosticsScreen } from "@/components/diagnostics/DiagnosticsScreen";
+import { LyraShell } from "@/components/lyra";
 
 export default function DiagnosticsPage() {
   return (
-    <div className="phone">
-      <Backdrop />
+    <LyraShell>
       <DiagnosticsScreen />
-    </div>
+    </LyraShell>
   );
 }

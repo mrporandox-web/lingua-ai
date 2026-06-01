@@ -5,7 +5,7 @@
 // (тестируется отдельно). Этот компонент — только UI + сохранение итога:
 //   вопрос → подсветка ответа → следующий (сложнее/проще) → финиш →
 //   patch профиля (cefrLevel/skills.grammar/weakTopics/onboarded) → урок.
-// Визуальный язык общий с уроком: .top/.prog, .card, .opt, .big, .pill.
+// Визуальный слой берём из Lyra shell, логика диагностики остаётся в движке.
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -149,28 +149,29 @@ export function DiagnosticsScreen() {
   }, [router]);
 
   return (
-    <div className="app">
+    <div className="lyra-diagnostics">
       {/* top bar: прогресс прохождения теста */}
-      <div className="top">
-        <div className="prog" style={{ marginLeft: 0 }}>
+      <div className="lyra-diag-top">
+        <div className="lyra-progress">
           <i style={{ width: `${result ? 100 : progress}%` }} />
         </div>
       </div>
 
       {/* подпись-чип: что это за экран */}
-      <div className="chip">
-        <span className="dot" /> {greeted ? "Диагностика уровня" : "Знакомство"}
+      <div className="lyra-chip cool">
+        <span className="lyra-status-dot" />{" "}
+        {greeted ? "Диагностика уровня" : "Знакомство"}
       </div>
 
       {!greeted ? (
         // === Шаг знакомства: спрашиваем имя до теста ===
-        <div className="card" key="greet">
-          <div className="q">Давай познакомимся 👋</div>
-          <p className="hintline" style={{ marginBottom: 14 }}>
+        <div className="lyra-card lyra-diag-card" key="greet">
+          <div className="lyra-question">Давай познакомимся</div>
+          <p className="lyra-muted lyra-diag-copy">
             Как тебя зовут? Буду обращаться по имени — так уютнее учиться.
           </p>
           <input
-            className="nameInput"
+            className="lyra-input"
             type="text"
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value)}
@@ -181,8 +182,7 @@ export function DiagnosticsScreen() {
             aria-label="Твоё имя"
           />
           <button
-            className="btn go ready"
-            style={{ display: "block", width: "100%", marginTop: 14 }}
+            className="lyra-btn primary"
             onClick={onGreet}
           >
             {nameInput.trim() ? "Приятно познакомиться →" : "Пропустить →"}
@@ -190,32 +190,31 @@ export function DiagnosticsScreen() {
         </div>
       ) : result ? (
         // === Финишный экран: уровень + точность + слабые темы ===
-        <div className="card" key="result">
-          <div className="lbl">
+        <div className="lyra-card lyra-diag-card lyra-diag-result" key="result">
+          <div className="lyra-label">
             {savedName ? `${savedName}, твой уровень` : "Твой уровень"}
           </div>
-          <div className="big">{result.cefrLevel}</div>
-          <div className="lbl">Грамматика — {result.grammarAccuracy}% верных</div>
+          <div className="lyra-result-level">{result.cefrLevel}</div>
+          <div className="lyra-label">Грамматика — {result.grammarAccuracy}% верных</div>
 
           {result.weakTopics.length > 0 && (
-            <div style={{ marginTop: "18px" }}>
-              <div className="qmeta">Над чем поработаем</div>
+            <div className="lyra-topic-list">
+              <div className="lyra-eyebrow">Над чем поработаем</div>
               {result.weakTopics.map((w) => (
-                <span className="pill hot" key={w.topic}>
+                <span className="lyra-topic-pill hot" key={w.topic}>
                   {topicLabel(w.topic)}
                 </span>
               ))}
             </div>
           )}
 
-          <p className="note">
+          <p className="lyra-muted lyra-diag-copy">
             Дальше начнём с этих тем и подберём подачу, которая зайдёт именно
             тебе. Это и есть наша фишка — память про то, как ты учишься.
           </p>
 
           <button
-            className="btn go ready"
-            style={{ display: "block", width: "100%", marginTop: "16px" }}
+            className="lyra-btn primary"
             onClick={onFinish}
             disabled={saving}
           >
@@ -224,17 +223,17 @@ export function DiagnosticsScreen() {
         </div>
       ) : question ? (
         // === Экран вопроса ===
-        <div className="card" key={question.id}>
-          <div className="bar">
+        <div className="lyra-card lyra-diag-card" key={question.id}>
+          <div className="lyra-progress lyra-question-progress">
             <i style={{ width: `${progress}%` }} />
           </div>
-          <div className="qmeta">
+          <div className="lyra-eyebrow">
             Вопрос {answered + 1} · уровень {question.lvl}
           </div>
-          <div className="q">{question.q}</div>
+          <div className="lyra-question">{question.q}</div>
           {question.opts.map((opt, i) => {
             // Подсветка после выбора: верный — зелёный, выбранный неверный — красный.
-            let cls = "opt";
+            let cls = "lyra-option";
             if (picked !== null) {
               if (i === question.answer) cls += " ok";
               else if (i === picked) cls += " bad";
@@ -253,7 +252,7 @@ export function DiagnosticsScreen() {
         </div>
       ) : (
         // Банк исчерпан без результата (страховка — не должно случаться).
-        <div className="card">Готовим результат…</div>
+        <div className="lyra-card lyra-diag-card">Готовим результат…</div>
       )}
     </div>
   );
