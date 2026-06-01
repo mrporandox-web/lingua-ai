@@ -393,6 +393,127 @@
   font-weight: 800;
 }
 
+.lyra-course-head,
+.lyra-reco-top,
+.lyra-section-head,
+.lyra-unit-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lyra-eyebrow {
+  color: var(--lyra-dim);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.lyra-eyebrow.gold {
+  color: var(--lyra-gold);
+}
+
+.lyra-reco {
+  margin-top: 18px;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.lyra-reco h2 {
+  font-family: var(--lyra-display);
+  font-size: 24px;
+  line-height: 1.12;
+  margin-top: 16px;
+  letter-spacing: 0;
+}
+
+.lyra-ready-note {
+  margin: 12px 0 24px;
+  text-align: center;
+  font-size: 12.5px;
+}
+
+.lyra-constellation {
+  margin-top: 26px;
+}
+
+.lyra-section-head h2 {
+  font-family: var(--lyra-display);
+  font-size: 20px;
+  letter-spacing: 0;
+}
+
+.lyra-unit {
+  margin-top: 14px;
+  padding: 16px;
+}
+
+.lyra-unit-head h3 {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.lyra-unit-head p {
+  color: var(--lyra-muted);
+  font-size: 12.5px;
+  margin-top: 3px;
+}
+
+.lyra-stars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.lyra-star-btn {
+  min-height: 108px;
+  border-radius: 18px;
+  border: 1px solid var(--lyra-line);
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--lyra-text);
+  padding: 12px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.lyra-star-btn:disabled {
+  opacity: 0.42;
+}
+
+.lyra-star-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--lyra-surface-3);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.lyra-star-btn.done .lyra-star-dot,
+.lyra-star-btn.current .lyra-star-dot {
+  background: var(--lyra-gold);
+  box-shadow: 0 0 18px rgba(239, 192, 121, 0.45);
+}
+
+.lyra-star-btn.current {
+  border-color: rgba(239, 192, 121, 0.42);
+}
+
+.lyra-star-btn span:not(.lyra-star-dot) {
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.lyra-star-btn small {
+  color: var(--lyra-muted);
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

@@ -1,25 +1,21 @@
 "use client";
 
-// Экран-карта программы (линейный путь A1). Показывает юниты и темы со
-// статусом (освоено / доступно / закрыто / скоро), прогресс и вход в урок.
-// Витрина того, что мы — программа, а не один демо-урок.
+// Карта курса в визуальном языке Lyra. Данные и состояния остаются из
+// curriculum/progress; меняется только представление: секции/юниты/темы
+// становятся созвездиями и звёздами.
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Backdrop } from "@/components/Backdrop";
+import {
+  LyraBottomNav,
+  LyraCard,
+  LyraChip,
+  LyraOrb,
+  LyraShell,
+} from "@/components/lyra";
 import { getProfileStore } from "@/lib/store";
 import { createEmptyProfile, type UserProfile } from "@/lib/store/types";
-import { SECTIONS, unitsOfSection, getTopic } from "@/lib/course/curriculum";
-import {
-  topicStates,
-  topicMastery,
-  unitProgress,
-  courseProgress,
-  readyShare,
-  isTopicPlayable,
-  type TopicState,
-} from "@/lib/course/progress";
+import { buildCourseSky } from "./sky";
 
 export function CourseScreen() {
   const router = useRouter();
@@ -36,115 +32,92 @@ export function CourseScreen() {
     };
   }, []);
 
-  // Нет своего профиля (свежий заход) → считаем состояния от пустого:
-  // present-continuous всё равно должна быть current (доступна), не soon.
   const baseProfile = useMemo(
     () => profile ?? createEmptyProfile("anon", "1970-01-01T00:00:00.000Z"),
     [profile]
   );
-  const states = useMemo(() => topicStates(baseProfile), [baseProfile]);
-  const done = courseProgress(baseProfile);
-  const ready = readyShare();
+  const sky = useMemo(() => buildCourseSky(baseProfile), [baseProfile]);
+  const current = sky.sections
+    .flatMap((s) => s.units)
+    .flatMap((u) => u.stars)
+    .find((s) => s.state === "current");
 
   return (
-    <div className="phone">
-      <Backdrop />
-      <div className="app">
-        <div className="top">
-          <Link href="/" className="x" aria-label="На главную">
-            ‹
-          </Link>
-          <div className="chip" style={{ margin: 0 }}>
-            <span className="dot" /> Программа курса
-          </div>
+    <LyraShell withBottomNav={<LyraBottomNav />}>
+      <div className="lyra-course-head">
+        <div>
+          <p className="lyra-eyebrow">Твоё небо</p>
+          <h1 className="lyra-title">Курс английского</h1>
         </div>
-
-        {/* Прогресс курса */}
-        <div className="courseHead">
-          <div className="qmeta">Программа · {done.done}/{done.total} тем освоено</div>
-          <div className="bar" style={{ marginBottom: 6 }}>
-            <i style={{ width: `${(done.done / done.total) * 100}%` }} />
-          </div>
-          <div className="hintline" style={{ fontSize: 12 }}>
-            Готово {ready.ready} из {ready.total} тем — остальные открываем по
-            мере наполнения.
-          </div>
-        </div>
-
-        {SECTIONS.map((section) => (
-          <div key={section.cefr}>
-            <div className="sectionHead">{section.title}</div>
-            {unitsOfSection(section).map((unit, ui) => {
-              const up = unitProgress(baseProfile, unit.id);
-              return (
-                <div className="card" key={unit.id}>
-                <div className="unitHead">
-                  <div>
-                    <div className="unitTitle">
-                      {ui + 1}. {unit.title}
-                    </div>
-                    <div className="unitSub">{unit.subtitle}</div>
-                  </div>
-                  <div className="unitCount">
-                    {up.done}/{up.total}
-                  </div>
-                </div>
-
-                <div className="path">
-                  {unit.topicIds.map((tid) => {
-                    const topic = getTopic(tid);
-                    if (!topic) return null;
-                    const state: TopicState = states.get(tid) ?? "soon";
-                    const mastery = topicMastery(baseProfile, tid);
-                    const playable = isTopicPlayable(state);
-                    return (
-                      <button
-                        key={tid}
-                        className={`topicRow ${state}`}
-                        disabled={!playable}
-                        onClick={() =>
-                          playable && router.push(`/lesson?topic=${tid}`)
-                        }
-                      >
-                        <span className={`topicDot ${state}`}>
-                          {iconFor(state)}
-                        </span>
-                        <span className="topicMain">
-                          <span className="topicTitle">{topic.title}</span>
-                          <span className="topicBlurb">
-                            {state === "soon" ? "скоро" : topic.blurb}
-                          </span>
-                        </span>
-                        {state === "done" && mastery > 0 && (
-                          <span className="topicPct">
-                            {Math.round(mastery * 100)}%
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-                </div>
-              );
-            })}
-          </div>
-        ))}
+        <LyraChip tone="gold">
+          {sky.done}/{sky.total}
+        </LyraChip>
       </div>
-    </div>
-  );
-}
 
-function iconFor(state: TopicState): string {
-  switch (state) {
-    case "done":
-      return "✓";
-    case "current":
-      return "▶";
-    case "available":
-      return "○";
-    case "locked":
-      return "🔒";
-    default:
-      return "•";
-  }
+      <LyraCard className="lyra-reco">
+        <div className="lyra-reco-top">
+          <LyraOrb size={42} />
+          <div>
+            <p className="lyra-eyebrow gold">Lyra советует</p>
+            <p className="lyra-muted">следующая звезда в твоём курсе</p>
+          </div>
+        </div>
+        <h2>{current ? current.title : "Все готовые темы пройдены"}</h2>
+        <p className="lyra-muted">
+          {current ? current.blurb : "Можно повторить любую тему."}
+        </p>
+        {current && (
+          <button
+            className="lyra-btn primary"
+            onClick={() => router.push(`/lesson?topic=${current.id}`)}
+          >
+            Зажечь звезду
+          </button>
+        )}
+      </LyraCard>
+
+      <p className="lyra-muted lyra-ready-note">
+        Готово {sky.ready} из {sky.total} тем. Остальные появятся по мере
+        наполнения.
+      </p>
+
+      {sky.sections.map((section) => (
+        <section key={section.cefr} className="lyra-constellation">
+          <div className="lyra-section-head">
+            <p className="lyra-eyebrow">{section.cefr}</p>
+            <h2>{section.title}</h2>
+          </div>
+          {section.units.map((unit) => (
+            <LyraCard className="lyra-unit" key={unit.id}>
+              <div className="lyra-unit-head">
+                <div>
+                  <h3>{unit.title}</h3>
+                  <p>{unit.subtitle}</p>
+                </div>
+                <LyraChip tone="neutral">
+                  {unit.done}/{unit.total}
+                </LyraChip>
+              </div>
+              <div className="lyra-stars">
+                {unit.stars.map((star) => (
+                  <button
+                    key={star.id}
+                    className={`lyra-star-btn ${star.state}`}
+                    disabled={!star.playable}
+                    onClick={() =>
+                      star.playable && router.push(`/lesson?topic=${star.id}`)
+                    }
+                  >
+                    <span className="lyra-star-dot" />
+                    <span>{star.title}</span>
+                    <small>{star.state === "soon" ? "скоро" : star.blurb}</small>
+                  </button>
+                ))}
+              </div>
+            </LyraCard>
+          ))}
+        </section>
+      ))}
+    </LyraShell>
+  );
 }
