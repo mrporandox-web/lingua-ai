@@ -80,7 +80,7 @@ describe("progress", () => {
     expect(unitProgress(p, "a1-basics")).toEqual({ done: 0, total: 4 });
   });
 
-  it("readyShare: 24 готовых из 32 (A1 + A2 Юниты 1–2)", () => {
-    expect(readyShare()).toEqual({ ready: 24, total: 32 });
+  it("readyShare: 32 готовых из 32 (вся A1 + A2)", () => {
+    expect(readyShare()).toEqual({ ready: 32, total: 32 });
   });
 });

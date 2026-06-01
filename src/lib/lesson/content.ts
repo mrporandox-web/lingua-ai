@@ -26,6 +26,18 @@ import {
   FUTURE_TIME,
   PREDICTIONS,
 } from "./content-a2-unit2";
+import {
+  COMPARATIVES,
+  SUPERLATIVES,
+  QUANTIFIERS,
+  COUNTABLE,
+} from "./content-a2-unit3";
+import {
+  PRESENT_PERFECT,
+  PERFECT_VS_PAST,
+  MODALS_ADVICE,
+  ADVERBS_MANNER,
+} from "./content-a2-unit4";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -726,6 +738,16 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "going-to": GOING_TO,
   "future-time": FUTURE_TIME,
   predictions: PREDICTIONS,
+  // A2 · Юнит 3 (Сравнение и количество)
+  comparatives: COMPARATIVES,
+  superlatives: SUPERLATIVES,
+  quantifiers: QUANTIFIERS,
+  countable: COUNTABLE,
+  // A2 · Юнит 4 (Опыт и советы)
+  "present-perfect": PRESENT_PERFECT,
+  "perfect-vs-past": PERFECT_VS_PAST,
+  "modals-advice": MODALS_ADVICE,
+  "adverbs-manner": ADVERBS_MANNER,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */

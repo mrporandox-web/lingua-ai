@@ -31,7 +31,15 @@ export type LessonKind =
   | "future-will"
   | "going-to"
   | "future-time"
-  | "predictions";
+  | "predictions"
+  | "comparatives"
+  | "superlatives"
+  | "quantifiers"
+  | "countable"
+  | "present-perfect"
+  | "perfect-vs-past"
+  | "modals-advice"
+  | "adverbs-manner";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

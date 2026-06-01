@@ -37,6 +37,14 @@ const KINDS: LessonKind[] = [
   "going-to",
   "future-time",
   "predictions",
+  "comparatives",
+  "superlatives",
+  "quantifiers",
+  "countable",
+  "present-perfect",
+  "perfect-vs-past",
+  "modals-advice",
+  "adverbs-manner",
 ];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */

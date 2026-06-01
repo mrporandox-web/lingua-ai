@@ -85,17 +85,17 @@ export const A2_TOPICS: CourseTopic[] = [
   { id: "future-time", title: "Время в будущем", blurb: "when/if + present", cefr: "A2", status: "ready" },
   { id: "predictions", title: "Прогнозы", blurb: "will / might про будущее", cefr: "A2", status: "ready" },
 
-  // Юнит 3 · Сравнение и количество
-  { id: "comparatives", title: "Сравнительная степень", blurb: "bigger, more expensive", cefr: "A2", status: "soon" },
-  { id: "superlatives", title: "Превосходная степень", blurb: "the biggest, the best", cefr: "A2", status: "soon" },
-  { id: "quantifiers", title: "some / any / much / many", blurb: "сколько чего", cefr: "A2", status: "soon" },
-  { id: "countable", title: "Исчисляемое и нет", blurb: "a lot of vs much", cefr: "A2", status: "soon" },
+  // Юнит 3 · Сравнение и количество — наполнен (status: ready)
+  { id: "comparatives", title: "Сравнительная степень", blurb: "bigger, more expensive", cefr: "A2", status: "ready" },
+  { id: "superlatives", title: "Превосходная степень", blurb: "the biggest, the best", cefr: "A2", status: "ready" },
+  { id: "quantifiers", title: "some / any / much / many", blurb: "сколько чего", cefr: "A2", status: "ready" },
+  { id: "countable", title: "Исчисляемое и нет", blurb: "a lot of vs much", cefr: "A2", status: "ready" },
 
-  // Юнит 4 · Опыт и советы
-  { id: "present-perfect", title: "Present Perfect", blurb: "have done — опыт/результат", cefr: "A2", status: "soon" },
-  { id: "perfect-vs-past", title: "Perfect vs Past", blurb: "have been vs was", cefr: "A2", status: "soon" },
-  { id: "modals-advice", title: "should / must", blurb: "советы и долженствование", cefr: "A2", status: "soon" },
-  { id: "adverbs-manner", title: "Наречия образа действия", blurb: "quickly, well, hard", cefr: "A2", status: "soon" },
+  // Юнит 4 · Опыт и советы — наполнен (status: ready)
+  { id: "present-perfect", title: "Present Perfect", blurb: "have done — опыт/результат", cefr: "A2", status: "ready" },
+  { id: "perfect-vs-past", title: "Perfect vs Past", blurb: "have been vs was", cefr: "A2", status: "ready" },
+  { id: "modals-advice", title: "should / must", blurb: "советы и долженствование", cefr: "A2", status: "ready" },
+  { id: "adverbs-manner", title: "Наречия образа действия", blurb: "quickly, well, hard", cefr: "A2", status: "ready" },
 ];
 
 export const A2_UNITS: CourseUnit[] = [
