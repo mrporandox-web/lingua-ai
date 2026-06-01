@@ -111,7 +111,7 @@ export function HomeScreen() {
         {onboarded && known ? (
           <LyraCard className="lyra-ob-card">
             <LyraChip tone="gold">С возвращением</LyraChip>
-            <h1 className="lyra-title">{name}, продолжим небо?</h1>
+            <h1 className="lyra-title">{name}, летим дальше?</h1>
             <p className="lyra-muted">
               Я помню твой уровень, слабые темы и стиль подачи, который тебе
               подходит.
