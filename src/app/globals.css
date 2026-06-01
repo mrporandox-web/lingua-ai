@@ -1087,6 +1087,152 @@
     top 0.32s cubic-bezier(0.34, 1.2, 0.5, 1), transform 0.32s ease;
 }
 
+.lyra-profile {
+  display: flex;
+  min-height: calc(100dvh - 168px);
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lyra-profile-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.lyra-profile-card {
+  padding: 20px;
+}
+
+.lyra-profile-hero {
+  text-align: center;
+}
+
+.lyra-profile-name {
+  margin-bottom: 10px;
+  font-family: var(--lyra-display);
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.lyra-profile-copy {
+  margin: 10px 0 0;
+}
+
+.lyra-streak-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  color: var(--lyra-muted);
+  font-size: 13px;
+}
+
+.lyra-streak-row span {
+  border: 1px solid var(--lyra-line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: var(--lyra-surface-2);
+}
+
+.lyra-streak-row b {
+  color: var(--lyra-text);
+}
+
+.lyra-sub-row,
+.lyra-skill-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lyra-sub-row {
+  margin-top: 14px;
+}
+
+.lyra-plan-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.lyra-plan-badge.free {
+  border: 1px solid var(--lyra-line);
+  color: var(--lyra-muted);
+}
+
+.lyra-plan-badge.premium {
+  color: #1c1305;
+  background: linear-gradient(180deg, #f6ce8c, var(--lyra-gold));
+}
+
+.lyra-skill-row {
+  margin-top: 14px;
+}
+
+.lyra-skill-head {
+  margin-bottom: 7px;
+  color: var(--lyra-text);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.lyra-skill-pct {
+  color: var(--lyra-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.lyra-win-line {
+  margin-top: 12px;
+  color: var(--lyra-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.lyra-win-line b {
+  color: var(--lyra-gold);
+}
+
+.lyra-win-hint {
+  display: block;
+  margin-top: 4px;
+  color: var(--lyra-muted);
+  font-size: 12.5px;
+}
+
+.lyra-concept-list {
+  margin-top: 14px;
+}
+
+.lyra-win-badge {
+  display: inline-block;
+  margin-left: 7px;
+  border: 1px solid rgba(127, 217, 166, 0.58);
+  border-radius: 999px;
+  padding: 2px 7px;
+  color: var(--lyra-good);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.lyra-win-fill {
+  background: linear-gradient(90deg, var(--lyra-good), var(--lyra-gold)) !important;
+}
+
+.lyra-profile-card > .lyra-topic-pill {
+  margin-top: 10px;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

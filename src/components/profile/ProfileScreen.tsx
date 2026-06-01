@@ -4,11 +4,10 @@
 // Показывает то, что система уже знает про юзера: уровень CEFR, карту навыков,
 // слабые темы, стрик и — ядро — КАКАЯ подача заходит лучше (preferredConcept)
 // либо честный статус «копим сигнал, осталось N сессий».
-// Только чтение профиля через ProfileStore + переиспользование визуала уроков.
+// Только чтение профиля через ProfileStore + Lyra visual system.
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Backdrop } from "@/components/Backdrop";
 import { getProfileStore } from "@/lib/store";
 import {
   ALL_CONCEPTS,
@@ -56,42 +55,38 @@ export function ProfileScreen() {
   }, []);
 
   return (
-    <div className="phone">
-      <Backdrop />
-      <div className="app">
-        <div className="top">
-          <Link href="/lesson" className="x" aria-label="Назад">
-            ‹
-          </Link>
-          <div className="chip" style={{ margin: 0 }}>
-            <span className="dot" /> Твой профиль
-          </div>
+    <div className="lyra-profile">
+      <div className="lyra-profile-top">
+        <Link href="/lesson" className="lyra-icon-btn" aria-label="Назад">
+          ‹
+        </Link>
+        <div className="lyra-chip cool">
+          <span className="lyra-status-dot" /> Твой профиль
         </div>
-
-        {loading ? (
-          <div className="card">Загружаю профиль…</div>
-        ) : !profile || !profile.cefrLevel ? (
-          <EmptyState />
-        ) : (
-          <ProfileBody profile={profile} />
-        )}
       </div>
+
+      {loading ? (
+        <div className="lyra-card lyra-profile-card">Загружаю профиль…</div>
+      ) : !profile || !profile.cefrLevel ? (
+        <EmptyState />
+      ) : (
+        <ProfileBody profile={profile} />
+      )}
     </div>
   );
 }
 
 function EmptyState() {
   return (
-    <div className="card">
-      <div className="lbl">Профиль пуст</div>
-      <p className="note" style={{ borderTop: "none", marginTop: 10 }}>
+    <div className="lyra-card lyra-profile-card">
+      <div className="lyra-label">Профиль пуст</div>
+      <p className="lyra-muted lyra-profile-copy">
         Пройди короткую диагностику — мы определим твой уровень и начнём
         запоминать, как тебе удобнее учиться.
       </p>
       <Link
         href="/diagnostics"
-        className="btn go ready"
-        style={{ display: "block", textAlign: "center", marginTop: 8 }}
+        className="lyra-btn primary"
       >
         Определить мой уровень →
       </Link>
@@ -105,13 +100,13 @@ function ProfileBody({ profile }: { profile: UserProfile }) {
   return (
     <>
       {/* Имя + уровень + стрик */}
-      <div className="card">
-        {profile.name && <div className="nameHead">{profile.name}</div>}
-        <div className="lbl">Твой уровень</div>
-        <div className="big">{profile.cefrLevel}</div>
-        <div className="streakRow">
-          <span>🔥 Стрик: <b>{g.streak}</b> дн.</span>
-          <span>🏆 Рекорд: <b>{g.bestStreak}</b> дн.</span>
+      <div className="lyra-card lyra-profile-card lyra-profile-hero">
+        {profile.name && <div className="lyra-profile-name">{profile.name}</div>}
+        <div className="lyra-label">Твой уровень</div>
+        <div className="lyra-result-level">{profile.cefrLevel}</div>
+        <div className="lyra-streak-row">
+          <span>Стрик: <b>{g.streak}</b> дн.</span>
+          <span>Рекорд: <b>{g.bestStreak}</b> дн.</span>
         </div>
       </div>
 
@@ -120,17 +115,17 @@ function ProfileBody({ profile }: { profile: UserProfile }) {
 
 
       {/* Карта навыков */}
-      <div className="card">
-        <div className="qmeta">Карта навыков</div>
+      <div className="lyra-card lyra-profile-card">
+        <div className="lyra-eyebrow">Карта навыков</div>
         {SKILL_ROWS.map(({ key, label }) => {
           const v = Math.round(profile.skills[key]);
           return (
-            <div className="skillRow" key={key}>
-              <div className="skillHead">
+            <div className="lyra-skill-row" key={key}>
+              <div className="lyra-skill-head">
                 <span>{label}</span>
-                <span className="skillPct">{v}%</span>
+                <span className="lyra-skill-pct">{v}%</span>
               </div>
-              <div className="bar" style={{ marginBottom: 0 }}>
+              <div className="lyra-progress">
                 <i style={{ width: `${v}%` }} />
               </div>
             </div>
@@ -143,13 +138,13 @@ function ProfileBody({ profile }: { profile: UserProfile }) {
 
       {/* Слабые темы */}
       {profile.weakTopics.length > 0 && (
-        <div className="card">
-          <div className="qmeta">Над чем работаем</div>
+        <div className="lyra-card lyra-profile-card">
+          <div className="lyra-eyebrow">Над чем работаем</div>
           {[...profile.weakTopics]
             .sort((a, b) => b.weight - a.weight)
             .map((w) => (
               <span
-                className={`pill ${w.mastery >= 0.8 ? "" : "hot"}`}
+                className={`lyra-topic-pill ${w.mastery >= 0.8 ? "" : "hot"}`}
                 key={w.topic}
               >
                 {topicLabel(w.topic)}
@@ -175,13 +170,13 @@ function SubscriptionCard({ profile }: { profile: UserProfile }) {
     });
 
   return (
-    <div className="card">
-      <div className="qmeta">Подписка</div>
-      <div className="subRow">
-        <span className={`planBadge ${isPremium ? "premium" : "free"}`}>
-          {isPremium ? "✦ Premium" : "Free"}
+    <div className="lyra-card lyra-profile-card">
+      <div className="lyra-eyebrow">Подписка</div>
+      <div className="lyra-sub-row">
+        <span className={`lyra-plan-badge ${isPremium ? "premium" : "free"}`}>
+          {isPremium ? "Premium" : "Free"}
         </span>
-        <span className="skillPct">
+        <span className="lyra-skill-pct">
           {isPremium
             ? renews
               ? `продление ${renews}`
@@ -190,7 +185,7 @@ function SubscriptionCard({ profile }: { profile: UserProfile }) {
         </span>
       </div>
       {!isPremium && (
-        <p className="note" style={{ borderTop: "none", marginTop: 10 }}>
+        <p className="lyra-muted lyra-profile-copy">
           Premium откроет безлимитные уроки, аудирование и speaking. Подключим
           оплату — будет доступно здесь.
         </p>
@@ -213,17 +208,17 @@ function ConceptCard({ profile }: { profile: UserProfile }) {
   const sessionsLeft = Math.max(0, MIN_SESSIONS_TO_LOCK - bestN);
 
   return (
-    <div className="card">
-      <div className="qmeta">Как тебе заходит лучше</div>
+    <div className="lyra-card lyra-profile-card">
+      <div className="lyra-eyebrow">Как тебе заходит лучше</div>
 
       {preferred ? (
-        <div className="winLine">
+        <div className="lyra-win-line">
           Сейчас ведём тебя так:{" "}
           <b>{CONCEPT_LABEL[preferred]}</b>
-          <span className="winHint">{CONCEPT_HINT[preferred]}</span>
+          <span className="lyra-win-hint">{CONCEPT_HINT[preferred]}</span>
         </div>
       ) : (
-        <p className="note" style={{ borderTop: "none", marginTop: 6 }}>
+        <p className="lyra-muted lyra-profile-copy">
           Пробуем разные стили подачи и замеряем, что заходит именно тебе.
           {sessionsLeft > 0
             ? ` Осталось ~${sessionsLeft} ${plural(sessionsLeft)} — и закрепим рабочий стиль.`
@@ -232,23 +227,23 @@ function ConceptCard({ profile }: { profile: UserProfile }) {
       )}
 
       {/* Сравнение стилей по накопленному сигналу */}
-      <div style={{ marginTop: 14 }}>
+      <div className="lyra-concept-list">
         {ranked.map((c: ConceptId) => {
           const s = scores[c];
           const val = Math.round(conceptValue(s) * 100);
           const isWin = c === preferred;
           return (
-            <div className="skillRow" key={c}>
-              <div className="skillHead">
+            <div className="lyra-skill-row" key={c}>
+              <div className="lyra-skill-head">
                 <span>
                   {CONCEPT_LABEL[c]}
-                  {isWin && <span className="winBadge">рабочий</span>}
+                  {isWin && <span className="lyra-win-badge">рабочий</span>}
                 </span>
-                <span className="skillPct">{s.n > 0 ? `${val}%` : "—"}</span>
+                <span className="lyra-skill-pct">{s.n > 0 ? `${val}%` : "—"}</span>
               </div>
-              <div className="bar" style={{ marginBottom: 0 }}>
+              <div className="lyra-progress">
                 <i
-                  className={isWin ? "winFill" : undefined}
+                  className={isWin ? "lyra-win-fill" : undefined}
                   style={{ width: `${s.n > 0 ? val : 0}%` }}
                 />
               </div>
