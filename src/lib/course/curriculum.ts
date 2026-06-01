@@ -111,12 +111,53 @@ export const A2_SECTION: CourseSection = {
   unitIds: A2_UNITS.map((u) => u.id),
 };
 
-// Весь курс: A1 + A2.
-export const SECTIONS: CourseSection[] = [A1_SECTION, A2_SECTION];
+// ══ Уровень B1 ═══════════════════════════════════════════════════════════════
+// Юнит 1 «Условия и желания» наполнен; остальные — скелет под наполнение.
+export const B1_TOPICS: CourseTopic[] = [
+  // Юнит 1 · Условия и желания
+  { id: "zero-conditional", title: "Zero Conditional", blurb: "общие истины: if + present", cefr: "B1", status: "ready" },
+  { id: "second-conditional", title: "Second Conditional", blurb: "гипотеза: if + past, would", cefr: "B1", status: "ready" },
+  { id: "wish-past", title: "I wish", blurb: "сожаления: wish + past", cefr: "B1", status: "ready" },
+  { id: "unless", title: "unless", blurb: "«если не»", cefr: "B1", status: "ready" },
+
+  // Юнит 2 · Времена Perfect
+  { id: "present-perfect-continuous", title: "Present Perfect Continuous", blurb: "have been doing", cefr: "B1", status: "soon" },
+  { id: "past-perfect", title: "Past Perfect", blurb: "had done — до прошлого", cefr: "B1", status: "soon" },
+  { id: "for-since", title: "for / since", blurb: "длительность и точка отсчёта", cefr: "B1", status: "soon" },
+  { id: "just-already-yet", title: "just / already / yet", blurb: "маркеры перфекта", cefr: "B1", status: "soon" },
+
+  // Юнит 3 · Пассив и косвенная речь
+  { id: "passive-present", title: "Пассив (настоящее)", blurb: "is made, are built", cefr: "B1", status: "soon" },
+  { id: "passive-past", title: "Пассив (прошлое)", blurb: "was made, were built", cefr: "B1", status: "soon" },
+  { id: "reported-speech", title: "Косвенная речь", blurb: "he said that…", cefr: "B1", status: "soon" },
+  { id: "reported-questions", title: "Косвенные вопросы", blurb: "asked if / where", cefr: "B1", status: "soon" },
+
+  // Юнит 4 · Герундий и связки
+  { id: "gerund-infinitive", title: "Герундий и инфинитив", blurb: "enjoy doing / want to do", cefr: "B1", status: "soon" },
+  { id: "relative-clauses", title: "Относительные придаточные", blurb: "who, which, that", cefr: "B1", status: "soon" },
+  { id: "modals-deduction", title: "must / can't (логика)", blurb: "must be, can't be", cefr: "B1", status: "soon" },
+  { id: "so-such", title: "so / such", blurb: "усиление: so big, such a…", cefr: "B1", status: "soon" },
+];
+
+export const B1_UNITS: CourseUnit[] = [
+  { id: "b1-conditions", title: "Условия и желания", subtitle: "Conditionals, wish, unless", topicIds: ["zero-conditional", "second-conditional", "wish-past", "unless"] },
+  { id: "b1-perfect", title: "Времена Perfect", subtitle: "Perfect Continuous, Past Perfect", topicIds: ["present-perfect-continuous", "past-perfect", "for-since", "just-already-yet"] },
+  { id: "b1-passive", title: "Пассив и косвенная речь", subtitle: "Passive voice, reported speech", topicIds: ["passive-present", "passive-past", "reported-speech", "reported-questions"] },
+  { id: "b1-structures", title: "Герундий и связки", subtitle: "Gerund/infinitive, relative clauses", topicIds: ["gerund-infinitive", "relative-clauses", "modals-deduction", "so-such"] },
+];
+
+export const B1_SECTION: CourseSection = {
+  cefr: "B1",
+  title: "B1 · Intermediate",
+  unitIds: B1_UNITS.map((u) => u.id),
+};
+
+// Весь курс: A1 + A2 + B1.
+export const SECTIONS: CourseSection[] = [A1_SECTION, A2_SECTION, B1_SECTION];
 
 // Плоские списки по всем секциям (для индексов/прогресса/карты).
-export const ALL_TOPICS: CourseTopic[] = [...A1_TOPICS, ...A2_TOPICS];
-export const ALL_UNITS: CourseUnit[] = [...A1_UNITS, ...A2_UNITS];
+export const ALL_TOPICS: CourseTopic[] = [...A1_TOPICS, ...A2_TOPICS, ...B1_TOPICS];
+export const ALL_UNITS: CourseUnit[] = [...A1_UNITS, ...A2_UNITS, ...B1_UNITS];
 
 // ── Индексы для быстрого доступа ────────────────────────────────────────────
 const TOPIC_BY_ID = new Map(ALL_TOPICS.map((t) => [t.id, t]));

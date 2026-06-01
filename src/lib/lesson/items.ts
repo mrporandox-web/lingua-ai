@@ -39,7 +39,11 @@ export type LessonKind =
   | "present-perfect"
   | "perfect-vs-past"
   | "modals-advice"
-  | "adverbs-manner";
+  | "adverbs-manner"
+  | "zero-conditional"
+  | "second-conditional"
+  | "wish-past"
+  | "unless";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

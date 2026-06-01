@@ -27,10 +27,10 @@ function withMastery(topic: string, mastery: number): UserProfile {
 }
 
 describe("curriculum A1", () => {
-  it("16 тем A1 в 4 юнитах; orderedTopics покрывает A1+A2 = 32", () => {
+  it("16 тем A1 в 4 юнитах; orderedTopics покрывает A1+A2+B1 = 48", () => {
     expect(A1_UNITS).toHaveLength(4);
     expect(A1_TOPICS).toHaveLength(16);
-    expect(orderedTopics()).toHaveLength(32); // A1 (16) + A2 (16)
+    expect(orderedTopics()).toHaveLength(48); // A1 + A2 + B1 (по 16)
   });
 
   it("каждый topicId юнита резолвится в тему", () => {
@@ -75,12 +75,12 @@ describe("progress", () => {
 
   it("courseProgress и unitProgress считают освоенные", () => {
     const p = withMastery("present-continuous", MASTERY_DONE);
-    expect(courseProgress(p)).toEqual({ done: 1, total: 32 }); // A1+A2 = 32 темы
+    expect(courseProgress(p)).toEqual({ done: 1, total: 48 }); // A1+A2+B1 = 48 тем
     expect(unitProgress(p, "a1-now")).toEqual({ done: 1, total: 4 });
     expect(unitProgress(p, "a1-basics")).toEqual({ done: 0, total: 4 });
   });
 
-  it("readyShare: 32 готовых из 32 (вся A1 + A2)", () => {
-    expect(readyShare()).toEqual({ ready: 32, total: 32 });
+  it("readyShare: 36 готовых из 48 (A1 + A2 + B1 Юнит 1)", () => {
+    expect(readyShare()).toEqual({ ready: 36, total: 48 });
   });
 });

@@ -38,6 +38,12 @@ import {
   MODALS_ADVICE,
   ADVERBS_MANNER,
 } from "./content-a2-unit4";
+import {
+  ZERO_CONDITIONAL,
+  SECOND_CONDITIONAL,
+  WISH_PAST,
+  UNLESS,
+} from "./content-b1-unit1";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -748,6 +754,11 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "perfect-vs-past": PERFECT_VS_PAST,
   "modals-advice": MODALS_ADVICE,
   "adverbs-manner": ADVERBS_MANNER,
+  // B1 · Юнит 1 (Условия и желания)
+  "zero-conditional": ZERO_CONDITIONAL,
+  "second-conditional": SECOND_CONDITIONAL,
+  "wish-past": WISH_PAST,
+  unless: UNLESS,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */
