@@ -70,14 +70,14 @@
 .lyra-phone {
   position: relative;
   width: min(100vw, 430px);
-  min-height: 100dvh;
+  height: 100dvh;
   background: var(--lyra-ink);
   overflow: hidden;
 }
 
 .lyra-screen {
   position: relative;
-  min-height: 100dvh;
+  height: 100%;
   overflow: hidden;
   isolation: isolate;
 }
@@ -85,8 +85,9 @@
 .lyra-view {
   position: relative;
   z-index: 1;
-  min-height: 100dvh;
+  height: 100%;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 58px 22px 110px;
 }
 
@@ -263,17 +264,17 @@
   }
   .lyra-phone {
     width: 390px;
-    min-height: 844px;
+    height: min(844px, calc(100dvh - 56px));
     border-radius: 52px;
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.04),
       0 0 0 11px #0b0b11, 0 50px 120px -30px rgba(0, 0, 0, 0.9);
   }
   .lyra-screen {
-    min-height: 844px;
+    height: 100%;
     border-radius: 46px;
   }
   .lyra-view {
-    min-height: 844px;
+    height: 100%;
   }
 }
 
