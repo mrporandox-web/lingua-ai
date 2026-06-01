@@ -13,8 +13,9 @@ export const MASTERY_DONE = 0.8;
 /** Состояние темы для UI карты. */
 export type TopicState =
   | "done" // освоена (mastery ≥ порога)
-  | "current" // доступна сейчас (первая неосвоенная готовая)
-  | "locked" // готова, но ещё закрыта (идём по порядку)
+  | "current" // следующая рекомендованная (первая неосвоенная готовая) — указатель «ты здесь»
+  | "available" // готова и открыта (можно проходить в любом порядке)
+  | "locked" // зарезервировано: готова, но закрыта (когда включим строгий линейный путь)
   | "soon"; // скелет без контента
 
 /** Мастерство темы 0..1 (0, если ещё не трогали). */
@@ -29,7 +30,7 @@ export function topicMastery(profile: UserProfile, topicId: string): number {
  */
 export function topicStates(profile: UserProfile): Map<string, TopicState> {
   const states = new Map<string, TopicState>();
-  let currentTaken = false; // уже назначили «текущую» готовую тему?
+  let currentTaken = false; // уже назначили «текущую» (указатель) готовую тему?
 
   for (const t of orderedTopics()) {
     if (t.status === "soon") {
@@ -41,19 +42,20 @@ export function topicStates(profile: UserProfile): Map<string, TopicState> {
       states.set(t.id, "done");
       continue;
     }
+    // первая неосвоенная готовая — «текущая» (указатель), остальные открыты тоже
     if (!currentTaken) {
       states.set(t.id, "current");
       currentTaken = true;
     } else {
-      states.set(t.id, "locked");
+      states.set(t.id, "available");
     }
   }
   return states;
 }
 
-/** Можно ли начать тему сейчас (current). */
+/** Можно ли начать тему сейчас (готова и открыта). */
 export function isTopicPlayable(state: TopicState | undefined): boolean {
-  return state === "current" || state === "done";
+  return state === "current" || state === "available" || state === "done";
 }
 
 /** Прогресс юнита: сколько тем освоено из всех. */

@@ -7,16 +7,28 @@
 // остаётся живой /api/tts с рантайм-кэшем.
 
 import { createHash } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
+import { access, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { ITEMS } from "@/lib/lesson/items";
+import { CONTENT_BY_TOPIC } from "@/lib/lesson/content";
 import { synthesizeWav } from "./gemini";
 
-/** Все уникальные английские фразы, которые приложение озвучивает. */
+/** Все уникальные английские фразы из ВСЕХ тем курса (что приложение озвучивает). */
 export function spokenPhrases(): string[] {
   const set = new Set<string>();
-  for (const it of ITEMS) set.add(it.correct.join(" ").trim());
+  for (const items of Object.values(CONTENT_BY_TOPIC)) {
+    for (const it of items) set.add(it.correct.join(" ").trim());
+  }
   return [...set].filter(Boolean);
+}
+
+/** Существует ли файл на диске. */
+async function fileExists(p: string): Promise<boolean> {
+  try {
+    await access(p);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /** Детерминированное имя файла по тексту (совпадает на сервере и клиенте). */
@@ -48,13 +60,21 @@ export async function prebakeAll(): Promise<PrebakeResult> {
 
   for (const text of phrases) {
     const file = ttsFileName(text);
+    const full = path.join(outDir, file);
+
+    // Кумулятивно: если WAV уже на диске (запечён в прошлый прогон) — просто
+    // вносим в манифест, синтез не дёргаем (идемпотентность + щадим rate-limit).
+    if (await fileExists(full)) {
+      manifest[text] = file;
+      continue;
+    }
     try {
       const wav = await synthesizeWav(text);
       if (!wav) {
         failed.push(text);
         continue;
       }
-      await writeFile(path.join(outDir, file), wav);
+      await writeFile(full, wav);
       manifest[text] = file;
       baked++;
     } catch {

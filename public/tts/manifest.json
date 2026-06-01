@@ -1,5 +1,17 @@
 {
   "I am reading a book right now": "70fc4ad213a8db8f.wav",
   "She is cooking dinner now": "3ddb1bd6640ff7de.wav",
-  "We are watching a movie": "b63a89fc3e462486.wav"
+  "We are watching a movie": "b63a89fc3e462486.wav",
+  "I am a student": "1d2d5e7080af9930.wav",
+  "She is happy": "9816dd4d29affca9.wav",
+  "They are at home": "f4bb5e1a89024449.wav",
+  "He is my brother": "646f5ef8d78d5ff4.wav",
+  "We are ready": "3dad62b533e812da.wav",
+  "It is easy": "8b51d6288530b944.wav",
+  "It is an apple": "516ed513ead64770.wav",
+  "I have a dog": "46ccbe2ab05861b4.wav",
+  "The sun is bright": "9a877aef8d1797cd.wav",
+  "I have two cats": "ed62842a8acc189c.wav",
+  "These boxes are heavy": "ecd6c05beafee7e0.wav",
+  "The children are happy": "e0866bbdc2c39fef.wav"
 }

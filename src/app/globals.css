@@ -1056,6 +1056,13 @@ body {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px var(--accent) inset;
 }
+.topicRow.available {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+}
+.topicDot.available {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  color: var(--accent);
+}
 .topicRow.done {
   border-color: color-mix(in srgb, var(--ok) 55%, var(--line));
 }

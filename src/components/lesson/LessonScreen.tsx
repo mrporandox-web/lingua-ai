@@ -9,12 +9,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
-  ITEMS,
   explainFor,
   explainStructured,
   type ErrorBlock,
   type LessonItem,
 } from "@/lib/lesson/items";
+import { itemsForTopic } from "@/lib/lesson/content";
 import type { ConceptId, UserProfile } from "@/lib/store/types";
 import { CONCEPT_LABEL } from "@/lib/pedagogy";
 import {
@@ -63,13 +63,14 @@ function haptic(pattern: number | number[]) {
   }
 }
 
-export function LessonScreen() {
+export function LessonScreen({ topic }: { topic?: string | null }) {
   const [idx, setIdx] = useState(0);
 
-  // Пачка упражнений: стартует со статических ITEMS (мгновенный первый кадр),
-  // при удачной AI-генерации (Фаза 3) тихо подменяется на свежую от Claude.
+  // Пачка упражнений: тема урока берётся из ?topic= (карта курса) — это
+  // выверенный кураторский контент. Без темы → дефолт-витрина (present-continuous),
+  // которую адаптивная AI-генерация (Фаза 3) может тихо подменить под слабую тему.
   // Любой сбой генерации → остаёмся на статике, продукт не ломается.
-  const [items, setItems] = useState<LessonItem[]>(ITEMS);
+  const [items, setItems] = useState<LessonItem[]>(() => itemsForTopic(topic));
   const item: LessonItem = items[idx] ?? items[0];
 
   // профиль ученика + концепция подачи, выбранная движком памяти
@@ -107,6 +108,7 @@ export function LessonScreen() {
   // иначе молчим на статических ITEMS. Стреляет один раз — когда профиль пришёл.
   useEffect(() => {
     if (!profile) return; // ждём загрузки профиля движком памяти
+    if (topic) return; // явная тема курса = кураторский контент, AI не дёргаем
     let alive = true;
     const ctrl = new AbortController();
     (async () => {

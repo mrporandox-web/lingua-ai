@@ -17,6 +17,7 @@ import {
   unitProgress,
   courseProgress,
   readyShare,
+  isTopicPlayable,
   type TopicState,
 } from "@/lib/course/progress";
 
@@ -65,8 +66,8 @@ export function CourseScreen() {
             <i style={{ width: `${(done.done / done.total) * 100}%` }} />
           </div>
           <div className="hintline" style={{ fontSize: 12 }}>
-            Контент готов для {ready.ready} темы, остальные открываем по мере
-            наполнения.
+            Готово {ready.ready} из {ready.total} тем — остальные открываем по
+            мере наполнения.
           </div>
         </div>
 
@@ -92,13 +93,15 @@ export function CourseScreen() {
                     if (!topic) return null;
                     const state: TopicState = states.get(tid) ?? "soon";
                     const mastery = topicMastery(baseProfile, tid);
-                    const playable = state === "current" || state === "done";
+                    const playable = isTopicPlayable(state);
                     return (
                       <button
                         key={tid}
                         className={`topicRow ${state}`}
                         disabled={!playable}
-                        onClick={() => playable && router.push("/lesson")}
+                        onClick={() =>
+                          playable && router.push(`/lesson?topic=${tid}`)
+                        }
                       >
                         <span className={`topicDot ${state}`}>
                           {iconFor(state)}
@@ -132,6 +135,8 @@ function iconFor(state: TopicState): string {
       return "✓";
     case "current":
       return "▶";
+    case "available":
+      return "○";
     case "locked":
       return "🔒";
     default:

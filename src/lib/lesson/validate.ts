@@ -12,7 +12,14 @@ import type {
 } from "@/lib/lesson/items";
 
 /** Известные kind'ы (для распознавания сырого raw.kind). */
-const KINDS: LessonKind[] = ["present-continuous", "past-simple", "articles"];
+const KINDS: LessonKind[] = [
+  "present-continuous",
+  "past-simple",
+  "articles",
+  "to-be",
+  "pronouns",
+  "plurals",
+];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */
 function readKind(o: Record<string, unknown>): LessonKind {

@@ -39,9 +39,15 @@ describe("curriculum A1", () => {
     }
   });
 
-  it("present-continuous — единственная готовая тема", () => {
-    const ready = A1_TOPICS.filter((t) => t.status === "ready");
-    expect(ready.map((t) => t.id)).toEqual(["present-continuous"]);
+  it("Юнит 1 + present-continuous готовы (5 ready-тем)", () => {
+    const ready = A1_TOPICS.filter((t) => t.status === "ready").map((t) => t.id);
+    expect(ready).toEqual([
+      "to-be",
+      "pronouns",
+      "articles",
+      "plurals",
+      "present-continuous",
+    ]);
   });
 
   it("getUnit возвращает юнит по id", () => {
@@ -51,16 +57,19 @@ describe("curriculum A1", () => {
 });
 
 describe("progress", () => {
-  it("у нового ученика готовая тема — current, скелеты — soon", () => {
+  it("первая готовая — current, прочие готовые — available, скелеты — soon", () => {
     const st = topicStates(profile());
-    expect(st.get("present-continuous")).toBe("current");
-    expect(st.get("to-be")).toBe("soon");
+    expect(st.get("to-be")).toBe("current"); // первая в порядке
+    expect(st.get("pronouns")).toBe("available");
+    expect(st.get("present-continuous")).toBe("available");
     expect(st.get("wh-questions")).toBe("soon");
   });
 
   it("освоенная готовая тема становится done", () => {
-    const st = topicStates(withMastery("present-continuous", 0.9));
-    expect(st.get("present-continuous")).toBe("done");
+    const st = topicStates(withMastery("to-be", 0.9));
+    expect(st.get("to-be")).toBe("done");
+    // следующая готовая становится current
+    expect(st.get("pronouns")).toBe("current");
   });
 
   it("topicMastery читает weakTopics, клампит в 0..1", () => {
@@ -76,7 +85,7 @@ describe("progress", () => {
     expect(unitProgress(p, "a1-basics")).toEqual({ done: 0, total: 4 });
   });
 
-  it("readyShare: 1 готовая из 16", () => {
-    expect(readyShare()).toEqual({ ready: 1, total: 16 });
+  it("readyShare: 5 готовых из 16", () => {
+    expect(readyShare()).toEqual({ ready: 5, total: 16 });
   });
 });

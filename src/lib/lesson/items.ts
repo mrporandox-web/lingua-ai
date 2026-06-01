@@ -7,7 +7,13 @@ import type { ConceptId } from "@/lib/store/types";
 // устроен разбор ошибки. Расширяемо: каждая новая тема = новый kind + своя
 // ветка в валидаторе/промпте/объяснялке. Старые PC-айтемы без kind считаем
 // present-continuous (обратная совместимость).
-export type LessonKind = "present-continuous" | "past-simple" | "articles";
+export type LessonKind =
+  | "present-continuous"
+  | "past-simple"
+  | "articles"
+  | "to-be"
+  | "pronouns"
+  | "plurals";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

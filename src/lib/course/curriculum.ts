@@ -10,11 +10,11 @@ import type { CourseSection, CourseTopic, CourseUnit } from "./types";
 
 // ── Темы A1 (id == topic в банке уроков) ────────────────────────────────────
 export const A1_TOPICS: CourseTopic[] = [
-  // Юнит 1 · Первые шаги
-  { id: "to-be", title: "Глагол to be", blurb: "am / is / are — «быть»", cefr: "A1", status: "soon" },
-  { id: "pronouns", title: "Местоимения", blurb: "I, you, he, she, it, we, they", cefr: "A1", status: "soon" },
-  { id: "articles", title: "Артикли a / an / the", blurb: "когда какой и когда никакой", cefr: "A1", status: "soon" },
-  { id: "plurals", title: "Множественное число", blurb: "-s, -es и исключения", cefr: "A1", status: "soon" },
+  // Юнит 1 · Первые шаги — наполнен кураторским контентом (status: ready)
+  { id: "to-be", title: "Глагол to be", blurb: "am / is / are — «быть»", cefr: "A1", status: "ready" },
+  { id: "pronouns", title: "Местоимения", blurb: "I, you, he, she, it, we, they", cefr: "A1", status: "ready" },
+  { id: "articles", title: "Артикли a / an / the", blurb: "когда какой и когда никакой", cefr: "A1", status: "ready" },
+  { id: "plurals", title: "Множественное число", blurb: "-s, -es и исключения", cefr: "A1", status: "ready" },
 
   // Юнит 2 · О себе и людях
   { id: "present-simple", title: "Present Simple", blurb: "регулярные действия: I work", cefr: "A1", status: "soon" },
