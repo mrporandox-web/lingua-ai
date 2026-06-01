@@ -51,7 +51,11 @@ export type LessonKind =
   | "passive-present"
   | "passive-past"
   | "reported-speech"
-  | "reported-questions";
+  | "reported-questions"
+  | "gerund-infinitive"
+  | "relative-clauses"
+  | "modals-deduction"
+  | "so-such";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

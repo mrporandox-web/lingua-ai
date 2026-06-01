@@ -56,6 +56,12 @@ import {
   REPORTED_SPEECH,
   REPORTED_QUESTIONS,
 } from "./content-b1-unit3";
+import {
+  GERUND_INFINITIVE,
+  RELATIVE_CLAUSES,
+  MODALS_DEDUCTION,
+  SO_SUCH,
+} from "./content-b1-unit4";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -781,6 +787,11 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "passive-past": PASSIVE_PAST,
   "reported-speech": REPORTED_SPEECH,
   "reported-questions": REPORTED_QUESTIONS,
+  // B1 · Юнит 4 (Герундий и связки)
+  "gerund-infinitive": GERUND_INFINITIVE,
+  "relative-clauses": RELATIVE_CLAUSES,
+  "modals-deduction": MODALS_DEDUCTION,
+  "so-such": SO_SUCH,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */

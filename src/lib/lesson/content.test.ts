@@ -43,6 +43,16 @@ describe("контент Юнита 1", () => {
     expect(itemsForTopic("reported-questions")[0].topic).toBe(
       "reported-questions"
     );
+    expect(itemsForTopic("gerund-infinitive")[0].topic).toBe(
+      "gerund-infinitive"
+    );
+    expect(itemsForTopic("relative-clauses")[0].topic).toBe(
+      "relative-clauses"
+    );
+    expect(itemsForTopic("modals-deduction")[0].topic).toBe(
+      "modals-deduction"
+    );
+    expect(itemsForTopic("so-such")[0].topic).toBe("so-such");
     expect(itemsForTopic("нет-такой")[0].topic).toBe("present-continuous");
     expect(itemsForTopic(null)[0].topic).toBe("present-continuous");
   });

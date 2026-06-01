@@ -57,6 +57,10 @@ const KINDS: LessonKind[] = [
   "passive-past",
   "reported-speech",
   "reported-questions",
+  "gerund-infinitive",
+  "relative-clauses",
+  "modals-deduction",
+  "so-such",
 ];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */

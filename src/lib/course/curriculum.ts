@@ -133,10 +133,10 @@ export const B1_TOPICS: CourseTopic[] = [
   { id: "reported-questions", title: "Косвенные вопросы", blurb: "asked if / where", cefr: "B1", status: "ready" },
 
   // Юнит 4 · Герундий и связки
-  { id: "gerund-infinitive", title: "Герундий и инфинитив", blurb: "enjoy doing / want to do", cefr: "B1", status: "soon" },
-  { id: "relative-clauses", title: "Относительные придаточные", blurb: "who, which, that", cefr: "B1", status: "soon" },
-  { id: "modals-deduction", title: "must / can't (логика)", blurb: "must be, can't be", cefr: "B1", status: "soon" },
-  { id: "so-such", title: "so / such", blurb: "усиление: so big, such a…", cefr: "B1", status: "soon" },
+  { id: "gerund-infinitive", title: "Герундий и инфинитив", blurb: "enjoy doing / want to do", cefr: "B1", status: "ready" },
+  { id: "relative-clauses", title: "Относительные придаточные", blurb: "who, which, that", cefr: "B1", status: "ready" },
+  { id: "modals-deduction", title: "must / can't (логика)", blurb: "must be, can't be", cefr: "B1", status: "ready" },
+  { id: "so-such", title: "so / such", blurb: "усиление: so big, such a…", cefr: "B1", status: "ready" },
 ];
 
 export const B1_UNITS: CourseUnit[] = [
