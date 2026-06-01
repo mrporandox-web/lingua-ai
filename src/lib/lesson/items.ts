@@ -47,7 +47,11 @@ export type LessonKind =
   | "present-perfect-continuous"
   | "past-perfect"
   | "for-since"
-  | "just-already-yet";
+  | "just-already-yet"
+  | "passive-present"
+  | "passive-past"
+  | "reported-speech"
+  | "reported-questions";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

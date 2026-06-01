@@ -53,6 +53,10 @@ const KINDS: LessonKind[] = [
   "past-perfect",
   "for-since",
   "just-already-yet",
+  "passive-present",
+  "passive-past",
+  "reported-speech",
+  "reported-questions",
 ];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */

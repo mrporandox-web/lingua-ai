@@ -37,6 +37,12 @@ describe("контент Юнита 1", () => {
     expect(itemsForTopic("just-already-yet")[0].topic).toBe(
       "just-already-yet"
     );
+    expect(itemsForTopic("passive-present")[0].topic).toBe("passive-present");
+    expect(itemsForTopic("passive-past")[0].topic).toBe("passive-past");
+    expect(itemsForTopic("reported-speech")[0].topic).toBe("reported-speech");
+    expect(itemsForTopic("reported-questions")[0].topic).toBe(
+      "reported-questions"
+    );
     expect(itemsForTopic("нет-такой")[0].topic).toBe("present-continuous");
     expect(itemsForTopic(null)[0].topic).toBe("present-continuous");
   });

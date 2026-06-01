@@ -127,10 +127,10 @@ export const B1_TOPICS: CourseTopic[] = [
   { id: "just-already-yet", title: "just / already / yet", blurb: "маркеры перфекта", cefr: "B1", status: "ready" },
 
   // Юнит 3 · Пассив и косвенная речь
-  { id: "passive-present", title: "Пассив (настоящее)", blurb: "is made, are built", cefr: "B1", status: "soon" },
-  { id: "passive-past", title: "Пассив (прошлое)", blurb: "was made, were built", cefr: "B1", status: "soon" },
-  { id: "reported-speech", title: "Косвенная речь", blurb: "he said that…", cefr: "B1", status: "soon" },
-  { id: "reported-questions", title: "Косвенные вопросы", blurb: "asked if / where", cefr: "B1", status: "soon" },
+  { id: "passive-present", title: "Пассив (настоящее)", blurb: "is made, are built", cefr: "B1", status: "ready" },
+  { id: "passive-past", title: "Пассив (прошлое)", blurb: "was made, were built", cefr: "B1", status: "ready" },
+  { id: "reported-speech", title: "Косвенная речь", blurb: "he said that…", cefr: "B1", status: "ready" },
+  { id: "reported-questions", title: "Косвенные вопросы", blurb: "asked if / where", cefr: "B1", status: "ready" },
 
   // Юнит 4 · Герундий и связки
   { id: "gerund-infinitive", title: "Герундий и инфинитив", blurb: "enjoy doing / want to do", cefr: "B1", status: "soon" },

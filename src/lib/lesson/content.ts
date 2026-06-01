@@ -50,6 +50,12 @@ import {
   FOR_SINCE,
   JUST_ALREADY_YET,
 } from "./content-b1-unit2";
+import {
+  PASSIVE_PRESENT,
+  PASSIVE_PAST,
+  REPORTED_SPEECH,
+  REPORTED_QUESTIONS,
+} from "./content-b1-unit3";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -770,6 +776,11 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "past-perfect": PAST_PERFECT,
   "for-since": FOR_SINCE,
   "just-already-yet": JUST_ALREADY_YET,
+  // B1 · Юнит 3 (Пассив и косвенная речь)
+  "passive-present": PASSIVE_PRESENT,
+  "passive-past": PASSIVE_PAST,
+  "reported-speech": REPORTED_SPEECH,
+  "reported-questions": REPORTED_QUESTIONS,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */

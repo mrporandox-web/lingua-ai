@@ -81,11 +81,11 @@ describe("progress", () => {
     expect(unitProgress(p, "a1-basics")).toEqual({ done: 0, total: 4 });
   });
 
-  it("readyShare: 40 готовых из 48 (A1 + A2 + B1 Юниты 1–2)", () => {
-    expect(readyShare()).toEqual({ ready: 40, total: 48 });
+  it("readyShare: 44 готовых из 48 (A1 + A2 + B1 Юниты 1–3)", () => {
+    expect(readyShare()).toEqual({ ready: 44, total: 48 });
   });
 
-  it("B1 Unit 2 Perfect готов к прохождению", () => {
+  it("B1 Units 1–3 готовы к прохождению", () => {
     const readyIds = B1_TOPICS.filter((topic) => topic.status === "ready").map(
       (topic) => topic.id
     );
@@ -98,6 +98,10 @@ describe("progress", () => {
       "past-perfect",
       "for-since",
       "just-already-yet",
+      "passive-present",
+      "passive-past",
+      "reported-speech",
+      "reported-questions",
     ]);
   });
 });

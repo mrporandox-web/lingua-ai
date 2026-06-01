@@ -9,7 +9,7 @@ describe("buildCourseSky", () => {
 
     expect(sky.sections.map((s) => s.cefr)).toEqual(["A1", "A2", "B1"]);
     expect(sky.total).toBe(48);
-    expect(sky.ready).toBe(40);
+    expect(sky.ready).toBe(44);
     expect(sky.sections[0].units).toHaveLength(4);
     expect(sky.sections[2].units[0].stars.map((s) => s.id)).toEqual([
       "zero-conditional",
@@ -23,6 +23,12 @@ describe("buildCourseSky", () => {
       "for-since",
       "just-already-yet",
     ]);
+    expect(sky.sections[2].units[2].stars.map((s) => s.id)).toEqual([
+      "passive-present",
+      "passive-past",
+      "reported-speech",
+      "reported-questions",
+    ]);
   });
 
   it("marks the first unmastered ready topic as current and soon topics as soon", () => {
@@ -30,13 +36,17 @@ describe("buildCourseSky", () => {
     const sky = buildCourseSky(profile);
     const a1First = sky.sections[0].units[0].stars[0];
     const b1Ready = sky.sections[2].units[1].stars[0];
-    const b1Soon = sky.sections[2].units[2].stars[0];
+    const b1Unit3Ready = sky.sections[2].units[2].stars[0];
+    const b1Soon = sky.sections[2].units[3].stars[0];
 
     expect(a1First.state).toBe("current");
     expect(b1Ready.id).toBe("present-perfect-continuous");
     expect(b1Ready.state).toBe("available");
     expect(b1Ready.playable).toBe(true);
-    expect(b1Soon.id).toBe("passive-present");
+    expect(b1Unit3Ready.id).toBe("passive-present");
+    expect(b1Unit3Ready.state).toBe("available");
+    expect(b1Unit3Ready.playable).toBe(true);
+    expect(b1Soon.id).toBe("gerund-infinitive");
     expect(b1Soon.state).toBe("soon");
     expect(b1Soon.playable).toBe(false);
   });
