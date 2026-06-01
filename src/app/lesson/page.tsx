@@ -1,7 +1,7 @@
 // ?topic=<id> (из карты курса) задаёт тему урока; нет параметра → дефолт-витрина
 // (present-continuous + адаптивная AI-генерация под слабую тему).
 import { LessonScreen } from "@/components/lesson/LessonScreen";
-import { LyraShell } from "@/components/lyra";
+import { LyraBottomNav, LyraShell } from "@/components/lyra";
 
 export default async function LessonPage({
   searchParams,
@@ -10,7 +10,7 @@ export default async function LessonPage({
 }) {
   const { topic } = await searchParams;
   return (
-    <LyraShell>
+    <LyraShell withBottomNav={<LyraBottomNav />}>
       <LessonScreen topic={topic ?? null} />
     </LyraShell>
   );
