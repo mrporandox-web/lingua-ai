@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
+import { APP_DESCRIPTION, APP_NAME } from "@/lib/brand";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Lingua-AI — персональный AI-репетитор английского",
-    short_name: "Lingua-AI",
-    description:
-      "AI-репетитор, который запоминает, КАК ты учишься лучше — и ведёт именно так.",
+    name: `${APP_NAME} — персональный AI-репетитор английского`,
+    short_name: APP_NAME,
+    description: APP_DESCRIPTION,
     lang: "ru",
     start_url: "/",
     scope: "/",

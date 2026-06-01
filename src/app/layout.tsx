@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Sora } from "next/font/google";
 import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { APP_DESCRIPTION, APP_NAME } from "@/lib/brand";
 
 // Inter — корпус, Sora — дисплейные заголовки (как в прототипе).
 const inter = Inter({
@@ -17,14 +18,13 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "Lingua-AI — персональный AI-репетитор английского",
-  description:
-    "AI-репетитор, который запоминает, КАК ты учишься лучше — и ведёт именно так.",
-  applicationName: "Lingua-AI",
+  title: `${APP_NAME} — персональный AI-репетитор английского`,
+  description: APP_DESCRIPTION,
+  applicationName: APP_NAME,
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Lingua-AI",
+    title: APP_NAME,
   },
   formatDetection: { telephone: false },
 };
