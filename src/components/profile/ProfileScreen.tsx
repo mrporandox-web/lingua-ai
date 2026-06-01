@@ -32,12 +32,18 @@ const SKILL_ROWS: { key: keyof Skills; label: string }[] = [
   { key: "speaking", label: "Speaking" },
 ];
 
+const PROFILE_LOAD_TIMEOUT_MS = 2500;
+
 export function ProfileScreen() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let alive = true;
+    const fallback = window.setTimeout(() => {
+      if (alive) setLoading(false);
+    }, PROFILE_LOAD_TIMEOUT_MS);
+
     getProfileStore()
       .load()
       .then((p) => {
@@ -48,9 +54,13 @@ export function ProfileScreen() {
       })
       .catch(() => {
         if (alive) setLoading(false);
+      })
+      .finally(() => {
+        window.clearTimeout(fallback);
       });
     return () => {
       alive = false;
+      window.clearTimeout(fallback);
     };
   }, []);
 
