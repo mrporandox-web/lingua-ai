@@ -200,13 +200,20 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
   // профиль загружен? нужен как ТРИГГЕР (а не как зависимость по содержимому):
   // эффект ниже должен сработать ровно когда профиль впервые появился.
   const profileReady = profile !== null;
+  const currentItemKey = itemKey(item);
 
-  // при смене idx (или появлении профиля) — мягкий сброс поля + перевыбор
-  // концепции под новую тему. setState здесь — легитимная синхронизация UI
-  // с новой темой (не каскад): выполняется на смене idx / готовности профиля.
-  /* eslint-disable react-hooks/exhaustive-deps, react-hooks/set-state-in-effect */
+  // при смене самого задания — мягкий сброс поля. Загрузка профиля не должна
+  // стирать текущую попытку/feedback, если ученик уже начал отвечать.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     loadItem();
+  }, [currentItemKey, loadItem]);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  // при смене темы или появлении профиля — перевыбор концепции под новую тему.
+  // Ответ ученика не трогаем: это только смена педагогического режима.
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
     if (!profile) return;
     const themed = items[idx] ?? items[0];
     let alive = true;
@@ -220,9 +227,9 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
     };
     // profileReady (boolean) в deps, не profile целиком: эффект стрельнёт один
     // раз когда профиль придёт + на смене темы, но НЕ на каждом обновлении
-    // содержимого профиля (иначе чип «прыгал» бы прямо во время урока).
-  }, [idx, profileReady, loadItem]);
-  /* eslint-enable react-hooks/exhaustive-deps, react-hooks/set-state-in-effect */
+  // содержимого профиля (иначе чип «прыгал» бы прямо во время урока).
+  }, [currentItemKey, profileReady]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   const canCheck = picked.length > 0 && fb === null;
 
