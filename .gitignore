@@ -48,3 +48,6 @@ next-env.d.ts
 # dev-server logs
 /data/
 /data-dev.log
+
+# Capacitor iOS derived data
+ios/build/
