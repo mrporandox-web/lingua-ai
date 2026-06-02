@@ -61,6 +61,10 @@ const KINDS: LessonKind[] = [
   "relative-clauses",
   "modals-deduction",
   "so-such",
+  "past-perfect-continuous",
+  "third-conditional",
+  "mixed-conditionals",
+  "wish-past-perfect",
 ];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */

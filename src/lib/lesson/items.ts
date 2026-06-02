@@ -55,7 +55,11 @@ export type LessonKind =
   | "gerund-infinitive"
   | "relative-clauses"
   | "modals-deduction"
-  | "so-such";
+  | "so-such"
+  | "past-perfect-continuous"
+  | "third-conditional"
+  | "mixed-conditionals"
+  | "wish-past-perfect";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

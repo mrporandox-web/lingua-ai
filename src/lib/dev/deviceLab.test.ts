@@ -41,14 +41,14 @@ describe("Device Lab config", () => {
 
   it("builds a smoke path for every ready course topic", () => {
     const paths = courseSmokePaths();
-    expect(paths).toHaveLength(48);
+    expect(paths).toHaveLength(52);
     expect(paths[0]).toBe("/lesson?topic=to-be");
-    expect(paths.at(-1)).toBe("/lesson?topic=so-such");
+    expect(paths.at(-1)).toBe("/lesson?topic=wish-past-perfect");
   });
 
   it("builds answer smoke cases with every item for each ready course topic", () => {
     const cases = courseAnswerSmokeCases();
-    expect(cases).toHaveLength(48);
+    expect(cases).toHaveLength(52);
     expect(cases[0]).toEqual({
       topic: "to-be",
       path: "/lesson?topic=to-be",
@@ -59,16 +59,16 @@ describe("Device Lab config", () => {
       ],
     });
     expect(cases.at(-1)).toEqual({
-      topic: "so-such",
-      path: "/lesson?topic=so-such",
+      topic: "wish-past-perfect",
+      path: "/lesson?topic=wish-past-perfect",
       correctAnswers: [
-        ["She", "is", "so", "tired"],
-        ["It", "is", "such", "a", "good", "idea"],
-        ["It", "was", "such", "a", "long", "day"],
+        ["I", "wish", "I", "had", "studied", "harder"],
+        ["I", "wish", "I", "had", "told", "you"],
+        ["I", "wish", "we", "had", "gone"],
       ],
     });
     expect(
       cases.reduce((total, item) => total + item.correctAnswers.length, 0)
-    ).toBe(144);
+    ).toBe(156);
   });
 });

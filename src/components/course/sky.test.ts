@@ -7,9 +7,9 @@ describe("buildCourseSky", () => {
     const profile = createEmptyProfile("u1", "2026-06-01T00:00:00.000Z");
     const sky = buildCourseSky(profile);
 
-    expect(sky.sections.map((s) => s.cefr)).toEqual(["A1", "A2", "B1"]);
-    expect(sky.total).toBe(48);
-    expect(sky.ready).toBe(48);
+    expect(sky.sections.map((s) => s.cefr)).toEqual(["A1", "A2", "B1", "B2"]);
+    expect(sky.total).toBe(64);
+    expect(sky.ready).toBe(52);
     expect(sky.sections[0].units).toHaveLength(4);
     expect(sky.sections[2].units[0].stars.map((s) => s.id)).toEqual([
       "zero-conditional",

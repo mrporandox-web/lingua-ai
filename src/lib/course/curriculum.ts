@@ -152,12 +152,53 @@ export const B1_SECTION: CourseSection = {
   unitIds: B1_UNITS.map((u) => u.id),
 };
 
-// Весь курс: A1 + A2 + B1.
-export const SECTIONS: CourseSection[] = [A1_SECTION, A2_SECTION, B1_SECTION];
+// ══ Уровень B2 ═══════════════════════════════════════════════════════════════
+// Юнит 1 «Прошлое и сожаления» наполнен; остальные — скелет под наполнение.
+export const B2_TOPICS: CourseTopic[] = [
+  // Юнит 1 · Прошлое и сожаления
+  { id: "past-perfect-continuous", title: "Past Perfect Continuous", blurb: "had been doing — длилось до прошлого", cefr: "B2", status: "ready" },
+  { id: "third-conditional", title: "Third Conditional", blurb: "if + had done, would have done", cefr: "B2", status: "ready" },
+  { id: "mixed-conditionals", title: "Смешанные условия", blurb: "прошлое → настоящее", cefr: "B2", status: "ready" },
+  { id: "wish-past-perfect", title: "wish (о прошлом)", blurb: "сожаление: wish I had done", cefr: "B2", status: "ready" },
+
+  // Юнит 2 · Пассив продвинутый
+  { id: "passive-modal", title: "Пассив с модальными", blurb: "must be done, can be made", cefr: "B2", status: "soon" },
+  { id: "causative-have", title: "Каузатив have/get", blurb: "have something done", cefr: "B2", status: "soon" },
+  { id: "passive-reporting", title: "Пассив-репортинг", blurb: "is said to, is believed to", cefr: "B2", status: "soon" },
+  { id: "passive-gerund", title: "Пассивный герундий", blurb: "being done / having been done", cefr: "B2", status: "soon" },
+
+  // Юнит 3 · Будущее и вероятность
+  { id: "future-perfect", title: "Future Perfect", blurb: "will have done к моменту", cefr: "B2", status: "soon" },
+  { id: "future-continuous", title: "Future Continuous", blurb: "will be doing в момент", cefr: "B2", status: "soon" },
+  { id: "modals-past-deduction", title: "must/can't have done", blurb: "догадки о прошлом", cefr: "B2", status: "soon" },
+  { id: "likely-bound", title: "Вероятность", blurb: "likely to / bound to", cefr: "B2", status: "soon" },
+
+  // Юнит 4 · Стиль и связки
+  { id: "inversion", title: "Инверсия", blurb: "Never have I…, Hardly…", cefr: "B2", status: "soon" },
+  { id: "participle-clauses", title: "Причастные обороты", blurb: "Walking home, I saw…", cefr: "B2", status: "soon" },
+  { id: "cleft-sentences", title: "Эмфаза (cleft)", blurb: "It was X that…", cefr: "B2", status: "soon" },
+  { id: "advanced-linkers", title: "Связки", blurb: "despite, although, however", cefr: "B2", status: "soon" },
+];
+
+export const B2_UNITS: CourseUnit[] = [
+  { id: "b2-past", title: "Прошлое и сожаления", subtitle: "Perfect Continuous, 3rd & mixed conditionals", topicIds: ["past-perfect-continuous", "third-conditional", "mixed-conditionals", "wish-past-perfect"] },
+  { id: "b2-passive", title: "Пассив продвинутый", subtitle: "Модальный пассив, каузатив, репортинг", topicIds: ["passive-modal", "causative-have", "passive-reporting", "passive-gerund"] },
+  { id: "b2-future", title: "Будущее и вероятность", subtitle: "Future Perfect/Continuous, догадки", topicIds: ["future-perfect", "future-continuous", "modals-past-deduction", "likely-bound"] },
+  { id: "b2-style", title: "Стиль и связки", subtitle: "Инверсия, причастия, эмфаза", topicIds: ["inversion", "participle-clauses", "cleft-sentences", "advanced-linkers"] },
+];
+
+export const B2_SECTION: CourseSection = {
+  cefr: "B2",
+  title: "B2 · Upper-Intermediate",
+  unitIds: B2_UNITS.map((u) => u.id),
+};
+
+// Весь курс: A1 + A2 + B1 + B2.
+export const SECTIONS: CourseSection[] = [A1_SECTION, A2_SECTION, B1_SECTION, B2_SECTION];
 
 // Плоские списки по всем секциям (для индексов/прогресса/карты).
-export const ALL_TOPICS: CourseTopic[] = [...A1_TOPICS, ...A2_TOPICS, ...B1_TOPICS];
-export const ALL_UNITS: CourseUnit[] = [...A1_UNITS, ...A2_UNITS, ...B1_UNITS];
+export const ALL_TOPICS: CourseTopic[] = [...A1_TOPICS, ...A2_TOPICS, ...B1_TOPICS, ...B2_TOPICS];
+export const ALL_UNITS: CourseUnit[] = [...A1_UNITS, ...A2_UNITS, ...B1_UNITS, ...B2_UNITS];
 
 // ── Индексы для быстрого доступа ────────────────────────────────────────────
 const TOPIC_BY_ID = new Map(ALL_TOPICS.map((t) => [t.id, t]));

@@ -62,6 +62,12 @@ import {
   MODALS_DEDUCTION,
   SO_SUCH,
 } from "./content-b1-unit4";
+import {
+  PAST_PERFECT_CONTINUOUS,
+  THIRD_CONDITIONAL,
+  MIXED_CONDITIONALS,
+  WISH_PAST_PERFECT,
+} from "./content-b2-unit1";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -790,8 +796,14 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   // B1 · Юнит 4 (Герундий и связки)
   "gerund-infinitive": GERUND_INFINITIVE,
   "relative-clauses": RELATIVE_CLAUSES,
+  // (so-such ниже)
   "modals-deduction": MODALS_DEDUCTION,
   "so-such": SO_SUCH,
+  // B2 · Юнит 1 (Прошлое и сожаления)
+  "past-perfect-continuous": PAST_PERFECT_CONTINUOUS,
+  "third-conditional": THIRD_CONDITIONAL,
+  "mixed-conditionals": MIXED_CONDITIONALS,
+  "wish-past-perfect": WISH_PAST_PERFECT,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */
