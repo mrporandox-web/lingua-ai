@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { APP_DESCRIPTION, APP_NAME } from "@/lib/brand";
 
+// Манифест статичен — нужно для static-export (натив).
+export const dynamic = "force-static";
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: `${APP_NAME} — персональный AI-репетитор английского`,

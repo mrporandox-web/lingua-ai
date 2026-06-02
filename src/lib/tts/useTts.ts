@@ -12,6 +12,7 @@
 // listening деградирует мягко, урок не ломается.
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { apiUrl } from "@/lib/api";
 
 // Манифест предзапечённых фраз: { "<текст>": "<файл>.wav" }. Грузим один раз.
 let manifestPromise: Promise<Record<string, string>> | null = null;
@@ -84,7 +85,7 @@ export function useTts(): TtsState {
       // 3) живой синтез через API (фразы вне статики, напр. AI-генерация)
       setLoading(true);
       try {
-        const res = await fetch("/api/tts", {
+        const res = await fetch(apiUrl("/api/tts"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: key }),

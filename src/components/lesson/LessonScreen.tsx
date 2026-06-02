@@ -15,6 +15,7 @@ import {
 } from "@/lib/lesson/items";
 import { itemsForTopic } from "@/lib/lesson/content";
 import { getTopic } from "@/lib/course/curriculum";
+import { apiUrl } from "@/lib/api";
 import type { ConceptId, UserProfile } from "@/lib/store/types";
 import { CONCEPT_LABEL } from "@/lib/pedagogy";
 import { learningGoalLabel } from "@/lib/onboarding";
@@ -119,7 +120,7 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
     const ctrl = new AbortController();
     (async () => {
       try {
-        const res = await fetch("/api/generate", {
+        const res = await fetch(apiUrl("/api/generate"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

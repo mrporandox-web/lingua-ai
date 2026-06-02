@@ -1,22 +1,13 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
-// Конфиг нативной обёртки Lyra (Capacitor). Прототип: нативная оболочка грузит
-// живой прод-сайт (server.url) — так весь Next.js/API работает как есть, а
-// нативные плагины (on-device речь) доступны через мост Capacitor.
-// Для офлайн-сборки позже перейдём на static-export в webDir.
+// Нативная обёртка Lyra (Capacitor). Продакшен-подход: UI зашит в приложение
+// (static-export в out/), грузится мгновенно и без сети. Серверные данные
+// (TTS-генерация, Claude) уходят на удалённый Vercel — см. src/lib/api.ts.
+// Сборка натива: scripts/cap-build.sh (export → out → cap copy).
 const config: CapacitorConfig = {
   appId: "ai.lyra.app",
   appName: "Lyra",
-  webDir: "public", // плейсхолдер; при server.url контент грузится с прода
-  server: {
-    url: "https://lingua-ai-neon-delta.vercel.app",
-    cleartext: false,
-  },
-  plugins: {
-    SpeechRecognition: {
-      // разрешения и язык запрашиваем в рантайме
-    },
-  },
+  webDir: "out",
 };
 
 export default config;

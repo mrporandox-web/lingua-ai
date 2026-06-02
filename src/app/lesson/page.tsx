@@ -1,17 +1,15 @@
-// ?topic=<id> (из карты курса) задаёт тему урока; нет параметра → дефолт-витрина
-// (present-continuous + адаптивная AI-генерация под слабую тему).
-import { LessonScreen } from "@/components/lesson/LessonScreen";
+// Роут урока. ?topic=<id> (из карты курса) читается клиентски (LessonRoute) —
+// совместимо со static-export (натив). Нет темы → дефолт-витрина.
+import { Suspense } from "react";
+import { LessonRoute } from "@/components/lesson/LessonRoute";
 import { LyraBottomNav, LyraShell } from "@/components/lyra";
 
-export default async function LessonPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ topic?: string }>;
-}) {
-  const { topic } = await searchParams;
+export default function LessonPage() {
   return (
     <LyraShell withBottomNav={<LyraBottomNav />}>
-      <LessonScreen topic={topic ?? null} />
+      <Suspense>
+        <LessonRoute />
+      </Suspense>
     </LyraShell>
   );
 }
