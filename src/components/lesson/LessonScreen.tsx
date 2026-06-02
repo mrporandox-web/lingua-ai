@@ -16,6 +16,7 @@ import {
 import { itemsForTopic } from "@/lib/lesson/content";
 import { getTopic } from "@/lib/course/curriculum";
 import { apiUrl } from "@/lib/api";
+import { XP_PER_CORRECT, dailyProgress, dayKey } from "@/lib/gamification";
 import type { ConceptId, UserProfile } from "@/lib/store/types";
 import { CONCEPT_LABEL } from "@/lib/pedagogy";
 import { learningGoalLabel } from "@/lib/onboarding";
@@ -177,6 +178,10 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
   // сердца — текущая попытка урока, не история → стартуем с полного бака.
   const [hearts, setHearts] = useState(HEARTS_PER_LESSON);
 
+  // результат урока: XP за сессию + флаг завершения (экран результата).
+  const [sessionXp, setSessionXp] = useState(0);
+  const [done, setDone] = useState(false);
+
   // feedback-шторка
   const [fb, setFb] = useState<null | "good" | "bad">(null);
   const [fbBlocks, setFbBlocks] = useState<ErrorBlock[]>([]);
@@ -321,6 +326,7 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
       fireConfetti();
       haptic([10, 30, 10]);
       setProg(Math.round(((idx + 1) / items.length) * 100));
+      setSessionXp((x) => x + XP_PER_CORRECT); // XP за урок (для экрана результата)
       // стрик: засчитываем «занимался сегодня» через сервис (пишет в профиль,
       // идемпотентно за день) и показываем РЕАЛЬНОЕ число дней подряд, а не +1.
       void recordActivity().then((p) => setStreak(p.gamification.streak));
@@ -374,9 +380,9 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
       if (wasGood && !isLast) {
         setIdx((i) => i + 1);
       } else if (wasGood) {
-        // тема пройдена — в демо стартуем заново
-        setIdx(0);
-        setProg(0);
+        // тема пройдена → экран результата (XP, цель дня, стрик)
+        fireConfetti();
+        setDone(true);
       } else {
         // ошибка → то же задание, поле чистое
         setPicked([]);
@@ -384,7 +390,20 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
         setHintLevel(0);
       }
     }, 350);
-  }, [fb, isLast]);
+  }, [fb, isLast, fireConfetti]);
+
+  // начать урок заново после экрана результата
+  const restart = useCallback(() => {
+    setDone(false);
+    setSessionXp(0);
+    setIdx(0);
+    setProg(0);
+    setHearts(HEARTS_PER_LESSON);
+    setPicked([]);
+    setUsedBank(new Set());
+    setHintLevel(0);
+    setFb(null);
+  }, []);
 
   // ── строки-блоки структурированного разбора ─────────────────────────────────
   const renderBlocks = (blocks: ErrorBlock[]) => (
@@ -459,6 +478,51 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
       </>
     );
   };
+
+  // ── экран результата урока (дофамин-петля: XP → цель дня → стрик) ──────────
+  if (done) {
+    const goal = dailyProgress(
+      profile?.gamification,
+      dayKey(new Date().toISOString())
+    );
+    const left = Math.max(0, goal.goal - goal.done);
+    return (
+      <div className="lyra-lesson lyra-result">
+        <div className="confetti">
+          {confetti.map((c) => (
+            <span
+              key={c.id}
+              style={{
+                left: c.left,
+                background: c.bg,
+                animationDelay: c.delay,
+                transform: c.rot,
+              }}
+            />
+          ))}
+        </div>
+        <div className="lyra-result-emoji" aria-hidden>🎉</div>
+        <h1 className="lyra-result-title">Урок пройден!</h1>
+        <div className="lyra-result-xp">+{sessionXp} XP</div>
+
+        {goal.met ? (
+          <div className="lyra-result-goal met">🎯 Цель дня взята!</div>
+        ) : (
+          <div className="lyra-result-goal">
+            До цели дня осталось <b>{left}</b> XP
+          </div>
+        )}
+        <div className="lyra-result-streak">🔥 Стрик: <b>{streak}</b> дн.</div>
+
+        <button className="lyra-btn primary" onClick={restart}>
+          Ещё урок →
+        </button>
+        <Link href="/course" className="lyra-link">
+          К программе курса
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="lyra-lesson">

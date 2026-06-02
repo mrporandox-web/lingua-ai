@@ -2742,3 +2742,56 @@ body {
 
 /* XP-счётчик в топ-баре урока. */
 .lyra-stat.gold { color: var(--lyra-gold); }
+
+/* ── Экран результата урока ──────────────────────────────────────────────── */
+.lyra-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+  min-height: 100%;
+  padding: 32px 24px;
+}
+.lyra-result-emoji {
+  font-size: 64px;
+  animation: lyra-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+.lyra-result-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+}
+.lyra-result-xp {
+  font-size: 44px;
+  font-weight: 900;
+  color: var(--lyra-gold);
+  animation: lyra-pop 0.6s cubic-bezier(0.2, 1.5, 0.4, 1) 0.1s both;
+}
+.lyra-result-goal {
+  font-size: 16px;
+  color: var(--lyra-muted);
+  background: var(--lyra-surface-2);
+  border: 1px solid var(--lyra-line);
+  border-radius: 12px;
+  padding: 10px 16px;
+}
+.lyra-result-goal.met {
+  color: #0c2a16;
+  background: var(--lyra-good);
+  border-color: transparent;
+  font-weight: 800;
+}
+.lyra-result-streak {
+  font-size: 16px;
+  color: var(--lyra-text);
+}
+.lyra-result .lyra-btn.primary {
+  margin-top: 10px;
+  min-width: 200px;
+}
+@keyframes lyra-pop {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: scale(1); }
+}
