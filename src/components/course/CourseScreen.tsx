@@ -77,8 +77,9 @@ export function CourseScreen() {
       </LyraCard>
 
       <p className="lyra-muted lyra-ready-note">
-        Готово {sky.ready} из {sky.total} тем. Остальные появятся по мере
-        наполнения.
+        {sky.ready >= sky.total
+          ? `Открыты все ${sky.total} тем — от A1 до B1. Вперёд!`
+          : `Готово ${sky.ready} из ${sky.total} тем. Остальные появятся по мере наполнения.`}
       </p>
 
       {sky.sections.map((section) => (

@@ -502,7 +502,12 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
           ))}
         </div>
         <div className="lyra-result-emoji" aria-hidden>🎉</div>
-        <h1 className="lyra-result-title">Урок пройден!</h1>
+        <h1 className="lyra-result-title">
+          {profile?.name ? `Молодец, ${profile.name}!` : "Урок пройден!"}
+        </h1>
+        <p className="lyra-result-sub">
+          Тема «{getTopic(item.topic)?.title ?? "урок"}» пройдена
+        </p>
         <div className="lyra-result-xp">+{sessionXp} XP</div>
 
         {goal.met ? (
