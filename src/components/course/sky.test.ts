@@ -9,7 +9,7 @@ describe("buildCourseSky", () => {
 
     expect(sky.sections.map((s) => s.cefr)).toEqual(["A1", "A2", "B1", "B2"]);
     expect(sky.total).toBe(64);
-    expect(sky.ready).toBe(52);
+    expect(sky.ready).toBe(56);
     expect(sky.sections[0].units).toHaveLength(4);
     expect(sky.sections[2].units[0].stars.map((s) => s.id)).toEqual([
       "zero-conditional",

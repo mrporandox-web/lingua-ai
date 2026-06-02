@@ -81,8 +81,8 @@ describe("progress", () => {
     expect(unitProgress(p, "a1-basics")).toEqual({ done: 0, total: 4 });
   });
 
-  it("readyShare: 52 готовых из 64 (A1+A2+B1 + B2 Юнит 1)", () => {
-    expect(readyShare()).toEqual({ ready: 52, total: 64 });
+  it("readyShare: 56 готовых из 64 (A1+A2+B1 + B2 Юниты 1-2)", () => {
+    expect(readyShare()).toEqual({ ready: 56, total: 64 });
   });
 
   it("весь B1 готов к прохождению", () => {

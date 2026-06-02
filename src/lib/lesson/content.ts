@@ -68,6 +68,12 @@ import {
   MIXED_CONDITIONALS,
   WISH_PAST_PERFECT,
 } from "./content-b2-unit1";
+import {
+  PASSIVE_MODAL,
+  CAUSATIVE_HAVE,
+  PASSIVE_REPORTING,
+  PASSIVE_GERUND,
+} from "./content-b2-unit2";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -804,6 +810,11 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "third-conditional": THIRD_CONDITIONAL,
   "mixed-conditionals": MIXED_CONDITIONALS,
   "wish-past-perfect": WISH_PAST_PERFECT,
+  // B2 · Юнит 2 (Пассив продвинутый)
+  "passive-modal": PASSIVE_MODAL,
+  "causative-have": CAUSATIVE_HAVE,
+  "passive-reporting": PASSIVE_REPORTING,
+  "passive-gerund": PASSIVE_GERUND,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */

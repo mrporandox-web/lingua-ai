@@ -59,7 +59,11 @@ export type LessonKind =
   | "past-perfect-continuous"
   | "third-conditional"
   | "mixed-conditionals"
-  | "wish-past-perfect";
+  | "wish-past-perfect"
+  | "passive-modal"
+  | "causative-have"
+  | "passive-reporting"
+  | "passive-gerund";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

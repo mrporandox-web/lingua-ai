@@ -65,6 +65,10 @@ const KINDS: LessonKind[] = [
   "third-conditional",
   "mixed-conditionals",
   "wish-past-perfect",
+  "passive-modal",
+  "causative-have",
+  "passive-reporting",
+  "passive-gerund",
 ];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */

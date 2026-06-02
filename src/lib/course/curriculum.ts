@@ -161,11 +161,11 @@ export const B2_TOPICS: CourseTopic[] = [
   { id: "mixed-conditionals", title: "Смешанные условия", blurb: "прошлое → настоящее", cefr: "B2", status: "ready" },
   { id: "wish-past-perfect", title: "wish (о прошлом)", blurb: "сожаление: wish I had done", cefr: "B2", status: "ready" },
 
-  // Юнит 2 · Пассив продвинутый
-  { id: "passive-modal", title: "Пассив с модальными", blurb: "must be done, can be made", cefr: "B2", status: "soon" },
-  { id: "causative-have", title: "Каузатив have/get", blurb: "have something done", cefr: "B2", status: "soon" },
-  { id: "passive-reporting", title: "Пассив-репортинг", blurb: "is said to, is believed to", cefr: "B2", status: "soon" },
-  { id: "passive-gerund", title: "Пассивный герундий", blurb: "being done / having been done", cefr: "B2", status: "soon" },
+  // Юнит 2 · Пассив продвинутый — наполнен (status: ready)
+  { id: "passive-modal", title: "Пассив с модальными", blurb: "must be done, can be made", cefr: "B2", status: "ready" },
+  { id: "causative-have", title: "Каузатив have/get", blurb: "have something done", cefr: "B2", status: "ready" },
+  { id: "passive-reporting", title: "Пассив-репортинг", blurb: "is said to, is believed to", cefr: "B2", status: "ready" },
+  { id: "passive-gerund", title: "Пассивный герундий", blurb: "being done / having been done", cefr: "B2", status: "ready" },
 
   // Юнит 3 · Будущее и вероятность
   { id: "future-perfect", title: "Future Perfect", blurb: "will have done к моменту", cefr: "B2", status: "soon" },
