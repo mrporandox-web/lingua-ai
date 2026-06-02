@@ -2710,3 +2710,35 @@ body {
   font-size: 13px;
   text-align: center;
 }
+
+/* ── Цель дня + XP (геймификация) ─────────────────────────────────────────── */
+.lyra-goalday-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.lyra-xp-total {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--lyra-gold);
+}
+.lyra-goalday-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.lyra-goal-met {
+  color: var(--lyra-good);
+  font-weight: 700;
+  margin-left: 6px;
+  font-size: 13px;
+}
+.lyra-progress.met > i {
+  background: linear-gradient(90deg, var(--lyra-good), var(--lyra-gold));
+}
+
+/* XP-счётчик в топ-баре урока. */
+.lyra-stat.gold { color: var(--lyra-gold); }

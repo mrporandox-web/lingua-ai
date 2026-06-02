@@ -10,21 +10,12 @@
 // bestStreak ведёт личный рекорд (максимум за всё время).
 
 import { dayKey, daysBetween } from "@/lib/srs";
-import { emptyGamification, type Gamification } from "@/lib/store/types";
+import { withGamificationDefaults, type Gamification } from "@/lib/store/types";
 
-/** Толерантно привести возможно-устаревшую запись к полному Gamification.
- *  Старые профили (сохранённые до ввода поля) приходят без gamification —
- *  load() их не мигрирует, поэтому нормализуем здесь, а не падаем. */
+/** Толерантно привести возможно-устаревшую запись к полному Gamification
+ *  (старые профили без новых полей xp/цели — дополняем дефолтами). */
 function normalize(g: Partial<Gamification> | null | undefined): Gamification {
-  const base = emptyGamification();
-  if (!g) return base;
-  return {
-    streak: Number.isFinite(g.streak) ? (g.streak as number) : base.streak,
-    bestStreak: Number.isFinite(g.bestStreak)
-      ? (g.bestStreak as number)
-      : base.bestStreak,
-    lastActiveDate: g.lastActiveDate ?? base.lastActiveDate,
-  };
+  return withGamificationDefaults(g);
 }
 
 /**
@@ -44,7 +35,7 @@ export function bumpStreak(
 
   // первый день занятий за всю историю профиля
   if (!g.lastActiveDate) {
-    return { streak: 1, bestStreak: Math.max(1, g.bestStreak), lastActiveDate: today };
+    return { ...g, streak: 1, bestStreak: Math.max(1, g.bestStreak), lastActiveDate: today };
   }
 
   const gap = daysBetween(g.lastActiveDate, todayIso);
@@ -56,6 +47,7 @@ export function bumpStreak(
   const nextStreak = gap === 1 ? g.streak + 1 : 1;
 
   return {
+    ...g,
     streak: nextStreak,
     bestStreak: Math.max(nextStreak, g.bestStreak),
     lastActiveDate: today,

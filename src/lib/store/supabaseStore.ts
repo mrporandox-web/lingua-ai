@@ -3,7 +3,7 @@ import { ensureSession, getSupabaseClient } from "../supabase/client";
 import type { ProfileStore } from "./store";
 import {
   createEmptyProfile,
-  emptyGamification,
+  withGamificationDefaults,
   emptySubscription,
   type CefrLevel,
   type ConceptId,
@@ -61,8 +61,8 @@ function rowToProfile(row: ProfileRow): UserProfile {
     preferredConcept: row.preferred_concept,
     conceptScores: row.concept_scores,
     srsQueue: row.srs_queue ?? [],
-    // старые строки без колонки gamification → дефолт (толерантность к миграции)
-    gamification: row.gamification ?? emptyGamification(),
+    // старые строки/профили без новых полей gamification → дополняем дефолтами
+    gamification: withGamificationDefaults(row.gamification),
   };
 }
 

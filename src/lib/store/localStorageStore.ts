@@ -1,5 +1,9 @@
 import type { ProfileStore } from "./store";
-import { createEmptyProfile, type UserProfile } from "./types";
+import {
+  createEmptyProfile,
+  withGamificationDefaults,
+  type UserProfile,
+} from "./types";
 
 const KEY = "lingua-ai:profile:v1";
 
@@ -36,7 +40,10 @@ export class LocalStorageStore implements ProfileStore {
     const raw = store.getItem(KEY);
     if (!raw) return null;
     try {
-      return JSON.parse(raw) as UserProfile;
+      const p = JSON.parse(raw) as UserProfile;
+      // дополняем gamification недостающими полями (старые профили без xp/цели)
+      p.gamification = withGamificationDefaults(p.gamification);
+      return p;
     } catch {
       return null; // битые данные — считаем что профиля нет
     }

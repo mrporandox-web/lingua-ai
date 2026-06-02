@@ -13,9 +13,11 @@ import { learningGoalLabel } from "@/lib/onboarding";
 import {
   ALL_CONCEPTS,
   type ConceptId,
+  type Gamification,
   type Skills,
   type UserProfile,
 } from "@/lib/store/types";
+import { dailyProgress, dayKey } from "@/lib/gamification";
 import {
   CONCEPT_LABEL,
   CONCEPT_HINT,
@@ -121,10 +123,13 @@ function ProfileBody({ profile }: { profile: UserProfile }) {
           </p>
         )}
         <div className="lyra-streak-row">
-          <span>Стрик: <b>{g.streak}</b> дн.</span>
-          <span>Рекорд: <b>{g.bestStreak}</b> дн.</span>
+          <span>🔥 Стрик: <b>{g.streak}</b> дн.</span>
+          <span>🏆 Рекорд: <b>{g.bestStreak}</b> дн.</span>
         </div>
       </div>
+
+      {/* Цель дня + XP */}
+      <DailyGoalCard gamification={g} />
 
       {/* Подписка */}
       <SubscriptionCard profile={profile} />
@@ -175,6 +180,29 @@ function ProfileBody({ profile }: { profile: UserProfile }) {
 
 // Карточка подписки: тариф + статус. Биллинг подключим позже — пока
 // показываем текущий план (free по умолчанию) и CTA на премиум.
+// Цель дня + суммарный XP — ядро удержания (Duolingo-style daily goal).
+function DailyGoalCard({ gamification }: { gamification: Gamification }) {
+  const today = dayKey(new Date().toISOString());
+  const p = dailyProgress(gamification, today);
+  return (
+    <div className="lyra-card lyra-profile-card">
+      <div className="lyra-goalday-head">
+        <div className="lyra-eyebrow">Цель дня</div>
+        <div className="lyra-xp-total">⚡ {gamification.xp} XP</div>
+      </div>
+      <div className="lyra-goalday-row">
+        <span>
+          <b>{p.done}</b> / {p.goal} XP {p.met && <span className="lyra-goal-met">✓ цель взята</span>}
+        </span>
+        <span className="lyra-skill-pct">{p.pct}%</span>
+      </div>
+      <div className={`lyra-progress${p.met ? " met" : ""}`}>
+        <i style={{ width: `${p.pct}%` }} />
+      </div>
+    </div>
+  );
+}
+
 function SubscriptionCard({ profile }: { profile: UserProfile }) {
   const sub = profile.subscription;
   const isPremium = sub.plan === "premium";

@@ -26,7 +26,7 @@ import {
   gradeItem,
   upsertSrs,
 } from "@/lib/srs";
-import { bumpStreak } from "@/lib/gamification";
+import { bumpStreak, awardXp, dayKey, XP_PER_CORRECT } from "@/lib/gamification";
 
 /** Что сервис отдаёт UI на старте сессии: какой темой и какой концепцией вести. */
 export interface SessionPlan {
@@ -137,9 +137,15 @@ export async function submitAnswer(
     correct: args.correct,
     now: ts,
   });
+  // XP за верный ответ (геймификация удержания: суммарный + дневная цель)
+  const gamification = args.correct
+    ? awardXp(afterSignal.gamification, XP_PER_CORRECT, dayKey(ts))
+    : afterSignal.gamification;
+
   const next: UserProfile = {
     ...afterSignal,
     srsQueue: upsertSrs(afterSignal.srsQueue, nextSrs),
+    gamification,
     updatedAt: ts,
   };
 

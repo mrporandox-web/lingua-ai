@@ -474,6 +474,9 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
         <div className="lyra-progress lyra-lesson-progress">
           <i style={{ width: `${prog}%` }} />
         </div>
+        <div className="lyra-stat gold" aria-label="XP за сегодня">
+          <span aria-hidden>⚡</span> {profile?.gamification.dailyXp ?? 0}
+        </div>
         <Link href="/profile" className="lyra-stat" aria-label="Мой профиль">
           <span aria-hidden>*</span> {streak}
         </Link>

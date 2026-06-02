@@ -59,7 +59,17 @@ export interface Gamification {
   streak: number; // дней подряд с занятием
   bestStreak: number; // рекорд стрика (для «личного лучшего»)
   lastActiveDate: string | null; // YYYY-MM-DD последнего дня с занятием
+  xp: number; // суммарный XP за всё время (мотивация прогресса)
+  dailyXp: number; // XP, набранный сегодня
+  dailyGoal: number; // цель XP на день (геймификация удержания)
+  dailyXpDate: string | null; // YYYY-MM-DD, к какому дню относится dailyXp (сброс)
+  // ── Лиги: задел на будущее, выключены пока нет аудитории (leagueTier=null) ──
+  weeklyXp: number; // XP за неделю (для таблицы лиги)
+  leagueTier: number | null; // тир лиги; null = лиги ещё не включены
 }
+
+/** Цель XP в день по умолчанию (как daily goal у Duolingo). */
+export const DEFAULT_DAILY_GOAL = 30;
 
 /** Запись в очереди spaced repetition (SM-2 / Anki). */
 export interface SrsItem {
@@ -103,7 +113,24 @@ export function emptySkills(): Skills {
 
 /** Дефолтная геймификация нового ученика (ещё ни дня не занимался). */
 export function emptyGamification(): Gamification {
-  return { streak: 0, bestStreak: 0, lastActiveDate: null };
+  return {
+    streak: 0,
+    bestStreak: 0,
+    lastActiveDate: null,
+    xp: 0,
+    dailyXp: 0,
+    dailyGoal: DEFAULT_DAILY_GOAL,
+    dailyXpDate: null,
+    weeklyXp: 0,
+    leagueTier: null,
+  };
+}
+
+/** Дополнить геймификацию недостающими полями (толерантность к старым профилям). */
+export function withGamificationDefaults(
+  g: Partial<Gamification> | null | undefined
+): Gamification {
+  return { ...emptyGamification(), ...(g ?? {}) };
 }
 
 /** Дефолтная подписка нового ученика (бесплатный тариф, без оплаты). */
