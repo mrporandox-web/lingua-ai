@@ -41,6 +41,7 @@ interface ProfileRow {
   weak_topics: WeakTopic[];
   preferred_concept: ConceptId | null;
   concept_scores: Record<ConceptId, ConceptScore>;
+  concept_revealed_at: string | null; // может отсутствовать до миграции
   srs_queue: SrsItem[];
   gamification: Gamification | null;
 }
@@ -60,6 +61,7 @@ function rowToProfile(row: ProfileRow): UserProfile {
     weakTopics: row.weak_topics ?? [],
     preferredConcept: row.preferred_concept,
     conceptScores: row.concept_scores,
+    conceptRevealedAt: row.concept_revealed_at ?? null,
     srsQueue: row.srs_queue ?? [],
     // старые строки/профили без новых полей gamification → дополняем дефолтами
     gamification: withGamificationDefaults(row.gamification),
@@ -79,6 +81,7 @@ function profileToRow(profile: UserProfile, userId: string) {
     weak_topics: profile.weakTopics,
     preferred_concept: profile.preferredConcept,
     concept_scores: profile.conceptScores,
+    concept_revealed_at: profile.conceptRevealedAt,
     srs_queue: profile.srsQueue,
     gamification: profile.gamification,
   };
@@ -87,7 +90,7 @@ function profileToRow(profile: UserProfile, userId: string) {
 // Колонки, которые могут отсутствовать в БД до миграции (schema.sql).
 // Если upsert падает на «нет такой колонки» — повторяем без них, чтобы прод
 // не ломался; облачная синхронизация этих полей включится после ALTER TABLE.
-const FORWARD_COMPAT_COLS = ["name", "subscription"] as const;
+const FORWARD_COMPAT_COLS = ["name", "subscription", "concept_revealed_at"] as const;
 
 /** Признак ошибки PostgREST «колонки нет в схеме» (код 42703 / PGRST204). */
 function isMissingColumnError(msg: string): boolean {

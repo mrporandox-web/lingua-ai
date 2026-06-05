@@ -22,6 +22,7 @@ import {
 } from "@/lib/placement/engine";
 import { getProfileStore } from "@/lib/store";
 import { topicLabel } from "@/lib/pedagogy";
+import { ConceptCalibration } from "@/components/onboarding/ConceptCalibration";
 
 // Лёгкая тактильная отдача (как в уроке) — без падений на десктопе.
 function haptic(pattern: number | number[]) {
@@ -47,6 +48,8 @@ export function DiagnosticsScreen() {
   // Итог диагностики (после последнего вопроса) + флаг сохранения.
   const [result, setResult] = useState<PlacementResult | null>(null);
   const [saving, setSaving] = useState(false);
+  // После сохранения уровня → калибровка подхода (подбор концепции + вау + ценник).
+  const [calibrating, setCalibrating] = useState(false);
 
   // Шаг знакомства: имя ученика. greeted=false → сперва спрашиваем имя,
   // потом тест. Имя сохраняем в профиль, чтобы обращаться по нему дальше.
@@ -100,8 +103,8 @@ export function DiagnosticsScreen() {
     [question, picked, state]
   );
 
-  // Сохранить итог в профиль и уйти на урок. Диагностика — разовый онбординг,
-  // поэтому пишем напрямую через стор (а не через сервис сессии урока).
+  // Сохранить уровень в профиль и перейти к калибровке подхода (подбор подачи →
+  // вау → ценник). onboarded выставит calibrateConcept в конце калибровки.
   const onFinish = useCallback(async () => {
     if (!result || saving) return;
     setSaving(true);
@@ -112,14 +115,13 @@ export function DiagnosticsScreen() {
         cefrLevel: result.cefrLevel,
         skills: { ...profile.skills, grammar: result.grammarAccuracy },
         weakTopics: result.weakTopics,
-        onboarded: true,
       });
-      router.push("/course");
+      setCalibrating(true);
     } catch (e) {
       console.warn("[diagnostics] не удалось сохранить профиль:", e);
       setSaving(false);
     }
-  }, [result, saving, router]);
+  }, [result, saving]);
 
   // Если профиль уже прошёл онбординг — не гоняем тест повторно, сразу на урок.
   useEffect(() => {
@@ -147,6 +149,15 @@ export function DiagnosticsScreen() {
       alive = false;
     };
   }, [router]);
+
+  // Калибровка подхода (после теста уровня) — отдельный экран онбординга.
+  if (calibrating) {
+    return (
+      <div className="lyra-diagnostics">
+        <ConceptCalibration name={savedName} />
+      </div>
+    );
+  }
 
   return (
     <div className="lyra-diagnostics">
@@ -218,7 +229,7 @@ export function DiagnosticsScreen() {
             onClick={onFinish}
             disabled={saving}
           >
-            {saving ? "Сохраняю…" : "Начать учиться →"}
+            {saving ? "Секунду…" : "Подобрать мой подход →"}
           </button>
         </div>
       ) : question ? (

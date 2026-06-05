@@ -41,14 +41,14 @@ describe("Device Lab config", () => {
 
   it("builds a smoke path for every ready course topic", () => {
     const paths = courseSmokePaths();
-    expect(paths).toHaveLength(56);
+    expect(paths).toHaveLength(64);
     expect(paths[0]).toBe("/lesson?topic=to-be");
-    expect(paths.at(-1)).toBe("/lesson?topic=passive-gerund");
+    expect(paths.at(-1)).toBe("/lesson?topic=advanced-linkers");
   });
 
   it("builds answer smoke cases with every item for each ready course topic", () => {
     const cases = courseAnswerSmokeCases();
-    expect(cases).toHaveLength(56);
+    expect(cases).toHaveLength(64);
     expect(cases[0]).toEqual({
       topic: "to-be",
       path: "/lesson?topic=to-be",
@@ -59,16 +59,16 @@ describe("Device Lab config", () => {
       ],
     });
     expect(cases.at(-1)).toEqual({
-      topic: "passive-gerund",
-      path: "/lesson?topic=passive-gerund",
+      topic: "advanced-linkers",
+      path: "/lesson?topic=advanced-linkers",
       correctAnswers: [
-        ["He", "likes", "being", "praised"],
-        ["Nobody", "likes", "being", "criticized"],
-        ["I", "remember", "being", "invited"],
+        ["Despite", "the", "rain", "we", "went", "out"],
+        ["Although", "he", "was", "tired", "he", "continued"],
+        ["However", "the", "food", "was", "delicious"],
       ],
     });
     expect(
       cases.reduce((total, item) => total + item.correctAnswers.length, 0)
-    ).toBe(168);
+    ).toBe(192);
   });
 });

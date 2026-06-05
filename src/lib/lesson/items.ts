@@ -63,7 +63,15 @@ export type LessonKind =
   | "passive-modal"
   | "causative-have"
   | "passive-reporting"
-  | "passive-gerund";
+  | "passive-gerund"
+  | "future-perfect"
+  | "future-continuous"
+  | "modals-past-deduction"
+  | "likely-bound"
+  | "inversion"
+  | "participle-clauses"
+  | "cleft-sentences"
+  | "advanced-linkers";
 
 // Тройка объяснений ОДНОЙ темы в рамках одной концепции подачи.
 // Ядро адаптивности (Фаза 2): один айтем держит несколько таких троек,

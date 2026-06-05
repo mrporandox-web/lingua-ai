@@ -5,7 +5,14 @@
 // Проверяем именно СВЯЗКУ движков, а не их математику (она покрыта отдельно).
 
 import { describe, expect, it } from "vitest";
-import { startSession, submitAnswer, scoreRetention } from "./session";
+import {
+  startSession,
+  submitAnswer,
+  scoreRetention,
+  markConceptRevealed,
+  calibrateConcept,
+} from "./session";
+import { MIN_SESSIONS_TO_LOCK } from "@/lib/pedagogy";
 import type { EventLog, LearningEvent } from "@/lib/store/eventLog";
 import type { ProfileStore } from "@/lib/store/store";
 import {
@@ -201,5 +208,48 @@ describe("scoreRetention", () => {
       { store, now: () => NEXT_DAY }
     );
     expect(second.conceptScores["rule-first"].retentionD1).toBe(r1);
+  });
+});
+
+describe("markConceptRevealed (вау-момент)", () => {
+  it("ставит conceptRevealedAt на чистом профиле и сохраняет", async () => {
+    const store = fakeStore();
+    expect(store.current.conceptRevealedAt).toBeNull();
+    const res = await markConceptRevealed({ store, now: () => NOW });
+    expect(res.conceptRevealedAt).toBe(NOW);
+    expect(store.current.conceptRevealedAt).toBe(NOW); // персистнуто
+  });
+
+  it("идемпотентно: повторный вызов не перетирает дату (показ раз за жизнь)", async () => {
+    const store = fakeStore();
+    await markConceptRevealed({ store, now: () => NOW });
+    const res = await markConceptRevealed({ store, now: () => NEXT_DAY });
+    expect(res.conceptRevealedAt).toBe(NOW); // осталась первая дата
+  });
+});
+
+describe("calibrateConcept (онбординг: выбор подхода)", () => {
+  it("закрепляет выбранную концепцию, ставит вау и onboarded", async () => {
+    const store = fakeStore();
+    const res = await calibrateConcept("examples-first", {
+      store,
+      now: () => NOW,
+    });
+    expect(res.preferredConcept).toBe("examples-first");
+    expect(res.conceptScores["examples-first"].n).toBe(MIN_SESSIONS_TO_LOCK);
+    expect(res.conceptRevealedAt).toBe(NOW);
+    expect(res.onboarded).toBe(true);
+  });
+
+  it("выбор «прилипает»: первый ответ в уроке не обнуляет рабочую концепцию", async () => {
+    const store = fakeStore();
+    await calibrateConcept("contrast-native", { store, now: () => NOW });
+    // даже неверный ответ другой концепцией не должен сбросить preferred:
+    // у contrast-native n уже на пороге, у остальных < порога (не eligible).
+    const res = await submitAnswer(
+      { topic: "t", item: "i-1", concept: "rule-first", correct: false },
+      { store, now: () => NOW }
+    );
+    expect(res.profile.preferredConcept).toBe("contrast-native");
   });
 });

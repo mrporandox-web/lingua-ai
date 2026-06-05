@@ -2802,3 +2802,281 @@ body {
   color: var(--lyra-muted);
   margin: -6px 0 2px;
 }
+
+/* ── ВАУ-МОМЕНТ: reveal «мы поняли, как тебя учить» ───────────────────────── */
+.lyra-reveal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+  min-height: 100%;
+  padding: 40px 26px;
+  overflow: hidden;
+}
+/* мягкое сияние-ореол на фоне (медленно пульсирует, разгорается из центра) */
+.lyra-reveal-aura {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(closest-side, rgba(143, 168, 255, 0.22), transparent 70%),
+    radial-gradient(closest-side, rgba(183, 155, 255, 0.18), transparent 75%);
+  background-position: 50% 38%, 50% 38%;
+  background-size: 120% 120%, 90% 90%;
+  background-repeat: no-repeat;
+  animation: lyra-aura 3.4s ease-in-out 0.1s infinite alternate;
+  pointer-events: none;
+}
+/* искра-звезда, «вспыхивает» первой */
+.lyra-reveal-spark {
+  position: relative;
+  font-size: 46px;
+  color: var(--lyra-cool-2);
+  text-shadow: 0 0 22px rgba(143, 168, 255, 0.8);
+  animation: lyra-spark 0.7s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+.lyra-reveal-kicker {
+  position: relative;
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lyra-cool);
+  opacity: 0;
+  animation: lyra-rise 0.5s ease-out 0.35s both;
+}
+.lyra-reveal-title {
+  position: relative;
+  margin: 0;
+  font-family: var(--lyra-display);
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 900;
+  opacity: 0;
+  animation: lyra-rise 0.55s ease-out 0.55s both;
+}
+/* карточка с концепцией — «впечатывается» с лёгким масштабом и подсветкой */
+.lyra-reveal-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 28px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--lyra-surface-3), var(--lyra-surface-2));
+  border: 1px solid rgba(143, 168, 255, 0.35);
+  box-shadow: 0 12px 40px rgba(143, 168, 255, 0.18);
+  opacity: 0;
+  animation: lyra-stamp 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) 0.85s both;
+}
+.lyra-reveal-card-label {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lyra-dim);
+}
+.lyra-reveal-concept {
+  font-family: var(--lyra-display);
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--lyra-cool), var(--lyra-cool-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lyra-reveal-hint {
+  font-size: 14px;
+  color: var(--lyra-muted);
+}
+.lyra-reveal-sub {
+  position: relative;
+  max-width: 320px;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--lyra-muted);
+  opacity: 0;
+  animation: lyra-rise 0.5s ease-out 1.15s both;
+}
+.lyra-reveal .lyra-btn.primary {
+  position: relative;
+  margin-top: 6px;
+  min-width: 220px;
+  opacity: 0;
+  animation: lyra-rise 0.5s ease-out 1.35s both;
+}
+@keyframes lyra-aura {
+  from { opacity: 0.6; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1.06); }
+}
+@keyframes lyra-spark {
+  0% { opacity: 0; transform: scale(0.2) rotate(-40deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@keyframes lyra-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes lyra-stamp {
+  0% { opacity: 0; transform: scale(0.6); }
+  60% { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lyra-reveal-aura,
+  .lyra-reveal-spark,
+  .lyra-reveal-kicker,
+  .lyra-reveal-title,
+  .lyra-reveal-card,
+  .lyra-reveal-sub,
+  .lyra-reveal .lyra-btn.primary {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Экраны калибровки растягиваются на всю высоту контейнера диагностики,
+   чтобы вау/ценник центрировались по экрану, а не липли к верху. */
+.lyra-diagnostics > .lyra-calibrate,
+.lyra-diagnostics > .lyra-reveal,
+.lyra-diagnostics > .lyra-paywall {
+  flex: 1;
+}
+
+/* ── Калибровка подхода (выбор подачи в онбординге) ───────────────────────── */
+.lyra-calibrate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 28px 22px;
+}
+.lyra-calibrate-title {
+  margin: 6px 0 0;
+  font-family: var(--lyra-display);
+  font-size: 24px;
+  font-weight: 800;
+}
+.lyra-calibrate-copy {
+  max-width: 340px;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 4px;
+}
+.lyra-calibrate-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
+}
+.lyra-calibrate-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: var(--lyra-surface-2);
+  border: 1px solid var(--lyra-line);
+  color: var(--lyra-text);
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.12s ease, background 0.18s ease;
+}
+.lyra-calibrate-card:hover:not(:disabled) {
+  border-color: rgba(143, 168, 255, 0.5);
+  background: var(--lyra-surface-3);
+  transform: translateY(-2px);
+}
+.lyra-calibrate-card:active:not(:disabled) {
+  transform: translateY(0);
+}
+.lyra-calibrate-card:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.lyra-calibrate-card-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--lyra-cool);
+}
+.lyra-calibrate-card-sample {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--lyra-text);
+}
+
+/* ── Ценник (paywall) ────────────────────────────────────────────────────── */
+.lyra-paywall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 32px 24px;
+  min-height: 100%;
+  justify-content: center;
+}
+.lyra-paywall-title {
+  margin: 8px 0 0;
+  font-family: var(--lyra-display);
+  font-size: 26px;
+  line-height: 1.18;
+  font-weight: 900;
+}
+.lyra-paywall-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 6px 0;
+}
+.lyra-paywall-amount {
+  font-family: var(--lyra-display);
+  font-size: 44px;
+  font-weight: 900;
+  color: var(--lyra-gold);
+}
+.lyra-paywall-period {
+  font-size: 16px;
+  color: var(--lyra-muted);
+}
+.lyra-paywall-feats {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  max-width: 340px;
+  width: 100%;
+}
+.lyra-paywall-feats li {
+  font-size: 15px;
+  color: var(--lyra-text);
+}
+.lyra-paywall .lyra-btn.primary {
+  min-width: 240px;
+  margin-top: 4px;
+}
+.lyra-link-btn {
+  background: none;
+  border: none;
+  color: var(--lyra-muted);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 8px;
+}
+.lyra-link-btn:hover {
+  color: var(--lyra-text);
+}
+.lyra-paywall-fine {
+  font-size: 13px;
+  color: var(--lyra-dim);
+  margin: 0;
+}

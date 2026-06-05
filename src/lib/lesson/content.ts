@@ -74,6 +74,18 @@ import {
   PASSIVE_REPORTING,
   PASSIVE_GERUND,
 } from "./content-b2-unit2";
+import {
+  FUTURE_PERFECT,
+  FUTURE_CONTINUOUS,
+  MODALS_PAST_DEDUCTION,
+  LIKELY_BOUND,
+} from "./content-b2-unit3";
+import {
+  INVERSION,
+  PARTICIPLE_CLAUSES,
+  CLEFT_SENTENCES,
+  ADVANCED_LINKERS,
+} from "./content-b2-unit4";
 
 // ── to-be: am / is / are как «быть» ─────────────────────────────────────────
 const TO_BE: LessonItem[] = [
@@ -815,6 +827,16 @@ export const CONTENT_BY_TOPIC: Record<string, LessonItem[]> = {
   "causative-have": CAUSATIVE_HAVE,
   "passive-reporting": PASSIVE_REPORTING,
   "passive-gerund": PASSIVE_GERUND,
+  // B2 · Юнит 3 (Будущее и вероятность)
+  "future-perfect": FUTURE_PERFECT,
+  "future-continuous": FUTURE_CONTINUOUS,
+  "modals-past-deduction": MODALS_PAST_DEDUCTION,
+  "likely-bound": LIKELY_BOUND,
+  // B2 · Юнит 4 (Стиль и связки)
+  "inversion": INVERSION,
+  "participle-clauses": PARTICIPLE_CLAUSES,
+  "cleft-sentences": CLEFT_SENTENCES,
+  "advanced-linkers": ADVANCED_LINKERS,
 };
 
 /** Айтемы темы для урока; нет темы → present-continuous (дефолт-витрина). */

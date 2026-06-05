@@ -19,7 +19,12 @@ import { getEventLog, type EventLog } from "@/lib/store/eventLog";
 import { getProfileStore, type ProfileStore } from "@/lib/store";
 import type { ConceptId, UserProfile } from "@/lib/store/types";
 import { ALL_CONCEPTS } from "@/lib/store/types";
-import { pickConcept, recordRetention, recordSignal } from "@/lib/pedagogy";
+import {
+  MIN_SESSIONS_TO_LOCK,
+  pickConcept,
+  recordRetention,
+  recordSignal,
+} from "@/lib/pedagogy";
 import {
   daysBetween,
   findSrs,
@@ -94,6 +99,62 @@ export async function recordActivity(
   const current = await store.getOrCreate();
   const gamification = bumpStreak(current.gamification, ts);
   const next: UserProfile = { ...current, gamification, updatedAt: ts };
+  await store.save(next);
+  return next;
+}
+
+/**
+ * Пометить, что «вау-момент» закрепления концепции уже показан ученику.
+ * Ставит conceptRevealedAt = сейчас (один раз за жизнь профиля). Идемпотентно:
+ * если уже стоит — ничего не меняет. Возвращает свежий профиль.
+ */
+export async function markConceptRevealed(
+  deps: LearningDeps = {}
+): Promise<UserProfile> {
+  const { store, now } = resolve(deps);
+  const current = await store.getOrCreate();
+  if (current.conceptRevealedAt) return current; // уже показывали
+  const ts = now();
+  const next: UserProfile = { ...current, conceptRevealedAt: ts, updatedAt: ts };
+  await store.save(next);
+  return next;
+}
+
+/**
+ * Калибровка подхода в онбординге: ученик выбрал концепцию, которая «зашла».
+ * Закрепляем её как рабочую СРАЗУ (до накопления сигнала в уроках) — это
+ * первичный замер, который движок дальше уточняет по реальным ответам.
+ *
+ * Чтобы выбор «прилип» и не обнулился первым же recordSignal (тот пересчитывает
+ * preferredConcept по conceptScores), сеем счёт выбранной концепции на порог
+ * закрепления: n = MIN_SESSIONS_TO_LOCK, высокая стартовая точность. Тогда она
+ * единственная «eligible» и остаётся рабочей, пока реальные уроки не докрутят.
+ * Заодно ставим conceptRevealedAt (вау-момент показан) и onboarded.
+ */
+export async function calibrateConcept(
+  concept: ConceptId,
+  deps: LearningDeps = {}
+): Promise<UserProfile> {
+  const { store, now } = resolve(deps);
+  const ts = now();
+  const current = await store.getOrCreate();
+
+  // сид: «ты заметно лучше справляешься с этой подачей» (уточнится в уроках)
+  const seeded = {
+    accuracy: 0.9,
+    retentionD1: 0,
+    n: MIN_SESSIONS_TO_LOCK,
+  };
+  const conceptScores = { ...current.conceptScores, [concept]: seeded };
+
+  const next: UserProfile = {
+    ...current,
+    conceptScores,
+    preferredConcept: concept,
+    conceptRevealedAt: current.conceptRevealedAt ?? ts,
+    onboarded: true,
+    updatedAt: ts,
+  };
   await store.save(next);
   return next;
 }

@@ -69,6 +69,14 @@ const KINDS: LessonKind[] = [
   "causative-have",
   "passive-reporting",
   "passive-gerund",
+  "future-perfect",
+  "future-continuous",
+  "modals-past-deduction",
+  "likely-bound",
+  "inversion",
+  "participle-clauses",
+  "cleft-sentences",
+  "advanced-linkers",
 ];
 
 /** Достать kind из сырого объекта; неизвестный/отсутствующий → present-continuous (legacy). */

@@ -168,16 +168,16 @@ export const B2_TOPICS: CourseTopic[] = [
   { id: "passive-gerund", title: "Пассивный герундий", blurb: "being done / having been done", cefr: "B2", status: "ready" },
 
   // Юнит 3 · Будущее и вероятность
-  { id: "future-perfect", title: "Future Perfect", blurb: "will have done к моменту", cefr: "B2", status: "soon" },
-  { id: "future-continuous", title: "Future Continuous", blurb: "will be doing в момент", cefr: "B2", status: "soon" },
-  { id: "modals-past-deduction", title: "must/can't have done", blurb: "догадки о прошлом", cefr: "B2", status: "soon" },
-  { id: "likely-bound", title: "Вероятность", blurb: "likely to / bound to", cefr: "B2", status: "soon" },
+  { id: "future-perfect", title: "Future Perfect", blurb: "will have done к моменту", cefr: "B2", status: "ready" },
+  { id: "future-continuous", title: "Future Continuous", blurb: "will be doing в момент", cefr: "B2", status: "ready" },
+  { id: "modals-past-deduction", title: "must/can't have done", blurb: "догадки о прошлом", cefr: "B2", status: "ready" },
+  { id: "likely-bound", title: "Вероятность", blurb: "likely to / bound to", cefr: "B2", status: "ready" },
 
   // Юнит 4 · Стиль и связки
-  { id: "inversion", title: "Инверсия", blurb: "Never have I…, Hardly…", cefr: "B2", status: "soon" },
-  { id: "participle-clauses", title: "Причастные обороты", blurb: "Walking home, I saw…", cefr: "B2", status: "soon" },
-  { id: "cleft-sentences", title: "Эмфаза (cleft)", blurb: "It was X that…", cefr: "B2", status: "soon" },
-  { id: "advanced-linkers", title: "Связки", blurb: "despite, although, however", cefr: "B2", status: "soon" },
+  { id: "inversion", title: "Инверсия", blurb: "Never have I…, Hardly…", cefr: "B2", status: "ready" },
+  { id: "participle-clauses", title: "Причастные обороты", blurb: "Walking home, I saw…", cefr: "B2", status: "ready" },
+  { id: "cleft-sentences", title: "Эмфаза (cleft)", blurb: "It was X that…", cefr: "B2", status: "ready" },
+  { id: "advanced-linkers", title: "Связки", blurb: "despite, although, however", cefr: "B2", status: "ready" },
 ];
 
 export const B2_UNITS: CourseUnit[] = [

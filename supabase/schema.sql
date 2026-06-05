@@ -41,6 +41,10 @@ create table if not exists public.profiles (
   -- { conceptId: { accuracy, retentionD1, n } }
   concept_scores    jsonb not null default '{}'::jsonb,
 
+  -- ISO-дата «вау-момента»: когда впервые закрепили рабочую концепцию и показали
+  -- ученику reveal «мы поняли, как тебя учить». null = ещё не было.
+  concept_revealed_at timestamptz,
+
   -- [{ item, dueDate, ease, interval, reps,
   --    lastConcept, lastReviewed, retentionScored }]  (мостик к движку памяти)
   srs_queue         jsonb not null default '[]'::jsonb,
@@ -59,6 +63,7 @@ create index if not exists profiles_user_id_idx on public.profiles (user_id);
 alter table public.profiles add column if not exists name text;
 alter table public.profiles add column if not exists subscription jsonb
   not null default '{"plan":"free","status":"none","renewsAt":null}'::jsonb;
+alter table public.profiles add column if not exists concept_revealed_at timestamptz;
 
 -- ── Лог событий обучения (для накопления сигнала концепций / аналитики) ──────
 -- Минимальный аппендли-лог. Pedagogy Engine читает его, чтобы считать

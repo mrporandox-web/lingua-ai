@@ -13,7 +13,18 @@ const nextConfig: NextConfig = {
         output: "export",
         images: { unoptimized: true }, // export не умеет оптимизатор картинок
       }
-    : {}),
+    : {
+        // Веб: корень «/» отдаёт маркетинговый лендинг (статика public/Landing.html).
+        // Онбординг приложения живёт на /start (кнопка «Попробовать бесплатно» туда ведёт).
+        // В нативе (Capacitor, output:export) rewrites игнорируются → «/» = HomeScreen.
+        async rewrites() {
+          return {
+            beforeFiles: [{ source: "/", destination: "/Landing.html" }],
+            afterFiles: [],
+            fallback: [],
+          };
+        },
+      }),
 };
 
 export default nextConfig;

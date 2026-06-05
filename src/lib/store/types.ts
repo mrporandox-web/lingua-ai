@@ -97,6 +97,9 @@ export interface UserProfile {
   weakTopics: WeakTopic[];
   preferredConcept: ConceptId | null; // null пока сигнал не накоплен
   conceptScores: Record<ConceptId, ConceptScore>;
+  // ISO-дата «вау-момента»: когда движок ВПЕРВЫЕ закрепил рабочую концепцию и
+  // мы показали ученику reveal «мы поняли, как тебя учить». null = ещё не было.
+  conceptRevealedAt: string | null;
   srsQueue: SrsItem[];
   gamification: Gamification; // стрик/рекорд занятий (мотивация)
 }
@@ -158,6 +161,7 @@ export function createEmptyProfile(id: string, now: string): UserProfile {
       "context-story": emptyConceptScore(),
       "contrast-native": emptyConceptScore(),
     },
+    conceptRevealedAt: null,
     srsQueue: [],
     gamification: emptyGamification(),
   };

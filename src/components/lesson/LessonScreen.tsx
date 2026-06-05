@@ -18,13 +18,14 @@ import { getTopic } from "@/lib/course/curriculum";
 import { apiUrl } from "@/lib/api";
 import { XP_PER_CORRECT, dailyProgress, dayKey } from "@/lib/gamification";
 import type { ConceptId, UserProfile } from "@/lib/store/types";
-import { CONCEPT_LABEL } from "@/lib/pedagogy";
+import { CONCEPT_LABEL, CONCEPT_HINT } from "@/lib/pedagogy";
 import { learningGoalLabel } from "@/lib/onboarding";
 import {
   startSession,
   submitAnswer,
   scoreRetention,
   recordActivity,
+  markConceptRevealed,
 } from "@/lib/learning";
 import { useTts } from "@/lib/tts/useTts";
 
@@ -181,6 +182,11 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
   // результат урока: XP за сессию + флаг завершения (экран результата).
   const [sessionXp, setSessionXp] = useState(0);
   const [done, setDone] = useState(false);
+
+  // ВАУ-МОМЕНТ: концепция, которую движок памяти ТОЛЬКО ЧТО закрепил впервые
+  // (null → id). Ставится в check() при переходе, показывается reveal-экраном
+  // на завершении урока ровно один раз за жизнь профиля (флаг conceptRevealedAt).
+  const [reveal, setReveal] = useState<ConceptId | null>(null);
 
   // feedback-шторка
   const [fb, setFb] = useState<null | "good" | "bad">(null);
@@ -362,6 +368,15 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
           correct: ok,
         });
         setProfile(res.profile);
+
+        // 3) ВАУ-МОМЕНТ: движок впервые закрепил рабочую концепцию
+        //    (preferredConcept стал не-null), а reveal ещё не показывали
+        //    (conceptRevealedAt пуст). Готовим reveal-экран и фиксируем флаг,
+        //    чтобы «оу, вау» случился ровно один раз за жизнь профиля.
+        if (res.profile.preferredConcept && !res.profile.conceptRevealedAt) {
+          setReveal(res.profile.preferredConcept);
+          void markConceptRevealed().then(setProfile);
+        }
       })();
     }
   }, [picked, item, idx, items.length, fireConfetti, profile, activeConcept, speak, setStreak]);
@@ -478,6 +493,34 @@ export function LessonScreen({ topic }: { topic?: string | null }) {
       </>
     );
   };
+
+  // ── ВАУ-МОМЕНТ: «мы поняли, как тебя учить» (показывается раз за профиль) ──
+  // На завершении урока, если движок только что закрепил концепцию. Кнопка
+  // «Продолжить» гасит reveal → дальше обычный экран результата (XP/стрик).
+  if (done && reveal) {
+    return (
+      <div className="lyra-lesson lyra-reveal">
+        <div className="lyra-reveal-aura" aria-hidden />
+        <div className="lyra-reveal-spark" aria-hidden>✦</div>
+        <p className="lyra-reveal-kicker">Мы кое-что про тебя поняли</p>
+        <h1 className="lyra-reveal-title">
+          Нашли, как тебе<br />учить лучше всего
+        </h1>
+        <div className="lyra-reveal-card">
+          <span className="lyra-reveal-card-label">Твой формат подачи</span>
+          <span className="lyra-reveal-concept">{CONCEPT_LABEL[reveal]}</span>
+          <span className="lyra-reveal-hint">{CONCEPT_HINT[reveal]}</span>
+        </div>
+        <p className="lyra-reveal-sub">
+          Дальше мы будем объяснять новые темы именно так — и подмечать, если
+          твой стиль изменится.
+        </p>
+        <button className="lyra-btn primary" onClick={() => setReveal(null)}>
+          Класс, продолжаем →
+        </button>
+      </div>
+    );
+  }
 
   // ── экран результата урока (дофамин-петля: XP → цель дня → стрик) ──────────
   if (done) {

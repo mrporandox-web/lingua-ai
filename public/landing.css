@@ -1,0 +1,279 @@
+/* ============================================================
+   LYRA — Landing page
+   Reuses the app's design tokens. Premium dark "your sky".
+   ============================================================ */
+
+:root {
+  --ink:        #08080C;
+  --ink-2:      #0C0C13;
+  --surface:    #131320;
+  --surface-2:  #1A1A2A;
+  --surface-3:  #232336;
+  --line:       rgba(255,255,255,0.07);
+  --line-2:     rgba(255,255,255,0.12);
+  --line-3:     rgba(255,255,255,0.20);
+
+  --text:   #F3F0E9;
+  --text-2: #ACA9BE;
+  --text-3: #6F6C84;
+
+  --gold:      #EFC079;
+  --gold-2:    #F4A85C;
+  --gold-deep: #C8893F;
+  --gold-glow: rgba(239,192,121,0.45);
+
+  --cool:   #8FA8FF;
+  --cool-2: #B79BFF;
+  --cool-glow: rgba(143,168,255,0.40);
+
+  --good: #7FD9A6;
+  --bad:  #FF8B82;
+
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-xl: 34px;
+
+  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Unbounded", var(--font-body);
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --ease-out: cubic-bezier(.16,1,.3,1);
+
+  --maxw: 1120px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+html, body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+body { position: relative; }
+
+button { font-family: inherit; color: inherit; cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--gold); color: #1b1405; }
+
+/* ============================================================
+   GLOBAL COSMIC BACKDROP (fixed)
+   ============================================================ */
+.cosmos {
+  position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background:
+    radial-gradient(1100px 760px at 18% -8%, #16131f 0%, transparent 58%),
+    radial-gradient(900px 720px at 92% 4%, #0f1320 0%, transparent 55%),
+    radial-gradient(1200px 900px at 50% 116%, #120f1d 0%, transparent 60%),
+    var(--ink);
+}
+.cosmos::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 8% 12%, rgba(255,255,255,.55), transparent),
+    radial-gradient(1.2px 1.2px at 72% 8%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1.1px 1.1px at 42% 24%, rgba(255,255,255,.32), transparent),
+    radial-gradient(1.6px 1.6px at 88% 36%, rgba(239,192,121,.32), transparent),
+    radial-gradient(1.2px 1.2px at 14% 52%, rgba(143,168,255,.32), transparent),
+    radial-gradient(1.3px 1.3px at 62% 64%, rgba(255,255,255,.3), transparent),
+    radial-gradient(1px 1px at 30% 74%, rgba(255,255,255,.25), transparent),
+    radial-gradient(1.4px 1.4px at 80% 82%, rgba(239,192,121,.22), transparent),
+    radial-gradient(1.1px 1.1px at 50% 92%, rgba(143,168,255,.26), transparent);
+  background-size: 100% 1400px;
+  opacity: .7;
+}
+
+/* drifting aura blobs */
+.aura {
+  position: absolute; border-radius: 50%; filter: blur(60px); pointer-events: none; z-index: -1;
+  opacity: .5;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: 22px; }
+section { position: relative; }
+.section-pad { padding-block: clamp(72px, 12vw, 140px); }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-3);
+}
+.eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
+
+.grad-gold {
+  background: linear-gradient(100deg, var(--gold) 0%, var(--gold-2) 92%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.grad-cool {
+  background: linear-gradient(100deg, var(--cool) 0%, var(--cool-2) 92%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; line-height: 1.04; }
+.display { font-size: clamp(38px, 7vw, 76px); font-weight: 700; line-height: 1.0; letter-spacing: -.03em; }
+.h-sec { font-size: clamp(30px, 4.6vw, 52px); letter-spacing: -.025em; }
+.lead { color: var(--text-2); font-size: clamp(16px, 2.1vw, 21px); line-height: 1.55; font-weight: 500; }
+.muted { color: var(--text-2); }
+.dim { color: var(--text-3); }
+.kicker-line { color: var(--text-2); font-size: 15px; font-weight: 600; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  font-weight: 800; font-size: 16px; letter-spacing: -.01em;
+  border-radius: var(--r-md); padding: 17px 26px; min-height: 56px;
+  transition: transform .16s var(--ease), filter .2s, box-shadow .3s;
+  user-select: none; white-space: nowrap;
+}
+.btn:active { transform: translateY(1px) scale(.99); }
+.btn-primary {
+  color: #1c1305;
+  background: linear-gradient(180deg, #F6CE8C 0%, var(--gold) 38%, var(--gold-2) 100%);
+  box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 16px 40px -14px var(--gold-glow), 0 0 0 1px rgba(239,192,121,.4);
+}
+.btn-primary:hover { filter: brightness(1.05); transform: translateY(-2px); box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 22px 50px -14px var(--gold-glow), 0 0 0 1px rgba(239,192,121,.5); }
+.btn-lg { font-size: 18px; padding: 20px 34px; min-height: 64px; border-radius: var(--r-lg); }
+.btn-ghost { color: var(--text); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-2); }
+.btn-ghost:hover { background: var(--surface-3); }
+.btn-block { display: flex; width: 100%; }
+
+/* ============================================================
+   CARDS / CHIPS
+   ============================================================ */
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.014));
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(8px);
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+  padding: 8px 14px; border-radius: 999px;
+  font-size: 13px; font-weight: 700;
+  background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-2);
+  color: var(--text);
+}
+.chip-gold { background: rgba(239,192,121,.13); box-shadow: inset 0 0 0 1px rgba(239,192,121,.32); color: var(--gold); }
+.chip-cool { background: rgba(143,168,255,.13); box-shadow: inset 0 0 0 1px rgba(143,168,255,.32); color: var(--cool); }
+.chip-good { background: rgba(127,217,166,.12); box-shadow: inset 0 0 0 1px rgba(127,217,166,.3); color: var(--good); }
+
+/* ============================================================
+   ORB
+   ============================================================ */
+.orb {
+  position: relative; border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff 0%, var(--gold) 22%, var(--gold-2) 52%, var(--gold-deep) 100%);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.25) inset, 0 8px 30px -6px var(--gold-glow), 0 0 50px -6px var(--gold-glow);
+  flex-shrink: 0;
+}
+.orb::after {
+  content: ""; position: absolute; inset: -40%; border-radius: 50%;
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 62%);
+  animation: orbPulse 3.4s var(--ease) infinite; z-index: -1;
+}
+.orb.cool {
+  background: radial-gradient(circle at 32% 28%, #fff 0%, var(--cool) 26%, var(--cool-2) 60%, #5d54b8 100%);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.25) inset, 0 8px 30px -6px var(--cool-glow), 0 0 50px -6px var(--cool-glow);
+}
+.orb.cool::after { background: radial-gradient(circle, var(--cool-glow) 0%, transparent 62%); }
+@keyframes orbPulse { 0%,100% { transform: scale(.9); opacity:.55; } 50% { transform: scale(1.12); opacity:.9; } }
+
+/* ============================================================
+   PHONE MOCKUP
+   ============================================================ */
+.phone {
+  position: relative; width: 300px; height: 620px;
+  border-radius: 44px; background: var(--ink-2); padding: 5px; flex-shrink: 0;
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.04),
+    0 0 0 9px #0b0b11,
+    0 0 0 10px rgba(255,255,255,.06),
+    0 50px 110px -30px rgba(0,0,0,.9),
+    0 0 130px -36px rgba(143,168,255,.3);
+}
+.phone .screen {
+  position: relative; width: 100%; height: 100%;
+  border-radius: 39px; overflow: hidden;
+  background: radial-gradient(120% 80% at 50% -10%, #161427 0%, transparent 55%), var(--ink);
+}
+.phone .pstatus {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 5; height: 46px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 26px 0; font-size: 13px; font-weight: 700; color: var(--text);
+}
+.phone .pstars {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    radial-gradient(1.4px 1.4px at 18% 14%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1.2px 1.2px at 74% 10%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1.5px 1.5px at 86% 42%, rgba(239,192,121,.3), transparent),
+    radial-gradient(1.2px 1.2px at 12% 56%, rgba(143,168,255,.3), transparent),
+    radial-gradient(1.3px 1.3px at 60% 86%, rgba(255,255,255,.28), transparent);
+}
+.phone .home-ind {
+  position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%);
+  width: 112px; height: 4px; border-radius: 3px; background: rgba(255,255,255,.25); z-index: 6;
+}
+
+/* ============================================================
+   SCROLL REVEAL  (keyframe-based — transitions don't play in
+   the capture engine, but @keyframes do)
+   ============================================================ */
+.reveal { opacity: 0; transform: translateY(26px); }
+.reveal.in { animation: revealUp .8s var(--ease-out) forwards; }
+@keyframes revealUp { to { opacity: 1; transform: none; } }
+.reveal.d1.in { animation-delay: .08s; }
+.reveal.d2.in { animation-delay: .16s; }
+.reveal.d3.in { animation-delay: .24s; }
+.reveal.d4.in { animation-delay: .32s; }
+
+/* demo reveal panel — transform-only entrance (stays visible even if a
+   one-shot animation is frozen at frame 0 by a preview engine) */
+.demo-reveal-in { animation: demoIn .5s var(--ease-out) both; }
+@keyframes demoIn { from { transform: translateY(10px); } to { transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; animation: none !important; }
+  .orb::after { animation: none; }
+  * { animation-duration: .001s !important; }
+}
+
+/* twinkle */
+.twinkle { animation: tw 4.2s ease-in-out infinite; }
+@keyframes tw { 0%,100%{opacity:.55} 50%{opacity:1} }
+
+@keyframes revealIn {
+  from { opacity: 0; transform: translateY(14px) scale(.99); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 880px) {
+  .wrap { padding-inline: 18px; }
+  /* hero stacks, phone first-ish */
+  header.section-pad .wrap { grid-template-columns: 1fr !important; text-align: center; }
+  header.section-pad .hero-copy { order: 2; display: flex; flex-direction: column; align-items: center; }
+  header.section-pad .hero-copy .lead { margin-inline: auto; }
+  header.section-pad .hero-phone { order: 1; margin-bottom: 8px; }
+  /* inside section stacks */
+  section.section-pad .wrap[style*="minmax(280px, 380px)"] { grid-template-columns: 1fr !important; }
+  section.section-pad .wrap[style*="minmax(280px, 380px)"] > div:first-child { position: static !important; }
+}
+
+@media (max-width: 520px) {
+  .phone { width: 270px; height: 560px; }
+  .btn-lg { width: 100%; }
+  header.section-pad .hero-copy .btn { width: 100%; }
+}

@@ -18,6 +18,8 @@ const MIGRATIONS = [
   `alter table public.profiles add column if not exists name text;`,
   `alter table public.profiles add column if not exists subscription jsonb
      not null default '{"plan":"free","status":"none","renewsAt":null}'::jsonb;`,
+  // 2026-06-05 · вау-момент: дата первого reveal рабочей концепции
+  `alter table public.profiles add column if not exists concept_revealed_at timestamptz;`,
 ];
 
 function readToken() {
