@@ -48,8 +48,12 @@ fi
 cd "$APP_DIR"
 
 echo "==> [6/8] сборка"
-pnpm install --frozen-lockfile
-pnpm build
+# pnpm v11 перед `pnpm run` сам передёргивает install (verify-deps) и падает на
+# заблокированных build-скриптах (sharp). Поэтому ставим зависимости явно, а
+# next зовём НАПРЯМУЮ из node_modules — без обёртки pnpm.
+export npm_config_verify_deps_before_run=false
+pnpm install --frozen-lockfile --config.confirmModulesPurge=false || pnpm install
+"$APP_DIR/node_modules/.bin/next" build
 
 echo "==> [7/8] systemd-сервис lyra"
 cat >/etc/systemd/system/lyra.service <<EOF
@@ -62,7 +66,7 @@ Type=simple
 WorkingDirectory=$APP_DIR
 Environment=NODE_ENV=production
 Environment=PORT=$PORT
-ExecStart=$(command -v pnpm) start
+ExecStart=$APP_DIR/node_modules/.bin/next start -p $PORT
 Restart=always
 RestartSec=3
 
