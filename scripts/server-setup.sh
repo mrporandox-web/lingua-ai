@@ -52,7 +52,9 @@ echo "==> [6/8] сборка"
 # заблокированных build-скриптах (sharp). Поэтому ставим зависимости явно, а
 # next зовём НАПРЯМУЮ из node_modules — без обёртки pnpm.
 export npm_config_verify_deps_before_run=false
-pnpm install --frozen-lockfile --config.confirmModulesPurge=false || pnpm install
+# pnpm v11 возвращает код 1 при заблокированных build-скриптах (sharp) — это НЕ
+# фатально (пакеты установлены), поэтому терпим ненулевой код и идём к сборке.
+pnpm install --frozen-lockfile || pnpm install || true
 "$APP_DIR/node_modules/.bin/next" build
 
 echo "==> [7/8] systemd-сервис lyra"
