@@ -80,8 +80,11 @@ systemctl enable lyra
 systemctl restart lyra
 
 echo "==> [8/8] Caddy reverse-proxy + авто-SSL для $DOMAIN"
+# ВРЕМЕННО http-only: Let's Encrypt не может валидировать домен (Timeweb режет
+# зарубежные проверки LE). Сайт работает по http сразу; настоящий HTTPS добавим
+# через DNS-01 (DNS-проверка, без входящих соединений) отдельным шагом.
 cat >/etc/caddy/Caddyfile <<EOF
-$DOMAIN, www.$DOMAIN {
+http://$DOMAIN, http://www.$DOMAIN {
   encode zstd gzip
   reverse_proxy 127.0.0.1:$PORT
 }
