@@ -79,16 +79,45 @@ systemctl daemon-reload
 systemctl enable lyra
 systemctl restart lyra
 
-echo "==> [8/8] Caddy reverse-proxy + авто-SSL для $DOMAIN"
-# ВРЕМЕННО http-only: Let's Encrypt не может валидировать домен (Timeweb режет
-# зарубежные проверки LE). Сайт работает по http сразу; настоящий HTTPS добавим
-# через DNS-01 (DNS-проверка, без входящих соединений) отдельным шагом.
-cat >/etc/caddy/Caddyfile <<EOF
+echo "==> [8/8] Caddy + SSL для $DOMAIN"
+# HTTPS через Cloudflare DNS-01 (обходит фильтр Timeweb на проверках LE).
+# Токен спрашиваем интерактивно (без файлов/спецсимволов в консоли) и кладём в
+# /etc/caddy/cf.env. Нет токена → остаёмся на http (сайт всё равно работает).
+CF_ENV=/etc/caddy/cf.env
+if [ ! -f "$CF_ENV" ]; then
+  echo ""
+  echo ">>> Вставь Cloudflare API token и нажми Enter (или просто Enter — оставить http):"
+  read -r CFT
+  if [ -n "$CFT" ]; then
+    echo "CF_API_TOKEN=$CFT" > "$CF_ENV"
+    chmod 600 "$CF_ENV"
+  fi
+fi
+
+if [ -s "$CF_ENV" ]; then
+  echo "==> SSL: Cloudflare DNS-01"
+  caddy add-package github.com/caddy-dns/cloudflare || true
+  mkdir -p /etc/systemd/system/caddy.service.d
+  printf '[Service]\nEnvironmentFile=%s\n' "$CF_ENV" > /etc/systemd/system/caddy.service.d/cf.conf
+  cat >/etc/caddy/Caddyfile <<EOF
+$DOMAIN, www.$DOMAIN {
+  encode zstd gzip
+  reverse_proxy 127.0.0.1:$PORT
+  tls {
+    dns cloudflare {env.CF_API_TOKEN}
+  }
+}
+EOF
+  systemctl daemon-reload
+else
+  echo "==> SSL: токена нет → http-only (временно)"
+  cat >/etc/caddy/Caddyfile <<EOF
 http://$DOMAIN, http://www.$DOMAIN {
   encode zstd gzip
   reverse_proxy 127.0.0.1:$PORT
 }
 EOF
+fi
 systemctl restart caddy
 
 echo ""
