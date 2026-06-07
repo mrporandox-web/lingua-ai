@@ -79,45 +79,21 @@ systemctl daemon-reload
 systemctl enable lyra
 systemctl restart lyra
 
-echo "==> [8/8] Caddy + SSL для $DOMAIN"
-# HTTPS через Cloudflare DNS-01 (обходит фильтр Timeweb на проверках LE).
-# Токен спрашиваем интерактивно (без файлов/спецсимволов в консоли) и кладём в
-# /etc/caddy/cf.env. Нет токена → остаёмся на http (сайт всё равно работает).
-CF_ENV=/etc/caddy/cf.env
-if [ ! -f "$CF_ENV" ]; then
-  echo ""
-  echo ">>> Вставь Cloudflare API token и нажми Enter (или просто Enter — оставить http):"
-  read -r CFT
-  if [ -n "$CFT" ]; then
-    echo "CF_API_TOKEN=$CFT" > "$CF_ENV"
-    chmod 600 "$CF_ENV"
-  fi
-fi
-
-if [ -s "$CF_ENV" ]; then
-  echo "==> SSL: Cloudflare DNS-01"
-  caddy add-package github.com/caddy-dns/cloudflare || true
-  mkdir -p /etc/systemd/system/caddy.service.d
-  printf '[Service]\nEnvironmentFile=%s\n' "$CF_ENV" > /etc/systemd/system/caddy.service.d/cf.conf
-  cat >/etc/caddy/Caddyfile <<EOF
-$DOMAIN, www.$DOMAIN {
-  encode zstd gzip
-  reverse_proxy 127.0.0.1:$PORT
-  tls {
-    dns cloudflare {env.CF_API_TOKEN}
-  }
-}
-EOF
-  systemctl daemon-reload
-else
-  echo "==> SSL: токена нет → http-only (временно)"
-  cat >/etc/caddy/Caddyfile <<EOF
+echo "==> [8/8] Caddy: origin HTTP-only за Cloudflare"
+# Сайт фронтит Cloudflare (оранжевое облако, DNS проксирован). HTTPS для юзеров
+# терминирует CF на своём edge. Origin отдаёт ЧИСТЫЙ HTTP по :80 — это намеренно:
+# Timeweb рубит зарубежные TLS-рукопожатия (→ CF error 525 при Full), а простой
+# HTTP после TCP-коннекта проходит. Поэтому в Cloudflare режим SSL/TLS = "Flexible".
+# Никаких LE/DNS-01 на origin — это снимает всю прежнюю возню с сертификатами.
+# Чистим остаток прошлой DNS-01 конфигурации (cf.env + systemd-override), если был:
+rm -f /etc/systemd/system/caddy.service.d/cf.conf /etc/caddy/cf.env 2>/dev/null
+systemctl daemon-reload 2>/dev/null || true
+cat >/etc/caddy/Caddyfile <<EOF
 http://$DOMAIN, http://www.$DOMAIN {
   encode zstd gzip
   reverse_proxy 127.0.0.1:$PORT
 }
 EOF
-fi
 systemctl restart caddy
 
 echo ""
