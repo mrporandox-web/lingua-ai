@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>Lyra — AI-репетитор английского, который учит именно тебя</title>
 <meta name="description" content="Lyra понимает, как ты запоминаешь, и подстраивает каждое объяснение под тебя. AI-репетитор английского для русскоговорящих. Бесплатно, без скачивания из сторов."/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet"/>
+<!-- Шрифты локально (Google Fonts CDN режется/висит в РФ → render-block → чёрный экран). -->
+<link rel="stylesheet" href="landing-fonts.css"/>
 <link rel="stylesheet" href="landing.css"/>
 </head>
 <body>
@@ -20,5 +19,7 @@
 <script src="landing-sections-a.js"></script>
 <script src="landing-sections-b.js"></script>
 <script src="landing-main.js"></script>
+<!-- Страховка: если React/JS не отработал — через 2.5с принудительно показать контент (никогда не оставлять чёрный экран). -->
+<script>setTimeout(function(){document.querySelectorAll('.reveal:not(.in)').forEach(function(e){e.classList.add('in');});},2500);</script>
 </body>
 </html>
