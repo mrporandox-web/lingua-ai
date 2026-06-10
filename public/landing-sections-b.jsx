@@ -50,14 +50,14 @@ function Pricing() {
     "Весь курс A1–B2 и все 64 темы",
     "Персональная подача под твой стиль",
     "Speaking, озвучка и умное повторение",
-    "Новые темы и улучшения — без доплат",
+    "Без карты, подписки и скрытых платежей",
   ];
   return (
     <section id="cena" className="section-pad" style={{ position:"relative", scrollMarginTop: 20 }}>
       <div className="aura" style={{ width:560, height:560, top:"20%", left:"50%", transform:"translateX(-50%)", background:"radial-gradient(circle, rgba(239,192,121,.26), transparent 66%)" }} />
       <div className="wrap">
         <div style={{ textAlign:"center", maxWidth: 600, margin:"0 auto 48px" }}>
-          <p className="eyebrow reveal" style={{ justifyContent:"center" }}><span className="dot" /> Цена</p>
+          <p className="eyebrow reveal" style={{ justifyContent:"center" }}><span className="dot" /> Ранний доступ</p>
           <h2 className="h-sec reveal d1" style={{ marginTop: 16 }}>Учись по своему<br/><span className="grad-gold">персональному методу</span></h2>
         </div>
         <div className="reveal d1" style={{ maxWidth: 480, margin:"0 auto" }}>
@@ -65,11 +65,10 @@ function Pricing() {
             <div style={{ position:"absolute", top:-60, right:-40, width:200, height:200, borderRadius:"50%", background:"radial-gradient(circle, var(--gold-glow), transparent 70%)", pointerEvents:"none" }} />
             <div style={{ display:"flex", alignItems:"center", gap:12 }}>
               <LOrb size={40} />
-              <span className="chip chip-gold"><LStar size={13} fill/> Один тариф — всё включено</span>
+              <span className="chip chip-gold"><LStar size={13} fill/> Ранний доступ — всё включено</span>
             </div>
             <div style={{ display:"flex", alignItems:"baseline", gap:8, marginTop:24 }}>
-              <span className="display" style={{ fontSize:"clamp(48px,8vw,68px)" }}>299&nbsp;₽</span>
-              <span className="muted" style={{ fontSize:18, fontWeight:700 }}>/ мес</span>
+              <span className="display" style={{ fontSize:"clamp(48px,8vw,68px)" }}>Бесплатно</span>
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:13, marginTop:26 }}>
               {perks.map((p, i) => (
@@ -81,8 +80,8 @@ function Pricing() {
                 </div>
               ))}
             </div>
-            <button onClick={() => { window.location.href = "/start"; }} className="btn btn-primary btn-block btn-lg" style={{ marginTop:30 }}>Попробовать бесплатно <LArrow size={20}/></button>
-            <p className="dim" style={{ fontSize:13, textAlign:"center", marginTop:14, fontWeight:600 }}>Отмена в любой момент</p>
+            <button onClick={() => { window.location.href = "/start"; }} className="btn btn-primary btn-block btn-lg" style={{ marginTop:30 }}>Получить бесплатный доступ <LArrow size={20}/></button>
+            <p className="dim" style={{ fontSize:13, textAlign:"center", marginTop:14, fontWeight:600 }}>Пока мы растём — весь курс открыт бесплатно</p>
           </div>
         </div>
       </div>
@@ -111,7 +110,7 @@ function FAQ() {
   const [open, setOpen] = useStateL(0);
   const qs = [
     { q:"Нужно ли скачивать из сторов?", a:"Нет. Lyra — это PWA: открываешь ссылку и ставишь приложение прямо с сайта одним касанием. Без App Store и Google Play, без долгих загрузок. Иконка появится на экране как у обычного приложения." },
-    { q:"Это правда бесплатно на старте?", a:"Да. Начать можно бесплатно — пройти диагностику, собрать своё небо и сделать первые уроки. Платная подписка открывает весь курс и все возможности, но попробовать ничего не стоит." },
+    { q:"Это правда бесплатно?", a:"Да, полностью. Пока Lyra в раннем доступе — весь курс, диагностика и все возможности открыты бесплатно, без карты и подписки. Мы растём и собираем обратную связь от первых учеников." },
     { q:"Чем Lyra отличается от Duolingo?", a:"Lyra — не игра «угадай слово», а персональный AI-репетитор. Главное отличие: она запоминает, как именно тебе понятнее, и подбирает подачу под тебя. Плюс объяснения на русском, реальный speaking и грамматика, а не только узнавание." },
     { q:"Подойдёт ли с полного нуля?", a:"Да. Диагностика определит уровень от A1, и Lyra начнёт ровно оттуда, где ты есть — мягко, на русском, маленькими шагами. С нуля это даже комфортнее: ты сразу учишься в своём темпе." },
   ];

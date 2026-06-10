@@ -121,18 +121,18 @@ export function ConceptCalibration({ name }: { name: string | null }) {
     );
   }
 
-  // ── Фаза 3: ценник (заглушка — без реальной оплаты) ─────────────────────────
+  // ── Фаза 3: бесплатный доступ (ранний доступ — без оплаты) ──────────────────
   return (
     <div className="lyra-paywall">
       <div className="lyra-chip cool">
-        <span className="lyra-status-dot" /> Полный доступ
+        <span className="lyra-status-dot" /> Ранний доступ
       </div>
       <h1 className="lyra-paywall-title">
-        Учись по своему<br />персональному методу
+        Полный доступ —<br />бесплатно
       </h1>
       <div className="lyra-paywall-price">
-        <span className="lyra-paywall-amount">299 ₽</span>
-        <span className="lyra-paywall-period">/ месяц</span>
+        <span className="lyra-paywall-amount">0 ₽</span>
+        <span className="lyra-paywall-period">пока мы растём</span>
       </div>
       <ul className="lyra-paywall-feats">
         <li>🎯 Подача под тебя — учишься быстрее</li>
@@ -141,12 +141,9 @@ export function ConceptCalibration({ name }: { name: string | null }) {
         <li>🔥 Стрики и цели — не бросишь на полпути</li>
       </ul>
       <button className="lyra-btn primary" onClick={goToCourse}>
-        Оформить за 299 ₽/мес
+        Открыть весь курс бесплатно
       </button>
-      <button className="lyra-link-btn" onClick={goToCourse}>
-        Пока попробую бесплатно
-      </button>
-      <p className="lyra-paywall-fine">Отмена в любой момент</p>
+      <p className="lyra-paywall-fine">Без карты и подписки</p>
     </div>
   );
 }
